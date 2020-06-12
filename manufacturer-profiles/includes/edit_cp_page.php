@@ -142,6 +142,7 @@
 					
 				echo '<span style="color:red;">Update Success! </span><br>';
 				$updatecontent = "<?php require_once('".$_SERVER['DOCUMENT_ROOT']."/wp-load.php'); get_header();?>";
+
 				$updatecontent = $updatecontent.'<style>.rating {
 																display: inline-block;
 																position: relative;
@@ -206,11 +207,39 @@
 																.rating label input:focus:not(:checked) ~ .icon:last-child {
 																color: #000;
 																text-shadow: 0 0 5px #09f;
-																}</style>';
+																}
+																#mfp-topbar {
+																	position: fixed;
+																	top: 0;
+																	width: 100%;
+																	left: 0;
+																	background: #000;
+																	height:30px;
+																}
+																#mfp-topbar ul {
+																	list-style: none;
+																	padding-left: 66px;
+																	display: inline;
+																}
+																#mfp-topbar ul li {
+																	display: inline;
+																	padding-left: 7px;
+																}
+																#mfp-topbar ul li a {
+																	color: #eee !important;
+																	font-size: 14px;
+																}
+																
+																</style>';
 
 				$updatecontent = $updatecontent."<style>a{color: #4DB7FE !important;}.site-content{padding-top:30px !important;}.whiteblock{box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background: #fff;border-radius: 10px;z-index:-1;margin-right: 20px;padding: 15px 30px;border: 1px solid #e5e7f2;}body {background: #f6f6f6 !important;}.content {width: 100%;padding: 20px;padding: 0 60px 0 0;}.question {position: relative;background: lightgrey;padding: 10px 10px 10px 50px;display: block;width:100%;cursor: pointer;}.answers {padding: 0px 15px;margin: 5px 0;max-height: 0;overflow: hidden;z-index: 0;position: relative;opacity: 0;-webkit-transition: .7s ease;-moz-transition: .7s ease;-o-transition: .7s ease;transition: .7s ease;}.questions:checked ~ .answers{max-height: fit-content;opacity: 1;padding: 15px;}.plus {position: absolute;margin-left: 10px;z-index: 5;font-size: 2em;line-height: 100%;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;-webkit-transition: .3s ease;-moz-transition: .3s ease;-o-transition: .3s ease;transition: .3s ease;}.questions:checked ~ .plus {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);transform:rotate(45deg);}.questions {display: none;}#rightmenu {position: fixed;right: 0;top: 5%;width: 12em;margin-top: -2.5em;}.d-70{width:70%;float:left;}.d-30{width:30%;float:right;}@media only screen and (max-width: 767px) {.d-70{width:100%;}.d-30{width:100%;}.nomargins{margin-top:0px !important;margin-bottom:0px !important;}</style>";
-					
-					
+				//top edit bar	
+				if ( is_user_logged_in() ) {
+				$edit_url= get_site_url()."/wp-admin/admin.php?page=cpcustomsubpage&company_id=".$cp_id;
+				$add_url = get_site_url()."/wp-admin/admin.php?page=cpcreatepage";
+				$admin_url = get_site_url()."/wp-admin";
+				$updatecontent = $updatecontent."<div id='mfp-topbar'><ul><li><a href='".$edit_url."'>Edit this page</a> |</li><li><a href='".$add_url."'>Add a new profile</a> |</li><li><a href='".$admin_url."'>WP Dashboard</a></li></ul></div>";
+				}
 				if ($new_cp_name == ""){
 					$new_cp_name = "Unknown";
 				}
@@ -296,10 +325,11 @@
 				$updatecontent = $updatecontent."</section>";
 					
 				$updatecontent = $updatecontent.'<aside class="d-30">';
-				$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
 				$updatecontent = $updatecontent.'<div class="whiteblock"><img src="'.$file["url"].'">';
 				$updatecontent = $updatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div>'.'<div><a href="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a> '.$new_cp_facebook.'</div>'.'<div><a href="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a> '.$new_cp_linkedin.'</div>'.'<div><a href="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a> '.$new_cp_twitter.'</div></div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
-				$updatecontent = $updatecontent."</div></aside>";
+				$updatecontent = $updatecontent."</div>";
+				$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
+				$updatecontent = $updatecontent. "</aside>";
 	
 				$updatecontent = $updatecontent."<?php get_footer(); ?>";
 			
@@ -360,98 +390,74 @@
     if ($cp_result->num_rows > 0) {
    
         while($row = $cp_result->fetch_assoc()) {
+			echo '<style>
+			.mfp-editbox {
+				display: flex;
+				flex-wrap: wrap;
+			}
+			.mfp-edit-left {
+				-ms-flex: 0 0 70%;
+				flex: 0 0 70%;
+				max-width: 70%;
+			}
+			.mfp-edit-right {
+				-ms-flex: 0 0 30%;
+				flex: 0 0 30%;
+				max-width: 30%;
+			}
+			.mfp-update-box {
+				box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+				padding: 20px;
+				margin-right: 15px;
+				position: fixed;
+				
+			}
+			</style>
+			';
+
 			echo '<br>';
 			echo '<div style="font-size:18px;">Company '.$row["name"].' Page</div>';
 			echo '<br>';
 	
-            echo '<form action="" method="POST" enctype="multipart/form-data">';
+			echo '<form action="" method="POST" enctype="multipart/form-data">';
+			echo '<div class="mfp-editbox">';
+			echo '<div class="mfp-edit-left">';
 			echo '<input id="updatecpid" name="updatecpid" type="hidden" value="1">';
     		echo '<input type="hidden" id="cpoldname" name="cpoldname" value="'. $row["name"].'">';
 			echo '<label for="cpname">Manufacturer Name: </label>';
     		echo '<input type="text" id="cpname" name="cpname" value="'. $row["name"].'"> <br><br>';
 			echo '<label for="cpname">Parent Manufacturer Name: </label>';
     		echo '<input type="text" id="cpparentname" name="cpparentname" value="'. $row["parent_company"].'"> <br><br>';
-			add_action ('admin_enqueue_scripts', function() {
-    	if(is_admin())
-    		wp_enqueue_media(); 
-		});
-	
-		if (is_null($row["company_image"])){
-				
-	        echo '<input type="text" class="process_custom_images example-jpg-file-new" id="example-jpg-file-new" name="example-jpg-file-new" value=""><button class="set_custom_logo button" style="vertical-align: middle;">Select Manufacturer Logo</button>';
-	
-	        echo "<script>jQuery(document).ready(function() {
-							var $ = jQuery;
-							if ($('.set_custom_logo').length > 0) {
-								if ( typeof wp !== 'undefined' && wp.media && wp.media.editor) {
-									$(document).on('click', '.set_custom_logo', function(e) {
-										e.preventDefault();
-										var button = $(this);
-										var id = button.prev();
-										wp.media.editor.send.attachment = function(props, attachment) {
-											id.val(attachment.url);
-										};
-										wp.media.editor.open(button);
-										return false;
-									});
-								}
-							}
-						});
-					</script>";
-		}else{
-				
-			echo '<input type="text" class="process_custom_images example-jpg-file" id="example-jpg-file" name="example-jpg-file" value=""><button class="set_custom_logo button" style="vertical-align: middle;">Update Manufacturer Logo</button>';
-			echo '<br><br>('.'<label for="cimage">Current Image: </label>'.'  <input type="text" id="cimage" name="cimage" value="'.$row["company_image"].'" size="100" readonly> ) <br><br><img src="'.$row["company_image"].'"> <br><br>';
-
-			echo "<script>jQuery(document).ready(function() {
-							var $ = jQuery;
-							if ($('.set_custom_logo').length > 0) {
-								if ( typeof wp !== 'undefined' && wp.media && wp.media.editor) {
-									$(document).on('click', '.set_custom_logo', function(e) {
-										e.preventDefault();
-										var button = $(this);
-										var id = button.prev();
-										wp.media.editor.send.attachment = function(props, attachment) {
-											id.val(attachment.url);
-										};
-										wp.media.editor.open(button);
-										return false;
-									});
-								}
-							}
-						});
-					</script>";
-			}
-            
-            /** Manufacturer Profile update_Table1 */
-
-			echo '<label for="cpname">Manufacturing: </label>';
-            echo '<input type="text" id="cpmanuf" name="cpmanuf" value="'. $row["manuf"].'"> <br><br>';
-            
-            echo '<label for="cpaddress">Address: </label>';
-            echo '<input type="text" id="cpaddress" name="cpaddress" value="'. $row["address"].'"><br><br>';
-            
-            echo '<label for="cpphone">Phone: </label>';
-            echo '<input type="text" id="cpphone" name="cpphone" value="'. $row["phone"].'"><br><br>';
 			
-			echo '<label for="cpemail">Email: </label>';
-            echo '<input type="text" id="cpemail" name="cpemail" value="'. $row["email"].'"><br><br>';
+            /** Manufacturer Profile update_Table1 */
+			echo '<table>';
+			echo '<tr><td><label for="cpname">Manufacturing: </label></td>';
+            echo '<td><input type="text" id="cpmanuf" name="cpmanuf" value="'. $row["manuf"].'"> </td></tr>';
             
-			echo '<label for="cpurl">Url: </label>';
-            echo '<input type="text" id="cpurl" name="cpurl" value="'. $row["url"].'"><br><br>';
+            echo '<tr><td><label for="cpaddress">Address: </label></td>';
+            echo '<td><input type="text" id="cpaddress" name="cpaddress" value="'. $row["address"].'"></td></tr>';
             
-			echo '<label for="cpregion">Region: </label>';
-            echo '<input type="text" id="cpregion" name="cpregion" value="'. $row["region"].'"><br><br>';
+            echo '<tr><td><label for="cpphone">Phone: </label></td>';
+            echo '<td><input type="text" id="cpphone" name="cpphone" value="'. $row["phone"].'"></td></tr>';
+			
+			echo '<tr><td><label for="cpemail">Email: </label></td>';
+            echo '<td><input type="text" id="cpemail" name="cpemail" value="'. $row["email"].'"></td></tr>';
             
-			echo '<label for="cpfacebook">Facebook: </label>';
-            echo '<input type="text" id="cpfacebook" name="cpfacebook" value="'. $row["facebook"].'"><br><br>';
+			echo '<tr><td><label for="cpurl">Url: </label></td>';
+            echo '<td><input type="text" id="cpurl" name="cpurl" value="'. $row["url"].'"></td></tr>';
             
-			echo '<label for="cplinkedin">Linkedin: </label>';
-            echo '<input type="text" id="cplinkedin" name="cplinkedin" value="'. $row["linkedin"].'"><br><br>';
+			echo '<tr><td><label for="cpregion">Region: </label></td>';
+            echo '<td><input type="text" id="cpregion" name="cpregion" value="'. $row["region"].'"></td></tr>';
             
-			echo '<label for="cptwitter">Twitter: </label>';
-            echo '<input type="text" id="cptwitter" name="cptwitter" value="'. $row["twitter"].'"><br><br>';
+			echo '<tr><td><label for="cpfacebook">Facebook: </label></td>';
+            echo '<td><input type="text" id="cpfacebook" name="cpfacebook" value="'. $row["facebook"].'"></td></tr>';
             
+			echo '<tr><td><label for="cplinkedin">Linkedin: </label></td>';
+            echo '<td><input type="text" id="cplinkedin" name="cplinkedin" value="'. $row["linkedin"].'"></td></tr>';
+            
+			echo '<tr><td><label for="cptwitter">Twitter: </label></td>';
+            echo '<td><input type="text" id="cptwitter" name="cptwitter" value="'. $row["twitter"].'"></td></tr>';
+            echo '</table>';
 			echo '<label for="cpabout">About: </label>';
 			$content   = $row["about"];
 			$editor_id = 'cpabout';
@@ -594,12 +600,73 @@
 			
             echo '<br>';
             
-            echo '<input type="submit" value="Submit">';	
+          	
 			$row["name"] = str_replace(",","",$row["name"]);
 			$row["name"] = str_replace(".","",$row["name"]);
 			$row["name"] = str_replace(' ', '-', $row["name"]);
+			echo '</div>';
+
+			echo '<div class="mfp-edit-right">';
+			echo '<div class="mfp-update-box">';
+
+			add_action ('admin_enqueue_scripts', function() {
+				if(is_admin())
+					wp_enqueue_media(); 
+				});
+			
+				if (is_null($row["company_image"])){
+						
+					echo '<input type="text" class="process_custom_images example-jpg-file-new" id="example-jpg-file-new" name="example-jpg-file-new" value=""><button class="set_custom_logo button" style="vertical-align: middle;">Select Manufacturer Logo</button>';
+			
+					echo "<script>jQuery(document).ready(function() {
+									var $ = jQuery;
+									if ($('.set_custom_logo').length > 0) {
+										if ( typeof wp !== 'undefined' && wp.media && wp.media.editor) {
+											$(document).on('click', '.set_custom_logo', function(e) {
+												e.preventDefault();
+												var button = $(this);
+												var id = button.prev();
+												wp.media.editor.send.attachment = function(props, attachment) {
+													id.val(attachment.url);
+												};
+												wp.media.editor.open(button);
+												return false;
+											});
+										}
+									}
+								});
+							</script>";
+				}else{
+						
+					echo '<input type="text" class="process_custom_images example-jpg-file" id="example-jpg-file" name="example-jpg-file" value=""><button class="set_custom_logo button" style="vertical-align: middle;">Update Manufacturer Logo</button>';
+					echo '<br><br>('.'<label for="cimage">Current Image: </label>'.'  <input type="text" id="cimage" name="cimage" value="'.$row["company_image"].'" size="" readonly> ) <br><br><img src="'.$row["company_image"].'"> <br><br>';
+		
+					echo "<script>jQuery(document).ready(function() {
+									var $ = jQuery;
+									if ($('.set_custom_logo').length > 0) {
+										if ( typeof wp !== 'undefined' && wp.media && wp.media.editor) {
+											$(document).on('click', '.set_custom_logo', function(e) {
+												e.preventDefault();
+												var button = $(this);
+												var id = button.prev();
+												wp.media.editor.send.attachment = function(props, attachment) {
+													id.val(attachment.url);
+												};
+												wp.media.editor.open(button);
+												return false;
+											});
+										}
+									}
+								});
+							</script>";
+					}
+					
 			echo '&nbsp;<a href="https://shop.solarfeeds.com/brands/'.$row["name"].'" target=”_blank”>View Page</a></td>';
-            echo '</form><br>';
+			echo '<input type="submit" value="Submit">';
+			echo '</div>';
+			echo '</div>';	
+			echo '</div>';	
+			echo '</form><br>';
             
 			echo '<form action="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage" method="POST"><input type="submit" value="Delete">';
 			echo '<input id="deletecpid" name="deletecpid" type="hidden" value="'.$cp_id.'">';

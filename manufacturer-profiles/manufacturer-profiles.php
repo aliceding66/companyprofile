@@ -34,9 +34,11 @@ function wpdocs_register_cp_custom_menu_page(){
 	add_menu_page( __( 'Manufacturer Profile', 'mfp-plugin' ),'Manufacturer Profile','manage_options','cpcustompage','','dashicons-layout',6);
     add_submenu_page('cpcustompage', __( 'Manufacturer Profile List', 'mfp-plugin' ),'Manufacturer Profile List','manage_options','cpcustompage','cp_custom_menu_page'); 
     add_submenu_page('cpcustompage', __( 'Manufacturer Profile - Create', 'mfp-plugin' ),'Manufacturer Profile - Create New','manage_options','cpcreatepage','create_cp_page');
-    add_submenu_page('cpcustompage',__( 'Manufacturer Profiles - Edit', 'mfp-plugin' ),'Manufacturer Profiles - Edit','manage_options','cpcustomsubpage','update_cp_page');
+    add_submenu_page('cpcustompage',__( '', 'mfp-plugin' ),'','manage_options','cpcustomsubpage','update_cp_page');
+   // remove_submenu_page('cpcustompage','cpcustomsubpage');
 }
 add_action( 'admin_menu', 'wpdocs_register_cp_custom_menu_page' );
+
 
 /**
  *  Manufacturer Profile List Callback
@@ -47,8 +49,8 @@ function cp_custom_menu_page(){
 	echo '<br>';
     echo '<div style="font-size:18px;">Manufacturer Profile Page</div>';
     echo '<br>';
-    
-    echo '<form action="" method="post">';
+    echo '<div>';
+    echo '<form action="" method="post" style="width: 25%; float: left;">';
     if($_POST && isset($_POST['psearch'])){
         $search_string = $_POST['psearch'];
         echo '<input type="text" id="search" name="psearch" value="'.$search_string.'">';
@@ -64,7 +66,7 @@ function cp_custom_menu_page(){
     echo '<input type="submit" value="Search">';
     echo '</form>';
     
-    echo '<div><a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcreatepage">Create New Manufacturer Profile</a></div>';
+    echo '<a class="button" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcreatepage">Create New Manufacturer Profile</a></div>';
     echo '<br>';
 	require '../wp-load.php'; 
 	require_once MFP_PLUGIN_PATH . 'includes/cp_custom_menu_page.php';
@@ -82,7 +84,6 @@ function create_cp_page(){
     echo '<br>';
     require_once '../wp-load.php'; 
     require_once MFP_PLUGIN_PATH . 'includes/cp_page.php';
-
 }
 
 /**

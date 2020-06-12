@@ -130,7 +130,7 @@
         echo '</div>';
     }
     else {
-        echo "0 results";
+        echo "<span style='font-size: 28px;'>0 results</span>";
     }
     
     $conn->close();

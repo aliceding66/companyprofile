@@ -182,6 +182,35 @@
             $cpcreatecontent = "<?php require_once('".$_SERVER['DOCUMENT_ROOT']."/wp-load.php'); get_header();?>";
             $cpcreatecontent = $cpcreatecontent."<style>a{color: #4DB7FE !important;}.site-content{padding-top:30px !important;}.whiteblock{box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background: #fff;border-radius: 10px;z-index:-1;margin-right: 20px;padding: 15px 30px;border: 1px solid #e5e7f2;}body {background: #f6f6f6 !important;}.content {width: 100%;padding: 20px;padding: 0 60px 0 0;}.question {position: relative;background: lightgrey;padding: 10px 10px 10px 50px;display: block;width:100%;cursor: pointer;}.answers {padding: 0px 15px;margin: 5px 0;max-height: 0;overflow: hidden;z-index: 0;position: relative;opacity: 0;-webkit-transition: .7s ease;-moz-transition: .7s ease;-o-transition: .7s ease;transition: .7s ease;}.questions:checked ~ .answers{max-height: fit-content;opacity: 1;padding: 15px;}.plus {position: absolute;margin-left: 10px;z-index: 5;font-size: 2em;line-height: 100%;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;-webkit-transition: .3s ease;-moz-transition: .3s ease;-o-transition: .3s ease;transition: .3s ease;}.questions:checked ~ .plus {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);transform:rotate(45deg);}.questions {display: none;}#rightmenu {position: fixed;right: 0;top: 5%;width: 12em;margin-top: -2.5em;}.d-70{width:70%;float:left;}.d-30{width:30%;float:right;}@media only screen and (max-width: 767px) {.d-70{width:100%;}.d-30{width:100%;}.nomargins{margin-top:0px !important;margin-bottom:0px !important;}</style>";
              
+            $cpcreatecontent = $cpcreatecontent."<style>
+            #mfp-topbar {
+                position: fixed;
+                top: 0;
+                width: 100%;
+                left: 0;
+                background: #000;
+                height:30px;
+            }
+            #mfp-topbar ul {
+                list-style: none;
+                padding-left: 66px;
+                display: inline;
+            }
+            #mfp-topbar ul li {
+                display: inline;
+                padding-left: 7px;
+            }
+            #mfp-topbar ul li a {
+                color: #eee !important;
+                font-size: 14px;
+            }
+            </style>";
+            if ( is_user_logged_in() ) {
+				$edit_url= get_site_url()."/wp-admin/admin.php?page=cpcustomsubpage&company_id=".$new_cp_id;
+				$add_url = get_site_url()."/wp-admin/admin.php?page=cpcreatepage";
+				$admin_url = get_site_url()."/wp-admin";
+				$cpcreatecontent = $cpcreatecontent."<div id='mfp-topbar'><ul><li><a href='".$edit_url."'>Edit this page</a> |</li><li><a href='".$add_url."'>Add a new profile</a> |</li><li><a href='".$admin_url."'>WP Dashboard</a></li></ul></div>";
+				}
             $cpcreatecontent = $cpcreatecontent.'<section class="d-70">';
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><h1>'.$new_cp_name.' | Product Reviews</h1>';
             $cpcreatecontent = $cpcreatecontent."Factory Location: ".$new_cp_region."      ";
@@ -193,10 +222,11 @@
     
              
             $cpcreatecontent = $cpcreatecontent.'<aside class="d-30">';
-            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><img src="'.$_POST['example-jpg-file'].'">';
             $cpcreatecontent = $cpcreatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div>'.'<div><a href="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a> '.$new_cp_facebook.'</div>'.'<div><a href="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a> '.$new_cp_linkedin.'</div>'.'<div><a href="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a> '.$new_cp_twitter.'</div></div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
-            $cpcreatecontent = $cpcreatecontent."</div></aside>";
+            $cpcreatecontent = $cpcreatecontent."</div>";
+            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div></aside>';
+
              
              
             $cpcreatecontent = $cpcreatecontent."<?php get_footer(); ?>";
@@ -216,6 +246,7 @@
             $cpwritefile     = file_put_contents($cpwritefilename,$cpcreatecontent);
          }
      }
+     wp_redirect( 'https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustomsubpage&company_id='.$new_cp_id );
  }
  
 
@@ -229,7 +260,7 @@
     echo '<input id="createcpid" name="createcpid" type="hidden" value="1">';
     echo '<table>';
     echo '<tr><td><label for="cpname">Manufacturer Name: </label></td>';
-    echo '<td><input type="text" id="cpname" name="cpname"></td></tr>';
+    echo '<td><input type="text" id="cpname" name="cpname" required></td></tr>';
     add_action ('admin_enqueue_scripts', function() {
         if(is_admin())
             wp_enqueue_media(); 
@@ -395,7 +426,7 @@
     echo '<input type="submit" value="Submit">';
     echo '&nbsp;&nbsp;<span><a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage">Back to Manufacturer Profile List</a></span>';
     echo '</form>';
-    
+   
     $conn->close();
 
 ?>
