@@ -205,12 +205,14 @@
                 font-size: 14px;
             }
             </style>";
-            if ( is_user_logged_in() ) {
+           // if ( is_user_logged_in() ) {
 				$edit_url= get_site_url()."/wp-admin/admin.php?page=cpcustomsubpage&company_id=".$new_cp_id;
 				$add_url = get_site_url()."/wp-admin/admin.php?page=cpcreatepage";
 				$admin_url = get_site_url()."/wp-admin";
-				$cpcreatecontent = $cpcreatecontent."<div id='mfp-topbar'><ul><li><a href='".$edit_url."'>Edit this page</a> |</li><li><a href='".$add_url."'>Add a new profile</a> |</li><li><a href='".$admin_url."'>WP Dashboard</a></li></ul></div>";
-				}
+				$cpcreatecontent = $cpcreatecontent."<?php if ( is_user_logged_in() ) { ?>";
+                $cpcreatecontent = $cpcreatecontent."<div id='mfp-topbar'><ul><li><a href='".$edit_url."'>Edit this page</a> |</li><li><a href='".$add_url."'>Add a new profile</a> |</li><li><a href='".$admin_url."'>WP Dashboard</a></li></ul></div>";
+                $cpcreatecontent = $cpcreatecontent."<?php  } ?>";
+			//	}
             $cpcreatecontent = $cpcreatecontent.'<section class="d-70">';
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><h1>'.$new_cp_name.' | Product Reviews</h1>';
             $cpcreatecontent = $cpcreatecontent."Factory Location: ".$new_cp_region."      ";
@@ -222,10 +224,11 @@
     
              
             $cpcreatecontent = $cpcreatecontent.'<aside class="d-30">';
+            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock" style="padding: 0;"><a href="https://solarfeeds.com/list-your-business/ "><img src="https://shop.solarfeeds.com/wp-content/uploads/2019/08/Add-a-heading.png"></a></div></br>';
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><img src="'.$_POST['example-jpg-file'].'">';
             $cpcreatecontent = $cpcreatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div>'.'<div><a href="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a> '.$new_cp_facebook.'</div>'.'<div><a href="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a> '.$new_cp_linkedin.'</div>'.'<div><a href="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a> '.$new_cp_twitter.'</div></div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
             $cpcreatecontent = $cpcreatecontent."</div>";
-            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div></aside>';
+            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div></aside>';
 
              
              
