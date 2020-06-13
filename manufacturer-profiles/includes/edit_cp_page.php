@@ -412,6 +412,17 @@
 				position: fixed;
 				
 			}
+			#btn_delete{
+				background: aliceblue;
+				color:black;
+    			border: none !important;
+    		}
+    		#btn_delete:hover{
+    			background: cadetblue;
+    			color: white;
+    			border: none !important;
+    			cursor: pointer;
+    		}
 			</style>
 			';
 
@@ -662,13 +673,13 @@
 					}
 					
 			echo '&nbsp;<a href="https://shop.solarfeeds.com/brands/'.$row["name"].'" target=”_blank”>View Page</a></td>';
-			echo '<input type="submit" value="Submit">';
+			echo '&nbsp;<input type="submit" value="Submit">';
 			echo '</div>';
 			echo '</div>';	
 			echo '</div>';	
 			echo '</form><br>';
             
-			echo '<form action="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage" method="POST"><input type="submit" value="Delete">';
+			echo '<form action="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage" method="POST"><input type="submit" value="Delete" id="btn_delete">';
 			echo '<input id="deletecpid" name="deletecpid" type="hidden" value="'.$cp_id.'">';
 			echo '&nbsp;&nbsp;<span><a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage">Back to Manufacturer Profile List</a></span>';
 			echo '</form>';
