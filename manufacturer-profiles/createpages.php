@@ -303,6 +303,7 @@
 			$updatecontent = $updatecontent."</section>";
 					
 			$updatecontent = $updatecontent.'<aside class="d-30">';
+			$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="https://solarfeeds.com/list-your-business/ "><img src="https://shop.solarfeeds.com/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
 	
 			$updatecontent = $updatecontent.'<div class="whiteblock"><img src="'.$file["url"].'">';
 					
