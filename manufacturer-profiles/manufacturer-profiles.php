@@ -31,10 +31,10 @@ function has_files_to_upload( $id ) {	return ( ! empty( $_FILES ) ) && isset( $_
 *
 */
 function wpdocs_register_cp_custom_menu_page(){
-	add_menu_page( __( 'Manufacturer Profile', 'mfp-plugin' ),'Manufacturer Profile','manage_options','cpcustompage','','dashicons-layout',6);
-    add_submenu_page('cpcustompage', __( 'Manufacturer Profile List', 'mfp-plugin' ),'Manufacturer Profile List','manage_options','cpcustompage','cp_custom_menu_page'); 
-    add_submenu_page('cpcustompage', __( 'Manufacturer Profile - Create', 'mfp-plugin' ),'Manufacturer Profile - Create New','manage_options','cpcreatepage','create_cp_page');
-    add_submenu_page('cpcustompage',__( '', 'mfp-plugin' ),'','manage_options','cpcustomsubpage','update_cp_page');
+	add_menu_page( __( 'Manufacturer Profile', 'mfp-plugin' ),'Manufacturer Profile','edit_posts','cpcustompage','','dashicons-layout',6);
+    add_submenu_page('cpcustompage', __( 'Manufacturer Profile List', 'mfp-plugin' ),'Manufacturer Profile List','edit_posts','cpcustompage','cp_custom_menu_page'); 
+    add_submenu_page('cpcustompage', __( 'Manufacturer Profile - Create', 'mfp-plugin' ),'Manufacturer Profile - Create New','edit_posts','cpcreatepage','create_cp_page');
+    add_submenu_page('cpcustompage',__( '', 'mfp-plugin' ),'','edit_posts','cpcustomsubpage','update_cp_page');
    // remove_submenu_page('cpcustompage','cpcustomsubpage');
 }
 add_action( 'admin_menu', 'wpdocs_register_cp_custom_menu_page' );

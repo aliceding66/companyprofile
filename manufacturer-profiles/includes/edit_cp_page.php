@@ -471,7 +471,7 @@
 			echo '<tr><td><label for="cptwitter">Twitter: </label></td>';
             echo '<td><input type="text" id="cptwitter" name="cptwitter" value="'. $row["twitter"].'"></td></tr>';
             echo '</table>';
-			echo '<label for="cpabout">About: </label>';
+			echo '<label for="cpabout"><h2>About: </h2></label>';
 			$content   = $row["about"];
 			$editor_id = 'cpabout';
 			$settings  = array( 'media_buttons' => true);
