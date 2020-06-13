@@ -682,7 +682,7 @@
 			echo '</div>';	
 			echo '</form><br>';
             
-			echo '<form action="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage" method="POST"><input type="submit" value="Delete" id="btn_delete" onsubmit="return confirm(\'Are you sure you want to delete this profile?\');">';
+			echo '<form action="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this profile?\');"><input type="submit" value="Delete" id="btn_delete">';
 			echo '<input id="deletecpid" name="deletecpid" type="hidden" value="'.$cp_id.'">';
 			echo '&nbsp;&nbsp;<span><a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage">Back to Manufacturer Profile List</a></span>';
 			echo '</form>';
