@@ -29,9 +29,9 @@
 				$cp_result_reviews_delete = $conn->query($cp_sql_reviews_delete);
 			}
 		
-			$related_profiles = realted_manufacturer($_POST['cpregion'], $_POST['cpcomtype'], $_POST['cpcrystalline']);
-			//print_r($related_profiles);
-			//exit();
+			$related_profiles = realted_manufacturer($_POST['cpregion'], $_POST['cpcomtype'], $_POST['cpcrystalline'],$_GET['company_id']);
+			// print_r($related_profiles);
+			// exit(); 
 
 			$xx = 1;
 			$xx_write = '<div class="whiteblock" id="archivenews"><h2>Archive News for '.$_POST['cpname'].': </h2><div class="content">';
@@ -381,11 +381,7 @@
 				$updatecontent = $updatecontent.'<div class="whiteblock"><br><h2> Related Profiles</h2>';
 				if(count($related_profiles)> 0){
 					foreach($related_profiles as $related){
-					$c_url = str_replace(",","",$related["name"]);
-					$c_url = str_replace(".","",$c_url);
-					$c_url = str_replace(' ', '-', $c_url);
-
-					$updatecontent = $updatecontent.'<a href="https://shop.solarfeeds.com/brands/'.$c_url.'">'.$related["name"].'</a></br>';
+					$updatecontent = $updatecontent.'<a href="https://shop.solarfeeds.com/brands/'.$related["name"].'">'.$related["name"].'</a></br>';
 					}
 				}
 				$updatecontent = $updatecontent.'<br><br></div><br>';

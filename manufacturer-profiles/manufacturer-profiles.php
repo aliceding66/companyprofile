@@ -37,26 +37,39 @@ function has_files_to_upload( $id ) {	return ( ! empty( $_FILES ) ) && isset( $_
  * 
  *  @since  1.0.0
  */
-
  function mfp_add_role(){
-    $wp_roles = new WP_Roles();
-    $wp_roles->remove_role("mf_editor");
-    $wp_roles->remove_role("manufacture_editor");
-   
     
     add_role('mfp_editor', __(
         'Manufacturer Editor','mfp'),
         array(
                 'read'            => true, // Allows a user to read
-				'create_posts'      => false, // Allows user to create new posts
-				'edit_posts'        => false, // Allows user to edit their own posts
-				'edit_others_posts' => false, // Allows user to edit others posts too
-				'publish_posts' => false, // Allows the user to publish posts
-				'manage_categories' => false, // Allows user to manage post categories
+				'create_posts'      => false, 
+				'edit_posts'        => false, 
+				'edit_others_posts' => false, 
+				'publish_posts' => false, 
+				'manage_categories' => false, 
 
             )
      );
  }
+/**
+ *  add Capabilities for custom role & admin
+ * 
+ *  @since  1.0.0
+ */
+ function add_theme_caps() {
+    // Get role Manufacturer Editor
+    $manufacturer = get_role( 'mfp_editor' );
+    $administrator     = get_role('administrator');
+    
+    $administrator->add_cap( 'manage_manufacturer' );
+    $manufacturer->add_cap( 'manage_manufacturer' );
+
+    //required if woocommerce is active
+    $manufacturer->add_cap( 'view_admin_dashboard' ); 
+    
+}
+add_action( 'admin_init', 'add_theme_caps');
 
 /**
  *  Manufacturer Profile enqueue scripts
@@ -80,10 +93,10 @@ add_action('admin_enqueue_scripts', 'enqueue_scripts');
 *
 */
 function wpdocs_register_cp_custom_menu_page(){
-	add_menu_page( __( 'Manufacturer Profile', 'mfp-plugin' ),'Manufacturer Profile','edit_posts','cpcustompage','','dashicons-layout',6);
-    add_submenu_page('cpcustompage', __( 'Manufacturer Profile List', 'mfp-plugin' ),'Manufacturer Profile List','edit_posts','cpcustompage','cp_custom_menu_page'); 
-    add_submenu_page('cpcustompage', __( 'Manufacturer Profile - Create', 'mfp-plugin' ),'Manufacturer Profile - Create New','edit_posts','cpcreatepage','create_cp_page');
-    add_submenu_page('cpcustompage',__( '', 'mfp-plugin' ),'','edit_posts','cpcustomsubpage','update_cp_page');
+	add_menu_page( __( 'Manufacturer Profile', 'mfp-plugin' ),'Manufacturer Profile','manage_manufacturer','cpcustompage','','dashicons-layout',6);
+    add_submenu_page('cpcustompage', __( 'Manufacturer Profile List', 'mfp-plugin' ),'Manufacturer Profile List','manage_manufacturer','cpcustompage','cp_custom_menu_page'); 
+    add_submenu_page('cpcustompage', __( 'Manufacturer Profile - Create', 'mfp-plugin' ),'Manufacturer Profile - Create New','manage_manufacturer','cpcreatepage','create_cp_page');
+    add_submenu_page('cpcustompage',__( '', 'mfp-plugin' ),'','manage_manufacturer','cpcustomsubpage','update_cp_page');
    // remove_submenu_page('cpcustompage','cpcustomsubpage');
 }
 add_action( 'admin_menu', 'wpdocs_register_cp_custom_menu_page' );
@@ -132,6 +145,7 @@ function create_cp_page(){
     echo '<div style="font-size:18px;">Manufacturer Profile - Create New Manufacturer Profile Page</div>';
     echo '<br>';
     require_once '../wp-load.php'; 
+    require_once MFP_PLUGIN_PATH . 'includes/functions.php';
     require_once MFP_PLUGIN_PATH . 'includes/cp_page.php';
 }
 
@@ -145,6 +159,8 @@ function update_cp_page(){
    require_once MFP_PLUGIN_PATH . 'includes/functions.php';
    require_once MFP_PLUGIN_PATH . 'includes/edit_cp_page.php';
 }
+
+
 
 
 ?>

@@ -1,6 +1,6 @@
 <?php
  
- function realted_manufacturer($region, $cat, $crystalline){
+ function realted_manufacturer($region, $cat, $crystalline,$cp_id=null){
    $conn  = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
    
    if ($crystalline != ''){
@@ -27,11 +27,16 @@
    usort($sorted_data, function($a, $b) {
       return $b['score'] - $a['score'];
     }); 
-    return array_slice($sorted_data, 0, 10);
+    if($cp_id != null){
+      $sorted_data = removeSameListing($sorted_data, "company_id", $cp_id);
+    }
+  
+   return array_slice($sorted_data, 0, 10);
     //return $sorted_data;
    }
  
 }
+
 
 function count_reviews_length($company_id){
   $conn  = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
@@ -57,6 +62,15 @@ function count_news_length($company_id){
     } else {
       return 0;
     }
+}
+
+function removeSameListing($array, $key, $value){
+  foreach($array as $subKey => $subArray){
+       if($subArray[$key] == $value){
+            unset($array[$subKey]);
+       }
+  }
+  return $array;
 }
 
 ?>

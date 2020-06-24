@@ -22,7 +22,7 @@
                 echo "Create Failed. There is an existing manufacturer name.";
                 exit;
             }
-         
+
         $sql_cp_id     = "SELECT MAX(company_id) AS LargestId FROM ".$tablename.";";   
         $result_cp_id  = $conn->query($sql_cp_id);
 
@@ -34,7 +34,9 @@
         else {
             $new_cp_id = 0;
         }
-
+        
+        $related_profiles = realted_manufacturer($_POST['cpregion'], $_POST['cpcomtype'], $_POST['cpcrystalline']);
+        
         $new_cp_id = intval($new_cp_id)+ 1;
          
         if ($cp_result_check->num_rows > 0) {
@@ -97,11 +99,13 @@
             $new_cp_high_eff       = $_POST['cphigh_eff'];
             $new_cp_hecprl         = $_POST['cphecprl'];
             $new_cp_hecprh         = $_POST['cphecprh'];
+            $new_cp_comtype        = $_POST['cpcomtype'];
+            $new_cp_cpme           = $_POST['cpme'];
              
             $cp_sql_insert         = "INSERT INTO ".$tablename." (company_id, name, address, phone, email, url, region,facebook, linkedin,twitter,company_image, about) VALUES (".$new_cp_id.", '".$new_cp_name."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_image."','".$new_cp_about."')";
             $cp_result_insert      = $conn->query($cp_sql_insert);
              
-            $cp_sql_insert_details = "INSERT INTO ".$tablename_details." (company_id, staff_no, crystalline, cprl, cprh, high_eff, hecprl, hecprh) VALUES (".$new_cp_id.",".$new_cp_staffno.",'".$new_cp_crystalline."','".$new_cp_cprl."','".$new_cp_cprh."','".$new_cp_high_eff."','".$new_cp_hecprl."','".$new_cp_hecprh."')";
+            $cp_sql_insert_details = "INSERT INTO ".$tablename_details." (company_id, staff_no, crystalline, cprl, cprh, high_eff, hecprl, hecprh,com_type,mounting_eq) VALUES (".$new_cp_id.",".$new_cp_staffno.",'".$new_cp_crystalline."','".$new_cp_cprl."','".$new_cp_cprh."','".$new_cp_high_eff."','".$new_cp_hecprl."','".$new_cp_hecprh."','".$new_cp_comtype."','".$new_cp_cpme."')";
             $cp_result_insert      = $conn->query($cp_sql_insert_details);
              
              
@@ -157,8 +161,13 @@
              if ($new_cp_hecprh == ""){
                  $new_cp_hecprh = "Unknown";
              }
-                 
-                 
+             if ($new_cp_comtype == ""){
+                $new_cp_comtype = "Unknown";
+             }
+             if ($new_cp_cpme == ""){
+                $new_cp_cpme = "Unknown";
+             }
+             
              if ($new_cp_crystalline == "0"){
                  $new_cp_crystalline = "Unknown";
              }
@@ -177,7 +186,13 @@
              if ($new_cp_hecprh == "0"){
                  $new_cp_hecprh = "Unknown";
              }
-         
+            
+             if ($new_cp_comtype == ""){
+                $new_cp_comtype = "Unknown";
+             }
+             if ($new_cp_cpme == ""){
+                $new_cp_cpme = "Unknown";
+             } 
              
             $cpcreatecontent = "<?php require_once('".$_SERVER['DOCUMENT_ROOT']."/wp-load.php'); get_header();?>";
             $cpcreatecontent = $cpcreatecontent."<style>a{color: #4DB7FE !important;}.site-content{padding-top:30px !important;}.whiteblock{box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background: #fff;border-radius: 10px;z-index:-1;margin-right: 20px;padding: 15px 30px;border: 1px solid #e5e7f2;}body {background: #f6f6f6 !important;}.content {width: 100%;padding: 20px;padding: 0 60px 0 0;}.question {position: relative;background: lightgrey;padding: 10px 10px 10px 50px;display: block;width:100%;cursor: pointer;}.answers {padding: 0px 15px;margin: 5px 0;max-height: 0;overflow: hidden;z-index: 0;position: relative;opacity: 0;-webkit-transition: .7s ease;-moz-transition: .7s ease;-o-transition: .7s ease;transition: .7s ease;}.questions:checked ~ .answers{max-height: fit-content;opacity: 1;padding: 15px;}.plus {position: absolute;margin-left: 10px;z-index: 5;font-size: 2em;line-height: 100%;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;-webkit-transition: .3s ease;-moz-transition: .3s ease;-o-transition: .3s ease;transition: .3s ease;}.questions:checked ~ .plus {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);transform:rotate(45deg);}.questions {display: none;}#rightmenu {position: fixed;right: 0;top: 5%;width: 12em;margin-top: -2.5em;}.d-70{width:70%;float:left;}.d-30{width:30%;float:right;}@media only screen and (max-width: 767px) {.d-70{width:100%;}.d-30{width:100%;}.nomargins{margin-top:0px !important;margin-bottom:0px !important;}</style>";
@@ -225,10 +240,17 @@
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><img src="'.$_POST['example-jpg-file'].'">';
             $cpcreatecontent = $cpcreatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div>'.'<div><a href="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a> '.$new_cp_facebook.'</div>'.'<div><a href="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a> '.$new_cp_linkedin.'</div>'.'<div><a href="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a> '.$new_cp_twitter.'</div></div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
             $cpcreatecontent = $cpcreatecontent."</div>";
-            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div></aside>';
+            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div>';
 
-             
-             
+            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><br><h2> Related Profiles</h2>';
+				if(count($related_profiles)> 0){
+					foreach($related_profiles as $related){
+					$cpcreatecontent = $cpcreatecontent.'<a href="https://shop.solarfeeds.com/brands/'.$related["name"].'">'.$related["name"].'</a></br>';
+					}
+				}
+            $cpcreatecontent = $cpcreatecontent.'<br><br></div><br>';
+            $cpcreatecontent = $cpcreatecontent. "</aside>";
+            
             $cpcreatecontent = $cpcreatecontent."<?php get_footer(); ?>";
              
             $new_cp_name = str_replace(' ', '-', $new_cp_name);
@@ -337,6 +359,13 @@
     echo '<tr><td><label for="cphecprl">High Efficiency Crystalline Power Range (Low): </label></td><td><input type="text" id="cphecprl" name="cphecprl"></td></tr>';
     echo '<tr><td><label for="cphecprh">High Efficiency Crystalline Power Range (High): </label></td><td><input type="text" id="cphecprh" name="cphecprh"></td></tr>';
     echo '</table>';
+
+     /** Manufacturer Profile update_Table3 */
+	echo '<table>';
+	echo '<tr><td><label for="cpcomtype">Component Type: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" ></td></tr>';
+	echo '<tr><td><label for="cpme">Mounting Equipment: </label></td><td><input type="text" id="cpme" name="cpme" ></td></tr>';
+	echo '</table>';
+            
     
     /** Add More btn */
     echo '<br><br>Reviews&nbsp;&nbsp;&nbsp;<button type="button" onclick="addreviews()">Add More</button><br><br>';       
