@@ -142,7 +142,7 @@ function create_cp_page(){
  */
 function update_cp_page(){
    require_once '../wp-load.php'; 
-   require_once MFP_PLUGIN_PATH . 'includes/custom_code.php';
+   require_once MFP_PLUGIN_PATH . 'includes/functions.php';
    require_once MFP_PLUGIN_PATH . 'includes/edit_cp_page.php';
 }
 

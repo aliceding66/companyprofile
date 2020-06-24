@@ -28,7 +28,11 @@
 				$cp_sql_reviews_delete    ="DELETE FROM ".$tablename_reviews." WHERE company_id = ".$cp_id;
 				$cp_result_reviews_delete = $conn->query($cp_sql_reviews_delete);
 			}
-			
+		
+			$related_profiles = realted_manufacturer($_POST['cpregion'], $_POST['cpcomtype'], $_POST['cpcrystalline']);
+			//print_r($related_profiles);
+			//exit();
+
 			$xx = 1;
 			$xx_write = '<div class="whiteblock" id="archivenews"><h2>Archive News for '.$_POST['cpname'].': </h2><div class="content">';
 			$is_news  = 0;
@@ -72,6 +76,7 @@
 			$cp_sql_details_check     = "SELECT * FROM ".$tablename_details." WHERE company_id = ".$cp_id;
 			$cp_result_details_check  = $conn->query($cp_sql_details_check);
 			
+			
 			if ($cp_result_details_check->num_rows > 0) {
 				$new_cp_name              = $_POST['cpname'];
 				$new_cp_address           = $_POST['cpaddress'];
@@ -93,8 +98,10 @@
 				$new_cp_hecprl            = $_POST['cphecprl'];
 				$new_cp_hecprh            = $_POST['cphecprh'];
 				$new_cp_business_status   = $_POST['cpbusiness_status'];
+				$new_cp_comptype   		  = $_POST['cpcomtype'];
+				$new_cp_me                = $_POST['cpme'];
 				
-				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."' WHERE company_id=".$cp_id;
+				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."', com_type='".$new_cp_comptype."', mounting_eq='".$new_cp_me."' WHERE company_id=".$cp_id;
 				$cp_result_details_update = $conn->query($cp_sql_details_update);
 
             }
@@ -137,7 +144,12 @@
 				$new_cp_youtube   = $_POST['cpyoutube'];
 				$new_cp_business_status = $_POST['cpbusiness_status'];
 				$new_cp_about     = str_replace('\"','',$_POST['cpabout']); 
-            }
+				$new_cp_cpcomtype	  = $_POST['cpcomtype'];
+				
+			}
+
+			
+			
             
 			$old_product_no   = $_POST['cpoldname'];
 			$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."',address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."' WHERE company_id=".$cp_id;
@@ -366,7 +378,17 @@
 				$updatecontent = $updatecontent."</div>";
 				$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
 
-				$updatecontent = $updatecontent.'<div class="whiteblock"><br><h2> Related Profiles</h2> <br><br></div><br>';
+				$updatecontent = $updatecontent.'<div class="whiteblock"><br><h2> Related Profiles</h2>';
+				if(count($related_profiles)> 0){
+					foreach($related_profiles as $related){
+					$c_url = str_replace(",","",$related["name"]);
+					$c_url = str_replace(".","",$c_url);
+					$c_url = str_replace(' ', '-', $c_url);
+
+					$updatecontent = $updatecontent.'<a href="https://shop.solarfeeds.com/brands/'.$c_url.'">'.$related["name"].'</a></br>';
+					}
+				}
+				$updatecontent = $updatecontent.'<br><br></div><br>';
 				$updatecontent = $updatecontent. "</aside>";
 	
 				$updatecontent = $updatecontent."<?php get_footer(); ?>";
@@ -433,10 +455,9 @@
     if ($cp_result->num_rows > 0) {
    
         while($row = $cp_result->fetch_assoc()) {
-		
-			//$cc = get_10_related_lists($row["region"],$update_cp_comptype,$update_cp_crystalline);
-			//print_r($cc);
+
 			
+
 			echo '<style>
 			.mfp-editbox {
 				display: flex;
@@ -456,7 +477,7 @@
 				box-shadow: hsl(0, 0%, 80%) 0 0 16px;
 				padding: 20px;
 				margin-right: 15px;
-				position: fixed;
+				
 				
 			}
 			#btn_delete{
@@ -472,8 +493,6 @@
     		}
 			</style>
 			';
-
-
 			echo '<br>';
 			echo '<div style="font-size:18px;">Company '.$row["name"].' Page</div>';
 			echo '<br>';
