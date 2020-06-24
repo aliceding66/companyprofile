@@ -256,7 +256,7 @@
  *  @since  1.0.0
  */
 
-    echo '<form action="" method="POST" enctype="multipart/form-data" enctype="multipart/form-data">';
+    echo '<form action="" method="POST" onsubmit="setFormSubmitting()" enctype="multipart/form-data" enctype="multipart/form-data">';
     echo '<input id="createcpid" name="createcpid" type="hidden" value="1">';
     echo '<table>';
     echo '<tr><td><label for="cpname">Manufacturer Name: </label></td>';

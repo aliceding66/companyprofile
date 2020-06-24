@@ -25,7 +25,7 @@
                 $writefoldername  = $_SERVER['DOCUMENT_ROOT']."/brands/".$company_name;
                 $writefilename    = $writefoldername."/index.php";
 
-                if (file_exists($writefoldername)) {	
+                if (file_exists($writefoldername)) {    
                     unlink($writefilename);
                     rmdir($writefoldername);
                 }
@@ -39,17 +39,28 @@
         $cp_result              = $conn->query($cp_sql_delete_details);
         
     }
-    
+
+
+    if(isset($_GET['loc'])){
+        // var_dump($_GET['loc']);
+        $addedregion = " ORDER BY region";
+        $pregion = '&loc=1';
+      }
+      else {
+          $addedregion = "";
+        $pregion = '';
+      }
+ 
     if($_POST && isset($_POST['psearch'])){
-        $cp_sql = "SELECT * FROM ".$tablename." WHERE name LIKE '%".$search_string."%'";
+        $cp_sql = "SELECT * FROM ".$tablename." WHERE name LIKE '%".$search_string."%'".$addedregion;
     }
     elseif (isset($_GET['psearch'])){
-        $cp_sql = "SELECT * FROM ".$tablename." WHERE name LIKE '%".$search_string."%'";
+        $cp_sql = "SELECT * FROM ".$tablename." WHERE name LIKE '%".$search_string."%'".$addedregion;
     }
     else{
-        $cp_sql = "SELECT * FROM ".$tablename;
-    }
-
+        $cp_sql = "SELECT * FROM ".$tablename.$addedregion;
+     }
+   
     $cp_result     = $conn->query($cp_sql);
     $page_numbers  = $cp_result->num_rows;
     $pnumber       = 250;
@@ -74,23 +85,23 @@
             $pp = intval($y/$pnumber + 1);
             if ($pp == $current_page){
                 if($_POST && isset($_POST['psearch'])){
-                    echo '<a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&psearch='.$_POST['psearch'].'&pnumber='.$pp.'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
+                    echo '<a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&psearch='.$_POST['psearch'].'&pnumber='.$pp.$pregion .'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
                 }
                 elseif (isset($_GET['psearch'])){
-                    echo '<a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&psearch='.$_GET['psearch'].'&pnumber='.$pp.'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
+                    echo '<a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&psearch='.$_GET['psearch'].'&pnumber='.$pp.$pregion .'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
                 }
                 else{
-                    echo '<a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&pnumber='.$pp.'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
+                    echo '<a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&pnumber='.$pp.$pregion .'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
                 }
             }else {
                     if($_POST && isset($_POST['psearch'])){
-                    echo '<a style="color:black;" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&psearch='.$_POST['psearch'].'&pnumber='.$pp.'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
+                    echo '<a style="color:black;" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&psearch='.$_POST['psearch'].'&pnumber='.$pp.$pregion .'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
                     }
                     elseif (isset($_GET['psearch'])){
-                        echo '<a style="color:black;" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&psearch='.$_GET['psearch'].'&pnumber='.$pp.'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
+                        echo '<a style="color:black;" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&psearch='.$_GET['psearch'].'&pnumber='.$pp.$pregion .'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
                     }
                     else {
-                        echo '<a style="color:black;" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&pnumber='.$pp.'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
+                        echo '<a style="color:black;" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&pnumber='.$pp.$pregion .'"><span>'.strval(intval($y/$pnumber + 1)).'</span></a>&nbsp;';
                     } 
                 }
         }
@@ -98,7 +109,7 @@
     
     if ($cp_result->num_rows > 0) {
         
-        echo "<table><tr><td>Manufacturer Name</td><td>Location</td><td></td><td></td></tr>";
+        echo '<table><tr><td>Manufacturer Name</td><td><a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&loc=1">Location</a></td><td></td><td></td></tr>';
             
             while($cp_row = $cp_result->fetch_assoc()) {
                 if ((intval(($pcount-1)/$pnumber)+1) == $current_page){
@@ -121,10 +132,10 @@
             for ($x = 0; $x < $page_numbers; $x+=$pnumber) {
                 $p = intval($x/$pnumber + 1);
                 if ($p == $current_page){
-                    echo '<a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&pnumber='.$p.'"><span>'.strval(intval($x/$pnumber + 1)).'</span></a>&nbsp;';
+                    echo '<a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&pnumber='.$p.$pregion.'"><span>'.strval(intval($x/$pnumber + 1)).'</span></a>&nbsp;';
                 } 
                 else {
-                    echo '<a style="color:black;" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&pnumber='.$p.'"><span>'.strval(intval($x/$pnumber + 1)).'</span></a>&nbsp;';
+                    echo '<a style="color:black;" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage&pnumber='.$p.$pregion.'"><span>'.strval(intval($x/$pnumber + 1)).'</span></a>&nbsp;';
                 }     
             }
         echo '</div>';

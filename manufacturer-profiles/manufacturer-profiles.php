@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Manufacturer Profiles
+Plugin Name: Manufacturer Profiles -New
 Description:  This plugin is for editing products on Manufacturer Profiles
 Author: Alice Ding
 Version: 1.0.0
@@ -21,8 +21,57 @@ if ( ! defined( 'WPINC' ) ) {
 */
 define( 'MFP_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
+/**
+* Plugin activation
+* MFP_PLUGIN_PATH
+* @since  1.0.0
+*
+*/
+register_activation_hook( __FILE__, 'mfp_add_role' );
+
 
 function has_files_to_upload( $id ) {	return ( ! empty( $_FILES ) ) && isset( $_FILES[ $id ] );	}
+
+/**
+ *  add role
+ * 
+ *  @since  1.0.0
+ */
+
+ function mfp_add_role(){
+    $wp_roles = new WP_Roles();
+    $wp_roles->remove_role("mf_editor");
+    $wp_roles->remove_role("manufacture_editor");
+   
+    
+    add_role('mfp_editor', __(
+        'Manufacturer Editor','mfp'),
+        array(
+                'read'            => true, // Allows a user to read
+				'create_posts'      => false, // Allows user to create new posts
+				'edit_posts'        => false, // Allows user to edit their own posts
+				'edit_others_posts' => false, // Allows user to edit others posts too
+				'publish_posts' => false, // Allows the user to publish posts
+				'manage_categories' => false, // Allows user to manage post categories
+
+            )
+     );
+ }
+
+/**
+ *  Manufacturer Profile enqueue scripts
+ * 
+ *  @since  1.0.0
+ */
+function enqueue_scripts($hook) { 
+    if(isset($_GET["page"])) {
+        if($_GET["page"] == "cpcustomsubpage" || $_GET["page"] == "cpcreatepage") {
+    wp_enqueue_script( 'my_custom_script', plugin_dir_url( __FILE__ ) . 'js/custom_js.js', array('jquery') );
+        }
+    }
+}
+add_action('admin_enqueue_scripts', 'enqueue_scripts');
+
 
 /**
 * Register Admin Menu
@@ -93,6 +142,7 @@ function create_cp_page(){
  */
 function update_cp_page(){
    require_once '../wp-load.php'; 
+   require_once MFP_PLUGIN_PATH . 'includes/custom_code.php';
    require_once MFP_PLUGIN_PATH . 'includes/edit_cp_page.php';
 }
 

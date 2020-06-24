@@ -1,5 +1,5 @@
 <?php
-
+     
     // Create connection
     $conn  = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
@@ -12,6 +12,7 @@
 	
 	if($_POST && isset($_POST['updatecpid'])){
 		if (isset($_GET['company_id'])){	
+			
 			$cp_sql_news    = "SELECT * FROM ".$tablename_news." WHERE company_id = ".$cp_id;
 			$cp_result_news = $conn->query($cp_sql_news);
 
@@ -82,6 +83,7 @@
 				$new_cp_facebook          = $_POST['cpfacebook'];
 				$new_cp_linkedin          = $_POST['cplinkedin'];
 				$new_cp_twitter           = $_POST['cptwitter'];
+				$new_cp_youtube           = $_POST['cpyoutube'];
 				$new_cp_about             = str_replace('\"','',$_POST['cpabout']); 
 				$new_cp_staffno           = intval($_POST['cpstaff_no']);
 				$new_cp_crystalline       = $_POST['cpcrystalline'];
@@ -90,6 +92,7 @@
 				$new_cp_high_eff          = $_POST['cphigh_eff'];
 				$new_cp_hecprl            = $_POST['cphecprl'];
 				$new_cp_hecprh            = $_POST['cphecprh'];
+				$new_cp_business_status   = $_POST['cpbusiness_status'];
 				
 				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."' WHERE company_id=".$cp_id;
 				$cp_result_details_update = $conn->query($cp_sql_details_update);
@@ -131,11 +134,13 @@
 				$new_cp_facebook  = $_POST['cpfacebook'];
 				$new_cp_linkedin  = $_POST['cplinkedin'];
 				$new_cp_twitter   = $_POST['cptwitter'];
+				$new_cp_youtube   = $_POST['cpyoutube'];
+				$new_cp_business_status = $_POST['cpbusiness_status'];
 				$new_cp_about     = str_replace('\"','',$_POST['cpabout']); 
             }
             
 			$old_product_no   = $_POST['cpoldname'];
-			$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."',address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."', company_image='".$file["url"]."', about='".$new_cp_about."' WHERE company_id=".$cp_id;
+			$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."',address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."' WHERE company_id=".$cp_id;
 			$cp_result_update = $conn->query($cp_sql_update);
 				
 			if ($cp_result_update){
@@ -269,6 +274,9 @@
 				if ($new_cp_twitter == ""){
 					$new_cp_twitter = "Unknown";
 				}
+				if ($new_cp_youtube == ""){
+					$new_cp_youtube = "Unknown";
+				}
 				if ($new_cp_about == ""){
 					$new_cp_about = "Unknown";
 				}
@@ -313,8 +321,19 @@
 				if ($new_cp_hecprh == "0"){
 					$new_cp_hecprh = "Unknown";
 				}
+				if ($new_cp_business_status == ""){
+					$new_cp_business_status = "Unknown";
+				}
 					
-					
+				if ($new_cp_business_status == "Closed permanently"){
+					$updatecontent = $updatecontent.'<section class="d-70" >';
+					$updatecontent = $updatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 7px solid #fff;'><h2 style='color: #a94442;'><i class='fa fa-exclamation-circle' style='font-size:27px;color:red'></i> Removed Listing</h2>";
+					$updatecontent = $updatecontent.'<p style="color: #a94442;">There are a number of possible reasons it was removed, including:<br>- The company do not produre solar equipments any more.<br>- The company is permanently closed.</p>';
+					$updatecontent = $updatecontent.'<p style="color: #a94442;">Sometimes a company is removed by mistake. For example if our researchers find the previous website is no longer accessible and no-one responds to their emails, they may assume the company has closed and remove it from the directory. If you are the owner of a removed company and you feel SolarFeeds made a mistake, please contact the industry directory manager at: <b>info@solarfeeds.com</b></p>';
+					$updatecontent = $updatecontent.'</div><br>';
+				}
+
+				$updatecontent = $updatecontent."</section>";
 				$updatecontent = $updatecontent.'<section class="d-70">';
 				$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$new_cp_name.' | Product Reviews</h1>';
 				$updatecontent = $updatecontent."Factory Location: ".$new_cp_region."      ";
@@ -329,9 +348,25 @@
 				$updatecontent = $updatecontent.'<aside class="d-30">';
 				$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="https://solarfeeds.com/list-your-business/ "><img src="https://shop.solarfeeds.com/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
 				$updatecontent = $updatecontent.'<div class="whiteblock"><img src="'.$file["url"].'">';
-				$updatecontent = $updatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div>'.'<div><a href="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a> '.$new_cp_facebook.'</div>'.'<div><a href="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a> '.$new_cp_linkedin.'</div>'.'<div><a href="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a> '.$new_cp_twitter.'</div></div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
+				$updatecontent = $updatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div>';
+				if($new_cp_facebook != 'Unknown'){
+					$updatecontent = $updatecontent.'<span ><a target = "_blank" href="'.$new_cp_facebook.'" title="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a></span>';
+				}
+				if($new_cp_linkedin != 'Unknown'){
+					$updatecontent = $updatecontent.'<span style="padding-left:7px"> <a target = "_blank" href="'.$new_cp_linkedin.'" title="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a></span>';
+				}
+				if($new_cp_twitter != 'Unknown'){
+					$updatecontent = $updatecontent.'<span style="padding-left:7px"><a target = "_blank" href="'.$new_cp_twitter.'" title="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a></span>';
+				}
+				if($new_cp_youtube != 'Unknown'){
+					$updatecontent = $updatecontent.'<span style="padding-left:7px"><a target = "_blank" href="'.$new_cp_youtube.'" title="'.$new_cp_youtube.'"><i class="fa fa-youtube" aria-hidden="true"></i></a></span>';
+				}
+				$updatecontent = $updatecontent."</div>";
+				$updatecontent = $updatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';;
 				$updatecontent = $updatecontent."</div>";
 				$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
+
+				$updatecontent = $updatecontent.'<div class="whiteblock"><br><h2> Related Profiles</h2> <br><br></div><br>';
 				$updatecontent = $updatecontent. "</aside>";
 	
 				$updatecontent = $updatecontent."<?php get_footer(); ?>";
@@ -366,10 +401,13 @@
 	
 	$cp_sql_detail     = "SELECT * FROM ".$tablename_details." WHERE company_id=".$cp_id;
     $cp_result_detail  = $conn->query($cp_sql_detail);
+
+	
 	
 	if ($cp_result_detail->num_rows > 0) {
    
         while($row_detail = $cp_result_detail->fetch_assoc()) {
+
 			$update_cp_staffno      = intval($row_detail['staff_no']);
 			$update_cp_crystalline  = $row_detail['crystalline'];
 			$update_cp_cproduction  = $row_detail['c_production'];
@@ -390,9 +428,15 @@
 		}
 	}
 	
+	
+
     if ($cp_result->num_rows > 0) {
    
         while($row = $cp_result->fetch_assoc()) {
+		
+			//$cc = get_10_related_lists($row["region"],$update_cp_comptype,$update_cp_crystalline);
+			//print_r($cc);
+			
 			echo '<style>
 			.mfp-editbox {
 				display: flex;
@@ -429,11 +473,12 @@
 			</style>
 			';
 
+
 			echo '<br>';
 			echo '<div style="font-size:18px;">Company '.$row["name"].' Page</div>';
 			echo '<br>';
 	
-			echo '<form action="" method="POST" enctype="multipart/form-data">';
+			echo '<form action="" method="POST" onsubmit="setFormSubmitting()" enctype="multipart/form-data">';
 			echo '<div class="mfp-editbox">';
 			echo '<div class="mfp-edit-left">';
 			echo '<input id="updatecpid" name="updatecpid" type="hidden" value="1">';
@@ -470,7 +515,11 @@
             echo '<td><input type="text" id="cplinkedin" name="cplinkedin" value="'. $row["linkedin"].'"></td></tr>';
             
 			echo '<tr><td><label for="cptwitter">Twitter: </label></td>';
-            echo '<td><input type="text" id="cptwitter" name="cptwitter" value="'. $row["twitter"].'"></td></tr>';
+			echo '<td><input type="text" id="cptwitter" name="cptwitter" value="'. $row["twitter"].'"></td></tr>';
+			
+			echo '<tr><td><label for="cpyoutube">YouTube: </label></td>';
+			echo '<td><input type="text" id="cpyoutube" name="cpyoutube" value="'. $row["youtube"].'"></td></tr>';
+			
             echo '</table>';
 			echo '<label for="cpabout"><h2>About: </h2></label>';
 			$content   = $row["about"];
@@ -517,6 +566,7 @@
 					'<div id="cpreviewcontent\'+String(s)+\'" name="cpreviewcontent\'+String(s)+\'"></div>'.
 					'<br><br><button type="button" onclick="deletereviews(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
 					document.getElementsByClassName("accordion");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
+					
 				 </script>';
 
 			echo '<script>function deletereviews(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
@@ -539,7 +589,7 @@
 			
 			echo '</span>';
 
-			
+			echo '<script>var acco = document.getElementsByClassName("accordion");var j;for (j = 0; j < acco.length; j++) {acco[j].addEventListener("click", function() {this.classList.toggle("active");var panelo = this.nextElementSibling;if (panelo.style.maxHeight) {panelo.style.maxHeight = null;} else {panelo.style.maxHeight = panelo.scrollHeight + "px";} });}</script>';
 			$cp_sql_news    = "SELECT * FROM ".$tablename_news." WHERE company_id=".$cp_id;
     		$cp_result_news = $conn->query($cp_sql_news);
 			$i = 0;
@@ -653,7 +703,7 @@
 				}else{
 						
 					echo '<input type="text" class="process_custom_images example-jpg-file" id="example-jpg-file" name="example-jpg-file" value=""><button class="set_custom_logo button" style="vertical-align: middle;">Update Manufacturer Logo</button>';
-					echo '<br><br>('.'<label for="cimage">Current Image: </label>'.'  <input type="text" id="cimage" name="cimage" value="'.$row["company_image"].'" size="" readonly> ) <br><br><img src="'.$row["company_image"].'"> <br><br>';
+					echo '<br><br>('.'<label for="cimage">Current Image: </label>'.'  <input type="text" id="cimage" name="cimage" value="'.$row["company_image"].'" size="" readonly> ) <br><br><img src="'.$row["company_image"].'"> <br>';
 		
 					echo "<script>jQuery(document).ready(function() {
 									var $ = jQuery;
@@ -674,6 +724,18 @@
 								});
 							</script>";
 					}
+
+			echo '<label for="cplastedit">Last Edit Date: </label>';
+			echo '<input type="text" id="cplastedit" name="cplastedit" value="'. $row["last_edit"].'"><br><br>';		
+			
+		    echo "Business status : "; 
+			echo '<select name="cpbusiness_status">'; ?>
+			<option value="">Select</option>
+			<option value="Closed permanently" <?php if($row["status"] == "Closed permanently"){echo $select_attribute = 'selected'; } ?> >Closed permanently</option>;
+			<option value="Active" <?php if($row["status"] == "Active"){echo $select_attribute = 'selected'; } ?>>Active</option> 
+			<option value="Acquired" <?php if($row["status"] == "Acquired"){echo $select_attribute = 'selected'; } ?>>Acquired</option> 
+
+			<?php echo '</select><br><br>';
 					
 			echo '&nbsp;<a href="https://shop.solarfeeds.com/brands/'.$row["name"].'" target=”_blank”>View Page</a></td>';
 			echo '&nbsp;<input type="submit" value="Submit">';
