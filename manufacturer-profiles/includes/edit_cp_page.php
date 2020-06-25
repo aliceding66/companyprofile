@@ -339,13 +339,12 @@
 					
 				if ($new_cp_business_status == "Closed permanently"){
 					$updatecontent = $updatecontent.'<section class="d-70" >';
-					$updatecontent = $updatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 7px solid #fff;'><h2 style='color: #a94442;'><i class='fa fa-exclamation-circle' style='font-size:27px;color:red'></i> Removed Listing</h2>";
-					$updatecontent = $updatecontent.'<p style="color: #a94442;">There are a number of possible reasons it was removed, including:<br>- The company do not produre solar equipments any more.<br>- The company is permanently closed.</p>';
-					$updatecontent = $updatecontent.'<p style="color: #a94442;">Sometimes a company is removed by mistake. For example if our researchers find the previous website is no longer accessible and no-one responds to their emails, they may assume the company has closed and remove it from the directory. If you are the owner of a removed company and you feel SolarFeeds made a mistake, please contact the industry directory manager at: <b>info@solarfeeds.com</b></p>';
+					$updatecontent = $updatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 3px 30px !important;'><h2 style='color: #a94442; line-height: 0.1;'><i class='fa fa-exclamation-circle' style='font-size:27px;color:red'></i> Removed Listing</h2>";
+					$updatecontent = $updatecontent.'<span style="color: #a94442;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
+					$updatecontent = $updatecontent.'<span style="color: #a94442;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@solarfeeds.com</b></span>';
 					$updatecontent = $updatecontent.'</div><br>';
-				}
-
-				$updatecontent = $updatecontent."</section>";
+                    $updatecontent = $updatecontent."</section>";
+			     } 
 				$updatecontent = $updatecontent.'<section class="d-70">';
 				$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$new_cp_name.' | Product Reviews</h1>';
 				$updatecontent = $updatecontent."Factory Location: ".$new_cp_region."      ";
@@ -374,14 +373,17 @@
 					$updatecontent = $updatecontent.'<span style="padding-left:7px"><a target = "_blank" href="'.$new_cp_youtube.'" title="'.$new_cp_youtube.'"><i class="fa fa-youtube" aria-hidden="true"></i></a></span>';
 				}
 				$updatecontent = $updatecontent."</div>";
-				$updatecontent = $updatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';;
+				$updatecontent = $updatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
 				$updatecontent = $updatecontent."</div>";
 				$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
 
 				$updatecontent = $updatecontent.'<div class="whiteblock"><br><h2> Related Profiles</h2>';
 				if(count($related_profiles)> 0){
 					foreach($related_profiles as $related){
-					$updatecontent = $updatecontent.'<a href="https://shop.solarfeeds.com/brands/'.$related["name"].'">'.$related["name"].'</a></br>';
+					$c_url = str_replace(",","",$related["name"]);
+					$c_url = str_replace(".","",$c_url);
+					$c_url = str_replace(' ', '-', $c_url);
+					$updatecontent = $updatecontent.'<a href="https://shop.solarfeeds.com/brands/'.$c_url.'">'.$related["name"].'</a></br>';
 					}
 				}
 				$updatecontent = $updatecontent.'<br><br></div><br>';
@@ -524,16 +526,16 @@
             echo '<td><input type="text" id="cpregion" name="cpregion" value="'. $row["region"].'"></td></tr>';
             
 			echo '<tr><td><label for="cpfacebook">Facebook: </label></td>';
-            echo '<td><input type="text" id="cpfacebook" name="cpfacebook" value="'. $row["facebook"].'"></td></tr>';
+            echo '<td><input type="text" id="cpfacebook" name="cpfacebook" placeholder="https://www.facebook.com" value="'. $row["facebook"].'"></td></tr>';
             
 			echo '<tr><td><label for="cplinkedin">Linkedin: </label></td>';
-            echo '<td><input type="text" id="cplinkedin" name="cplinkedin" value="'. $row["linkedin"].'"></td></tr>';
+            echo '<td><input type="text" id="cplinkedin" name="cplinkedin" placeholder="https://www.linkedin.com" value="'. $row["linkedin"].'"></td></tr>';
             
 			echo '<tr><td><label for="cptwitter">Twitter: </label></td>';
-			echo '<td><input type="text" id="cptwitter" name="cptwitter" value="'. $row["twitter"].'"></td></tr>';
+			echo '<td><input type="text" id="cptwitter" name="cptwitter" placeholder="https://twitter.com"  value="'. $row["twitter"].'"></td></tr>';
 			
 			echo '<tr><td><label for="cpyoutube">YouTube: </label></td>';
-			echo '<td><input type="text" id="cpyoutube" name="cpyoutube" value="'. $row["youtube"].'"></td></tr>';
+			echo '<td><input type="text" id="cpyoutube" name="cpyoutube" placeholder="https://www.youtube.com"  value="'. $row["youtube"].'"></td></tr>';
 			
             echo '</table>';
 			echo '<label for="cpabout"><h2>About: </h2></label>';
