@@ -1,5 +1,6 @@
 <?php 
-ini_set('max_execution_time', 500);
+ //ini_set('max_execution_time', 500);
+ //set_time_limit(500);
  require '../wp-load.php'; // Display WP database credentials 
  /*********functions */
  require_once 'functions.php';
@@ -18,17 +19,21 @@ ini_set('max_execution_time', 500);
 	
     $cp_id = $_GET['company_id'];
 		
-		//fetch company data
-	
-    $sql = "SELECT * FROM ".$tablename;
+	//fetch company data
+	$offset = 0;
+while (true) {
+	if ($offset == 0) {
+        $sql    = "SELECT * FROM company_profile_short LIMIT 10";
+    } else {
+		$sql    = "SELECT * FROM company_profile_short LIMIT 10 OFFSET ".$offset;
+    }
     $result = $conn->query($sql);
 
-		
-
 	if ($result->num_rows > 0) {
-		while($cp_row = $result->fetch_assoc()) {
+		while($cp_row = $result->fetch_assoc()) {	
+				
 			$new_cp_id               = $cp_row['company_id'];
-			$new_cp_name             = $cp_row['name'];
+		    $new_cp_name             = $cp_row['name'];
 			$new_cp_address          = $cp_row['address'];
 			$new_cp_phone            = $cp_row['phone'];
 			$new_cp_image            = $cp_row['company_image'];
@@ -69,14 +74,16 @@ ini_set('max_execution_time', 500);
 						
 					}
 				} 
-
-        //$related_profiles = realted_manufacturer($new_cp_region, $new_cp_comtype, $new_cp_crystalline,$new_cp_id); 
-
-
+				
+		$related_profiles = realted_manufacturer($new_cp_region, $new_cp_comtype, $new_cp_crystalline,$new_cp_id); 
+		//print_r($related_profiles);
+		// $x =  $offset." Profiles get generated";
+		print_r($x);
+	
 			//fetch News	
 	
 			$file["url"]="https://shop.solarfeeds.com/brands/".$new_cp_image;
-			var_dump($file["url"]);
+			//var_dump($file["url"]);
 			//var_dump($_POST['cimage']);
 			//var_dump($sql_check);
 				//
@@ -287,23 +294,19 @@ ini_set('max_execution_time', 500);
 			if ($new_cp_business_status == ""){
 					$new_cp_business_status = "Unknown";
 			}
-
-					
-			if ($new_cp_business_status == "Closed permanently"){
-				$updatecontent = $updatecontent.'<section class="d-70" >';
-				$updatecontent = $updatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 3px 30px !important;'><h2 style='color: #a94442; line-height: 0.1;'><i class='fa fa-exclamation-circle' style='font-size:27px;color:red'></i> Removed Listing</h2>";
-				$updatecontent = $updatecontent.'<span style="color: #a94442;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
-				$updatecontent = $updatecontent.'<span style="color: #a94442;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@solarfeeds.com</b></span>';
-				$updatecontent = $updatecontent.'</div><br>';
-                $updatecontent = $updatecontent."</section>";
-			} 	
 					
 			$updatecontent = $updatecontent.'<section class="d-70">';
 			$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$new_cp_name.' | Product Reviews</h1>';
 			$updatecontent = $updatecontent."Factory Location: ".$new_cp_region."      ";
 			$updatecontent = $updatecontent.' | <a href="#userreviews">'.$result_reviews->num_rows.' Reviews</a> | <a href="#archivenews">'.$result_news->num_rows.' News</a><br></div>';
 			$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0">';
-						
+			if ($new_cp_business_status == "Closed permanently"){
+				$updatecontent = $updatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 0px 30px 12px 30px !important;'><h4 style='color: #a94442; line-height: 0.1; font-size: 14px;'><i class='fa fa-exclamation-circle' style='font-size:16px;color:red'></i> Removed Listing</h4>";
+				$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442; font-size: 12px;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
+				$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@solarfeeds.com</b></span>';
+				$updatecontent = $updatecontent.'</div>';
+			} 			
+			$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0">';
 			$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$new_cp_name.": </h2>".$new_cp_about."</div><br>";
 			$updatecontent = '<br>'.$updatecontent.$x_write.'<br>';
 			$updatecontent = $updatecontent.$xx_write."<br>";
@@ -383,19 +386,22 @@ ini_set('max_execution_time', 500);
 			$updatecontent = $updatecontent."</div>";
 			
 			$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://solarfeeds.com/claim-your-mnfctr-page/">Claim Now!</a> <br><br></div><br>';
-		  /*
+			
+			if(count($related_profiles)> 0){
 			$updatecontent = $updatecontent.'<div class="whiteblock"><h2> Related Profiles</h2>';
-			 if(count($related_profiles)> 0){
 				foreach($related_profiles as $related){
-				  $updatecontent = $updatecontent.'<a href="https://shop.solarfeeds.com/brands/'.$related["name"].'">'.$related["name"].'</a></br>';
+					$id    = $related["ID"];
+					$c_url = str_replace(",","",$related["name"]);
+					$c_url = str_replace(".","",$c_url);
+					$c_url = str_replace(' ', '-', $c_url);
+					$x[$id]   = $c_url;
+				  $updatecontent = $updatecontent.'<a href="https://shop.solarfeeds.com/brands/'.$c_url.'">'.$related["name"].'</a></br>';
 					 }
-				}
-			$updatecontent = $updatecontent.'<br><br></div><br>';
-			*/
-
-			$updatecontent = $updatecontent. "</aside>";
 				
-					
+			$updatecontent = $updatecontent.'<br><br></div><br>';
+		    }   
+
+			$updatecontent = $updatecontent. "</aside>";	
 					
 			$updatecontent = $updatecontent."<?php get_footer(); ?>";
 					//var_dump($updatecontent);
@@ -416,9 +422,16 @@ ini_set('max_execution_time', 500);
 					//var_dump($writefilename);
 			$writefile = file_put_contents($writefilename,$updatecontent);
 					//var_dump($writefile);
+
 		}
 	}
-		
+	
+	$offset += 10;
+	if($offset >= 4122){
+	break;
+	}
+}
+
     $conn->close();
 
 //}
