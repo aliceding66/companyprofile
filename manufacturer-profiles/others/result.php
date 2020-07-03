@@ -1,4 +1,3 @@
-xt
 <?php 
 
 require_once('/srv/htdocs/wp-load.php'); 
