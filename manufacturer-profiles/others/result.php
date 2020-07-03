@@ -1,4 +1,4 @@
-
+xt
 <?php 
 
 require_once('/srv/htdocs/wp-load.php'); 
@@ -510,7 +510,7 @@ else{
 						//var_dump($pcount);
 						$name_new =  str_replace(" ","-",$cp_row["name"]);
 						$name_new =  str_replace(".","",$name_new);
-						
+						$name_new =  str_replace(",","",$name_new);
 						?>
 						<div class="whiteblock">
 							<div class="listcontent" style="min-height: 120px;">
