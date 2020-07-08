@@ -34,6 +34,11 @@ while (true) {
 				
 			$new_cp_id               = $cp_row['company_id'];
 		    $new_cp_name             = $cp_row['name'];
+		    $new_cp_asname      	 = $cp_row['as_name'];
+		    $new_cp_parent      	 = $cp_row['parent_company'];
+		    $new_cp_founded      	 = $cp_row['founded'];
+			$new_cp_founder     	 = $cp_row['founder'];
+			$new_cp_ceo     		 = $cp_row['ceo'];
 			$new_cp_address          = $cp_row['address'];
 			$new_cp_phone            = $cp_row['phone'];
 			$new_cp_image            = $cp_row['company_image'];
@@ -46,10 +51,11 @@ while (true) {
 			$new_cp_youtube          = $cp_row['youtube']; 
 			$new_cp_about            = $cp_row['about'];
 			$new_cp_business_status  = $cp_row['status'];
-			
+			$new_cp_trading_cap   	 = $cp_row['trading_capacity'];
+			$new_cp_respond   	 	 = $cp_row['respond'];
+			$new_cp_slogan    		 = $cp_row['slogan'];
+			$new_cp_vision    		 = $cp_row['vision'];
 
-
-			
 			//var_dump($new_cp_name);
 			//var_dump($new_cp_address);
 			//var_dump($new_cp_phone);
@@ -64,6 +70,7 @@ while (true) {
 				if ($result_detail->num_rows > 0) {	
 					while ($cp_row_detail= $result_detail->fetch_assoc()){
 						$new_cp_staffno     = $cp_row_detail['cpstaff_no'];
+						$new_cp_businesstype = intval($row_detail['business_type']);
 						$new_cp_crystalline = $cp_row_detail['cpcrystalline'];
 						$new_cp_cprl        = $cp_row_detail['cpcprl'];
 						$new_cp_cprh        = $cp_row_detail['cpcprh'];
@@ -222,6 +229,13 @@ while (true) {
   color: #000;
   text-shadow: 0 0 5px #09f;
 }
+
+.relatedprofiles a{
+	font-size: 14px !important;
+}
+
+.page-breadcrumbs{display:none !important;}
+
 #mfp-topbar {
 	position: fixed;
 	top: 0;
@@ -299,14 +313,14 @@ while (true) {
 			$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$new_cp_name.' | Product Reviews</h1>';
 			$updatecontent = $updatecontent."Factory Location: ".$new_cp_region."      ";
 			$updatecontent = $updatecontent.' | <a href="#userreviews">'.$result_reviews->num_rows.' Reviews</a> | <a href="#archivenews">'.$result_news->num_rows.' News</a><br></div>';
-			$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0">';
+			$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
 			if ($new_cp_business_status == "Closed permanently"){
 				$updatecontent = $updatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 0px 30px 12px 30px !important;'><h4 style='color: #a94442; line-height: 0.1; font-size: 14px;'><i class='fa fa-exclamation-circle' style='font-size:16px;color:red'></i> Removed Listing</h4>";
 				$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442; font-size: 12px;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
-				$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@solarfeeds.com</b></span>';
+				$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@shop.solarfeeds.com</b></span>';
 				$updatecontent = $updatecontent.'</div>';
 			} 			
-			$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0">';
+			$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
 			$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$new_cp_name.": </h2>".$new_cp_about."</div><br>";
 			$updatecontent = '<br>'.$updatecontent.$x_write.'<br>';
 			$updatecontent = $updatecontent.$xx_write."<br>";
@@ -362,7 +376,7 @@ while (true) {
 					
 			$updatecontent = $updatecontent.'<aside class="d-30">';
 
-			$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="https://solarfeeds.com/list-your-business/ "><img src="https://shop.solarfeeds.com/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
+			$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="https://shop.solarfeeds.com/list-your-business/ "><img src="https://shop.solarfeeds.com/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
 			$updatecontent = $updatecontent.'<div class="whiteblock"><img src="'.$new_cp_image.'">';
 					
 			//$updatecontent = $updatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div>'.'<div><a href="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a> '.$new_cp_facebook.'</div>'.'<div><a href="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a> '.$new_cp_linkedin.'</div>'.'<div><a href="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a> '.$new_cp_twitter.'</div></div><br>';
@@ -385,10 +399,10 @@ while (true) {
 			$updatecontent = $updatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
 			$updatecontent = $updatecontent."</div>";
 			
-			$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://solarfeeds.com/claim-your-mnfctr-page/">Claim Now!</a> <br><br></div><br>';
+			$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/">Claim Now!</a> <br><br></div><br>';
 			
 			if(count($related_profiles)> 0){
-			$updatecontent = $updatecontent.'<div class="whiteblock"><h2> Related Profiles</h2>';
+			$updatecontent = $updatecontent.'<div class="whiteblock relatedprofiles"><h2> Related Profiles</h2>';
 				foreach($related_profiles as $related){
 					$id    = $related["ID"];
 					$c_url = str_replace(",","",$related["name"]);

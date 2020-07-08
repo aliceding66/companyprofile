@@ -555,7 +555,7 @@ else{
 								</div>
 								<div class="d-30">
 									<br>
-									<a href="https://solarfeeds.com/contact/" class="btn_quote">Get a Quote</a>
+									<a href="https://shop.solarfeeds.com/contact/" class="btn_quote">Get a Quote</a>
 									<br><br>
 									<a href="https://shop.solarfeeds.com/brands/<?php echo $name_new; ?>" class="btn_quote" target=" _blank">Know More</a>
 								</div>

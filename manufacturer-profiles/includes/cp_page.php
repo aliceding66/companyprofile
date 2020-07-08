@@ -245,7 +245,7 @@
             if ($new_cp_business_status == "Closed permanently"){
 				$cpcreatecontent = $cpcreatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 0px 30px 12px 30px !important;'><h4 style='color: #a94442; line-height: 0.1; font-size: 14px;'><i class='fa fa-exclamation-circle' style='font-size:16px;color:red'></i> Removed Listing</h4>";
 				$cpcreatecontent = $cpcreatecontent.'<span style="color: #a94442; font-size: 12px;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442; font-size: 12px;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
-				$cpcreatecontent = $cpcreatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@solarfeeds.com</b></span>';
+				$cpcreatecontent = $cpcreatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@shop.solarfeeds.com</b></span>';
 				$cpcreatecontent = $cpcreatecontent.'</div>';
             }  
             $cpcreatecontent = $cpcreatecontent.'<hr style="width:50%;text-align:left;margin-left:0">';   

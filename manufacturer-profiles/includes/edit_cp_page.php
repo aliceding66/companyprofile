@@ -7,6 +7,9 @@
 	$tablename_details = "company_profile";
 	$tablename_reviews = "company_profile_reviews";
 	$tablename_news    = "company_profile_news";
+	$tablename_milestones    = "company_profile_milestones";
+	$tablename_projects    = "company_profile_projects";
+	$tablename_project_cat   = "company_profile_project_category";
 	
     $cp_id             = $_GET['company_id'];
 	
@@ -32,6 +35,30 @@
 			$related_profiles = realted_manufacturer($_POST['cpregion'], $_POST['cpcomtype'], $_POST['cpcrystalline'],$_GET['company_id']);
 			// print_r($related_profiles);
 			// exit(); 
+
+			
+
+			$xxx = 1;
+			$xxx_write = '<div class="whiteblock" id="milestones"><h2>Milestone for '.$_POST['cpname'].': </h2><div class="content">';
+			$is_milestones  = 0;
+
+			while(isset($_POST['cpmilestonesname'.$xxx]) && ($_POST['cpmilestonesname'.$xxx] != '') && ($_POST['cpmilestonesyear'.$xxx] != '')) {
+    			$cp_sql_milestones_update       = "INSERT INTO ".$tablename_milestones." (company_id, milestone_id, milestone_year,milestone_name, milestone_content	) VALUES (".$cp_id.", ".$xxx.",".$_POST['cpmilestonesyear'.$xxx].", '".$_POST['cpmilestonesname'.$xxx]."', '".$_POST['cpmilestonescontent'.$xxx]."');";
+				$cp_result_milestones_update = $conn->query($cp_sql_milestones_update);
+				
+				$xxx_write  = $xxx_write.'<div>';
+				$xxx_write  = $xxx_write.'<input type="checkbox" id="question'.$xxx.'" name="q" class="questions"><div class="plus">+</div><label for="question'.$xxx.'" class="question">'.$_POST['cpmilestonesyear'.$xxx].'</label>';
+				$xxx_write  = $xxx_write.'<div class="answers">'.$_POST['cpmilestonesname'.$xxx].'<br><br>'.str_replace('\"','',$_POST['cpmilestonescontent'.$xxx]).'</div>';
+				$xxx_write  = $xxx_write.'</div>';
+    			$xxx++;
+				$is_milestones = 1;
+            }
+            
+			if ($is_milestones == 1) {
+                $xxx_write = $xxx_write.'</div></div>';
+            }
+
+
 
 			$xx = 1;
 			$xx_write = '<div class="whiteblock" id="archivenews"><h2>Archive News for '.$_POST['cpname'].': </h2><div class="content">';
@@ -79,6 +106,10 @@
 			
 			if ($cp_result_details_check->num_rows > 0) {
 				$new_cp_name              = $_POST['cpname'];
+				$new_cp_asname     		  = $_POST['cpasname'];
+				$new_cp_founded     	  = $_POST['cpfounded'];
+				$new_cp_founder     	  = $_POST['cpfounder'];
+				$new_cp_ceo    	 		  = $_POST['cpceo'];
 				$new_cp_address           = $_POST['cpaddress'];
 				$new_cp_phone             = $_POST['cpphone'];
 				$new_cp_image             = basename($_FILES["fileToUpload"]["name"]);
@@ -89,8 +120,15 @@
 				$new_cp_linkedin          = $_POST['cplinkedin'];
 				$new_cp_twitter           = $_POST['cptwitter'];
 				$new_cp_youtube           = $_POST['cpyoutube'];
+				$new_cp_slogan  		  = $_POST['cpslogan'];
+				$new_cp_vision    		  = $_POST['cpvision'];
+
 				$new_cp_about             = str_replace('\"','',$_POST['cpabout']); 
+				$new_cp_trading_cap   	  = intval($_POST['cptrading_cap']);
+				$new_cp_respond   		  = floatval($_POST['cprespond']);
+
 				$new_cp_staffno           = intval($_POST['cpstaff_no']);
+				$new_businesstype		  = intval($_POST['cpbusiness_type']);
 				$new_cp_crystalline       = $_POST['cpcrystalline'];
 				$new_cp_cprl              = $_POST['cpcprl'];
 				$new_cp_cprh              = $_POST['cpcprh'];
@@ -101,7 +139,7 @@
 				$new_cp_comptype   		  = $_POST['cpcomtype'];
 				$new_cp_me                = $_POST['cpme'];
 				
-				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."', com_type='".$new_cp_comptype."', mounting_eq='".$new_cp_me."' WHERE company_id=".$cp_id;
+				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET business_type=".$new_businesstype.", staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."', com_type='".$new_cp_comptype."', mounting_eq='".$new_cp_me." WHERE company_id=".$cp_id;
 				$cp_result_details_update = $conn->query($cp_sql_details_update);
 
             }
@@ -132,6 +170,10 @@
 				
 			if ($cp_result_check->num_rows > 0) {
 				$new_cp_name      = $_POST['cpname'];
+				$new_cp_asname      = $_POST['cpasname'];
+				$new_cp_founded      = $_POST['cpfounded'];
+				$new_cp_founder     = $_POST['cpfounder'];
+				$new_cp_ceo     = $_POST['cpceo'];
 				$new_cp_image     = $file["url"];
 				$new_cp_address   = $_POST['cpaddress'];
 				$new_cp_phone     = $_POST['cpphone'];
@@ -142,9 +184,13 @@
 				$new_cp_linkedin  = $_POST['cplinkedin'];
 				$new_cp_twitter   = $_POST['cptwitter'];
 				$new_cp_youtube   = $_POST['cpyoutube'];
+				$new_cp_trading_cap   = intval($_POST['cptrading_cap']);
 				$new_cp_business_status = $_POST['cpbusiness_status'];
 				$new_cp_about     = str_replace('\"','',$_POST['cpabout']); 
 				$new_cp_cpcomtype	  = $_POST['cpcomtype'];
+				$new_cp_respond   	  = floatval($_POST['cprespond']);
+				$new_cp_slogan    = $_POST['cpslogan'];
+				$new_cp_vision    = $_POST['cpvision'];
 				
 			}
 
@@ -152,7 +198,7 @@
 			
             
 			$old_product_no   = $_POST['cpoldname'];
-			$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."',address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."' WHERE company_id=".$cp_id;
+			$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."',as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."' WHERE company_id=".$cp_id;
 			$cp_result_update = $conn->query($cp_sql_update);
 				
 			if ($cp_result_update){
@@ -249,7 +295,7 @@
 																
 																</style>';
 
-				$updatecontent = $updatecontent."<style>a{color: #4DB7FE !important;}.site-content{padding-top:30px !important;}.whiteblock{box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background: #fff;border-radius: 10px;z-index:-1;margin-right: 20px;padding: 15px 30px;border: 1px solid #e5e7f2;}body {background: #f6f6f6 !important;}.content {width: 100%;padding: 20px;padding: 0 60px 0 0;}.question {position: relative;background: lightgrey;padding: 10px 10px 10px 50px;display: block;width:100%;cursor: pointer;}.answers {padding: 0px 15px;margin: 5px 0;max-height: 0;overflow: hidden;z-index: 0;position: relative;opacity: 0;-webkit-transition: .7s ease;-moz-transition: .7s ease;-o-transition: .7s ease;transition: .7s ease;}.questions:checked ~ .answers{max-height: max-content;opacity: 1;padding: 15px;}.plus {position: absolute;margin-left: 10px;z-index: 5;font-size: 2em;line-height: 100%;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;-webkit-transition: .3s ease;-moz-transition: .3s ease;-o-transition: .3s ease;transition: .3s ease;}.questions:checked ~ .plus {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);transform:rotate(45deg);}.questions {display: none;}#rightmenu {position: fixed;right: 0;top: 5%;width: 12em;margin-top: -2.5em;}.d-70{width:70%;float:left;}.d-30{width:30%;float:right;}@media only screen and (max-width: 767px) {.d-70{width:100%;}.d-30{width:100%;}.nomargins{margin-top:0px !important;margin-bottom:0px !important;}</style>";
+				$updatecontent = $updatecontent."<style>.page-breadcrumbs{display:none !important;}.relatedprofiles a{font-size: 14px !important;} a{color: #4DB7FE !important;}.site-content{padding-top:30px !important;}.whiteblock{box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background: #fff;border-radius: 10px;z-index:-1;margin-right: 20px;padding: 15px 30px;border: 1px solid #e5e7f2;}body {background: #f6f6f6 !important;}.content {width: 100%;padding: 20px;padding: 0 60px 0 0;}.question {position: relative;background: lightgrey;padding: 10px 10px 10px 50px;display: block;width:100%;cursor: pointer;}.answers {padding: 0px 15px;margin: 5px 0;max-height: 0;overflow: hidden;z-index: 0;position: relative;opacity: 0;-webkit-transition: .7s ease;-moz-transition: .7s ease;-o-transition: .7s ease;transition: .7s ease;}.questions:checked ~ .answers{max-height: max-content;opacity: 1;padding: 15px;}.plus {position: absolute;margin-left: 10px;z-index: 5;font-size: 2em;line-height: 100%;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;-webkit-transition: .3s ease;-moz-transition: .3s ease;-o-transition: .3s ease;transition: .3s ease;}.questions:checked ~ .plus {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);transform:rotate(45deg);}.questions {display: none;}#rightmenu {position: fixed;right: 0;top: 5%;width: 12em;margin-top: -2.5em;}.d-70{width:70%;float:left;}.d-30{width:30%;float:right;}@media only screen and (max-width: 767px) {.d-70{width:100%;}.d-30{width:100%;}.nomargins{margin-top:0px !important;margin-bottom:0px !important;}</style>";
 				//top edit bar	
 				//if ( is_user_logged_in() ) {
 				$edit_url= get_site_url()."/wp-admin/admin.php?page=cpcustomsubpage&company_id=".$cp_id;
@@ -341,14 +387,14 @@
 				$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$new_cp_name.' | Product Reviews</h1>';
 				$updatecontent = $updatecontent."Factory Location: ".$new_cp_region."      ";
 				$updatecontent = $updatecontent.' | <a href="#userreviews">'.strval($x-1).' Reviews</a> | <a href="#archivenews">'.strval($xx-1)." News</a><br></div>";
-				$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0">';
+				$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
 				if ($new_cp_business_status == "Closed permanently"){
 					$updatecontent = $updatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 0px 30px 12px 30px !important;'><h4 style='color: #a94442; line-height: 0.1; font-size: 14px;'><i class='fa fa-exclamation-circle' style='font-size:16px;color:red'></i> Removed Listing</h4>";
 					$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442; font-size: 12px;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
-					$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@solarfeeds.com</b></span>';
+					$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@shop.solarfeeds.com</b></span>';
 					$updatecontent = $updatecontent.'</div>'; 
 				 } 
-				$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0">';
+				$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
 				$updatecontent = $updatecontent.$_POST['mycustomeditor'];
 				$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$new_cp_name.": </h2>".$new_cp_about."</div><br>";
 				$updatecontent = '<br>'.$updatecontent.$x_write.'<br>';
@@ -356,7 +402,7 @@
 				$updatecontent = $updatecontent."</section>";
 					
 				$updatecontent = $updatecontent.'<aside class="d-30">';
-				$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="https://solarfeeds.com/list-your-business/ "><img src="https://shop.solarfeeds.com/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
+				$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="https://shop.solarfeeds.com/list-your-business/ "><img src="https://shop.solarfeeds.com/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
 				$updatecontent = $updatecontent.'<div class="whiteblock"><img src="'.$file["url"].'">';
 				$updatecontent = $updatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div>';
 				if($new_cp_facebook != 'Unknown'){
@@ -377,7 +423,7 @@
 				$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
 				
 				if(count($related_profiles)> 0){
-				$updatecontent = $updatecontent.'<div class="whiteblock"><br><h2> Related Profiles</h2>';
+				$updatecontent = $updatecontent.'<div class="whiteblock relatedprofiles"><br><h2> Related Profiles</h2>';
 					foreach($related_profiles as $related){
 					$c_url = str_replace(",","",$related["name"]);
 					$c_url = str_replace(".","",$c_url);
@@ -429,6 +475,7 @@
         while($row_detail = $cp_result_detail->fetch_assoc()) {
 
 			$update_cp_staffno      = intval($row_detail['staff_no']);
+			$update_cp_businesstype = intval($row_detail['business_type']);
 			$update_cp_crystalline  = $row_detail['crystalline'];
 			$update_cp_cproduction  = $row_detail['c_production'];
 			$update_cp_cprl         = $row_detail['cprl'];
@@ -502,9 +549,30 @@
     		echo '<input type="hidden" id="cpoldname" name="cpoldname" value="'. $row["name"].'">';
 			echo '<label for="cpname">Manufacturer Name: </label>';
     		echo '<input type="text" id="cpname" name="cpname" value="'. $row["name"].'"> <br><br>';
+
+    		echo '<label for="cpasname">Do Business As: </label>';
+            echo '<input type="text" id="cpasname" name="cpasname" value="'. $row["as_name"].'"><br><br>';
+
 			echo '<label for="cpname">Parent Manufacturer Name: </label>';
     		echo '<input type="text" id="cpparentname" name="cpparentname" value="'. $row["parent_company"].'"> <br><br>';
 			
+
+			echo '<label for="cpfounded">Founded: </label></td>';
+            echo '<input type="text" id="cpfounded" name="cpfounded" value="'. $row["founded"].'"><br><br>';
+
+            echo '<label for="cpfounder">Founder(s): </label></td>';
+            echo '<input type="text" id="cpfounder" name="cpfounder" value="'. $row["founder"].'"><br><br>';
+
+            echo '<label for="cpceo">CEO: </label></td>';
+            echo '<input type="text" id="cpceo" name="cpceo" value="'. $row["ceo"].'"><br><br>';
+
+            echo '<label for="cpslogan">Slogan: </label></td>';
+            echo '<textarea id="cpslogan" name="cpslogan" rows="1" cols="80">'.$row["slogan"].'</textarea><br><br>';
+
+            echo '<label for="cpvision">Vision/Mission Statement: </label></td>';
+            echo '<textarea id="cpvision" name="cpvision" rows="4" cols=80">'.$row["vision"].'</textarea><br><br>';
+
+
             /** Manufacturer Profile update_Table1 */
 			echo '<table>';
 			echo '<tr><td><label for="cpname">Manufacturing: </label></td>';
@@ -536,7 +604,11 @@
 			
 			echo '<tr><td><label for="cpyoutube">YouTube: </label></td>';
 			echo '<td><input type="text" id="cpyoutube" name="cpyoutube" placeholder="https://www.youtube.com"  value="'. $row["youtube"].'"></td></tr>';
-			
+
+			echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="text" id="cptrading_cap" name="cptrading_cap" value="'. $row["trading_capacity"].'">&nbsp;Watts</td></tr>';
+
+
+			echo '<tr><td><label for="corespond">Average Respond Time: </label></td><td><input type="text" id="cprespond" name="cprespond" value="'. $row["respond"].'">&nbsp;Hours</td></tr>';
             echo '</table>';
 			echo '<label for="cpabout"><h2>About: </h2></label>';
 			$content   = $row["about"];
@@ -550,6 +622,18 @@
 			/** Manufacturer Profile update_Table2 */
 			echo '<table>';
 			echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input type="text" id="cpstaff_no" name="cpstaff_no" value="'. $update_cp_staffno.'"></td></tr>';
+			
+
+			if ($update_cp_businesstype == 1) {
+				echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1" selected>Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
+			}
+			elseif ($update_cp_businesstype == 2) {
+				echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1" selected>Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
+			}
+			else {
+				echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1">Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
+			}
+			
 			echo '<tr><td><label for="cpcrystalline">Crystalline: </label></td><td><input type="text" id="cpcrystalline" name="cpcrystalline" value="'. $update_cp_crystalline.'"></td></tr>';
 			echo '<tr><td><label for="cpcproduction">Crystalline Production: </label></td><td><input type="text" id="cpcproduction" name="cpcproduction" value="'. $update_cp_cproduction.'"></td></tr>';
 			echo '<tr><td><label for="cpcprl">Crystalline Power Range (Low): </label></td><td><input type="text" id="cpcprl" name="cpcprl" value="'. $update_cp_cprl.'"></td></tr>';
@@ -574,6 +658,81 @@
 			echo '<tr><td><label for="cpme">Mounting Equipment: </label></td><td><input type="text" id="cpme" name="cpme" value="'. $update_cp_me.'"></td></tr>';
 			echo '</table>';
             
+            
+			/** Add More btn */
+			echo '<br><br>Milestones&nbsp;&nbsp;&nbsp;<button type="button" onclick="addmilestones()">Add More</button><br><br>';
+			
+			
+			echo '<script>
+					function addmilestones() {var s=document.getElementsByClassName("accordionm").length+1;document.getElementById("milestonedemo").innerHTML =document.getElementById("milestonedemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordionm">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpmilestonesyear\'+String(s)+\'">Year: </label><textarea id="cpmilestonesyear\'+String(s)+\'" name="cpmilestonesyear\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpmilestonesname\'+String(s)+\'">Name: </label>'.
+					'<textarea id="cpmilestonesname\'+String(s)+\'" name="cpmilestonesname\'+String(s)+\'"></textarea><br>'.'<label for="cpmilestonescontent\'+String(s)+\'">Content: </label>'.'<textarea id="cpmilestonescontent\'+String(s)+\'" name="cpmilestonescontent\'+String(s)+\'"></textarea><br>'.
+					'<br><br><button type="button" onclick="deletemilestones(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
+					document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
+					
+				 </script>';
+
+			echo '<script>function deletemilestones(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
+			wp_enqueue_script( 'jQuery' );
+			
+			
+			$cp_sql_milestones    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".$cp_id;
+    		$cp_result_milestones = $conn->query($cp_sql_milestones);
+			echo '<style>.accordionm {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordionm:hover {background-color: #ccc;}.accordionm:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
+			
+			echo '<span id="milestonedemo">';
+					if ($cp_result_milestones->num_rows > 0) {
+				
+						while($row_milestones = $cp_result_milestones->fetch_assoc()) {
+							echo '<button id="'.$row_milestones["milestone_id"].'" type="button" class="accordionm">'.$row_milestones["milestone_year"].'</button>
+							<div id="plus'.$row_reviews["milestone_id"].'" class="panel"><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cprmilestonescontent'.$row_milestones["milestone_content"].'" name="cprmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
+						}	
+					}
+					else {echo '0 Milestones<br><br>';}
+			
+			echo '</span>';
+
+		
+
+		    /** Add More btn */
+			echo '<br><br>Solar projects that we supplied:&nbsp;&nbsp;&nbsp;<button type="button" onclick="addsolarprojects()">Add More</button><br><br>';
+			
+			
+			echo '<script>
+					function addsolarprojects() {var s=document.getElementsByClassName("accordions").length+1;document.getElementById("solarprojectsdemo").innerHTML =document.getElementById("solarprojectsdemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordions">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpsolarprojectscat\'+String(s)+\'">Solar Project Category: </label><textarea id="cpsolarprojectscat\'+String(s)+\'" name="cpsolarprojectscat\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpsolarprojectsno\'+String(s)+\'">Model Number: </label>'.
+					'<textarea id="cpsolarprojectsno\'+String(s)+\'" name="cpsolarprojectsno\'+String(s)+\'"></textarea><br>'.
+					'<br><br><button type="button" onclick="deletemilestones(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
+					document.getElementsByClassName("accordions");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
+					
+				 </script>';
+
+			echo '<script>function deletemilestones(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
+			wp_enqueue_script( 'jQuery' );
+			
+			
+			$cp_sql_solarprojects    = "SELECT * FROM ".$tablename_projects." WHERE company_id=".$cp_id;
+    		$cp_result_solarprojects = $conn->query($cp_sql_solarprojects);
+
+    		$cp_sql_solarprocat = "SELECT * FROM ".$tablename_project_cat." WHERE company_id=".$cp_id;
+    		$cp_result_solarprocat = $conn->query($cp_sql_solarprocat);
+
+
+			echo '<style>.accordions {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordions:hover {background-color: #ccc;}.accordions:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
+			
+			echo '<span id="solarprojectsdemo">';
+					if ($cp_result_milestones->num_rows > 0) {
+				
+						while($row_milestones = $cp_result_milestones->fetch_assoc()) {
+							echo '<button id="'.$row_milestones["project_id"].'" type="button" class="accordions">'.$row_milestones["project_id"].'</button>
+							<div id="plus'.$row_reviews["project_id"].'" class="panel"><label for="cpsolarprojectscat'.$row_milestones["project_id"].'">Solar Project Category: </label><textarea id="cpsolarprojectscat'.$row_milestones["project_id"].'" name="cpsolarprojectscat'.$row_milestones["project_id"].'" rows="1" cols="50">'.$row_milestones["project_cat_id"].'</textarea><br><label for="cpsolarprojectsno'.$row_milestones["project_id"].'">Model Number: </label><textaea id="cpsolarprojectsno'.$row_milestones["model_no"].'" name="cpmilestonesname'.$row_milestones["project_id"].'" rows="1" cols="80">'.$row_milestones["model_no"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
+						}	
+					}
+					else {echo '0 Solar Projects<br><br>';}
+			
+			echo '</span>';
+
+
+
+
             /** Add More btn */
 			echo '<br><br>Reviews&nbsp;&nbsp;&nbsp;<button type="button" onclick="addreviews()">Add More</button><br><br>';
 			
@@ -607,6 +766,9 @@
 			echo '</span>';
 
 			echo '<script>var acco = document.getElementsByClassName("accordion");var j;for (j = 0; j < acco.length; j++) {acco[j].addEventListener("click", function() {this.classList.toggle("active");var panelo = this.nextElementSibling;if (panelo.style.maxHeight) {panelo.style.maxHeight = null;} else {panelo.style.maxHeight = panelo.scrollHeight + "px";} });}</script>';
+
+
+
 			$cp_sql_news    = "SELECT * FROM ".$tablename_news." WHERE company_id=".$cp_id;
     		$cp_result_news = $conn->query($cp_sql_news);
 			$i = 0;
