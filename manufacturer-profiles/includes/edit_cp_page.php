@@ -436,7 +436,7 @@
 				if ($new_cp_business_status == "Closed permanently"){
 					$updatecontent = $updatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 0px 30px 12px 30px !important;'><h4 style='color: #a94442; line-height: 0.1; font-size: 14px;'><i class='fa fa-exclamation-circle' style='font-size:16px;color:red'></i> Removed Listing</h4>";
 					$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442; font-size: 12px;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
-					$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@shop.solarfeeds.com</b></span>';
+					$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: info@solarfeeds.com</b></span>';
 					$updatecontent = $updatecontent.'</div>'; 
 				 } 
 				$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
@@ -447,7 +447,7 @@
 				$updatecontent = $updatecontent."</section>";
 					
 				$updatecontent = $updatecontent.'<aside class="d-30">';
-				$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="https://shop.solarfeeds.com/list-your-business/ "><img src="https://shop.solarfeeds.com/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
+				$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="'.get_site_url().'/list-your-business/ "><img src="'.get_site_url().'/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
 				$updatecontent = $updatecontent.'<div class="whiteblock"><img src="'.$file["url"].'">';
 				$updatecontent = $updatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div>';
 				if($new_cp_facebook != 'Unknown'){
@@ -465,7 +465,7 @@
 				$updatecontent = $updatecontent."</div>";
 				$updatecontent = $updatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
 				$updatecontent = $updatecontent."</div>";
-				$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
+				$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="'.get_site_url().'/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
 				
 				if(count($related_profiles)> 0){
 				$updatecontent = $updatecontent.'<div class="whiteblock relatedprofiles"><br><h2> Related Profiles</h2>';
@@ -473,7 +473,7 @@
 					$c_url = str_replace(",","",$related["name"]);
 					$c_url = str_replace(".","",$c_url);
 					$c_url = str_replace(' ', '-', $c_url);
-					$updatecontent = $updatecontent.'<a href="https://shop.solarfeeds.com/brands/'.$c_url.'">'.$related["name"].'</a></br>';
+					$updatecontent = $updatecontent.'<a href="'.get_site_url().'/brands/'.$c_url.'">'.$related["name"].'</a></br>';
 					}
 				
 				$updatecontent = $updatecontent.'<br><br></div><br>';
@@ -999,16 +999,16 @@
 
 			<?php echo '</select><br><br>';
 					
-			echo '&nbsp;<a href="https://shop.solarfeeds.com/brands/'.$row["name"].'" target=”_blank”>View Page</a></td>';
+			echo '&nbsp;<a href="'.get_site_url().'/brands/'.$row["name"].'" target=”_blank”>View Page</a></td>';
 			echo '&nbsp;<input type="submit" value="Submit">';
 			echo '</div>';
 			echo '</div>';	
 			echo '</div>';	
 			echo '</form><br>';
             
-			echo '<form action="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage" method="POST" onsubmit="setFormSubmitting(); return confirm(\'Are you sure you want to delete this profile?\');"><input type="submit" value="Delete" id="btn_delete">';
+			echo '<form action="'.get_site_url().'/wp-admin/admin.php?page=cpcustompage" method="POST" onsubmit="setFormSubmitting(); return confirm(\'Are you sure you want to delete this profile?\');"><input type="submit" value="Delete" id="btn_delete">';
 			echo '<input id="deletecpid" name="deletecpid" type="hidden" value="'.$cp_id.'">';
-			echo '&nbsp;&nbsp;<span><a href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcustompage">Back to Manufacturer Profile List</a></span>';
+			echo '&nbsp;&nbsp;<span><a href="'.get_site_url().'/wp-admin/admin.php?page=cpcustompage">Back to Manufacturer Profile List</a></span>';
 			echo '</form>';
             
         }
