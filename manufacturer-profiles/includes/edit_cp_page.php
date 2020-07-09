@@ -761,8 +761,8 @@
 					if ($cp_result_solarprojects->num_rows > 0) {
 				
 						while($row_solarprojects = $cp_result_solarprojects->fetch_assoc()) {
-							echo '<button id="'.$row_solarprojects["project_id"].'" type="button" class="accordions">'.$row_solarprojects["project_id"].'</button>
-							<div id="plus'.$row_solarprojects["project_id"].'" class="panel">
+							echo '<button id="'.$row_solarprojects["project_id"].'" type="button" class="accordions">'.$row_solarprojects["model_no"].'</button>
+							<div id="plus'.$row_solarprojects["model_no"].'" class="panel">
 							  <select id="cpsolarprojectscat'.$row_solarprojects["project_id"].'" name="cpsolarprojectscat'.$row_solarprojects["project_id"].'>';
   							  foreach ($prod_cat as $v) {
   							  	if (array_search($v, $prod_cat) == $row_solarprojects["project_id"]){
