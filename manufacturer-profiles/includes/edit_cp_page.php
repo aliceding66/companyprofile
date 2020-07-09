@@ -36,7 +36,26 @@
 			// print_r($related_profiles);
 			// exit(); 
 
-			
+			$xxxx = 1;
+			$xxxx_write = '<div class="whiteblock" id="archiveprojects"><h2>Archive Solar Projects for '.$_POST['cpname'].': </h2><div class="content">';
+			$is_projects  = 0;
+
+			while(isset($_POST['cpsolarprojectsno'.$xxxx]) && ($_POST['cpsolarprojectsno'.$xxxx] != '')) {
+    			$cp_sql_projects_update       = "INSERT INTO ".$tablename_projects." (company_id, project_cat_id,model_no) VALUES (".$cp_id.", ".$_POST['cpsolarprojectscat'.$xxxx].", '".$_POST['cpsolarprojectsno'.$xxxx]."');";
+				$cp_result_projects_update = $conn->query($cp_sql_projects_update);
+				var_dump($cp_sql_projects_update );
+				
+				$xxxx_write  = $xxxx_write.'<div>';
+				$xxxx_write  = $xxxx_write.'<input type="checkbox" id="question'.$xxxx.'" name="q" class="questions"><div class="plus">+</div><label for="question'.$xx.'" class="question">'.$_POST['cpsolarprojectsno'.$xxxx].'</label>';
+				$xxxx_write  = $xxxx_write.'<div class="answers">'.str_replace('\"','',$_POST['cpsolarprojectsno'.$xxxx]).'</div>';
+				$xxxx_write  = $xxxx_write.'</div>';
+    			$xxxx++;
+				$is_projects = 1;
+            }
+            
+			if ($is_projects == 1) {
+                $xxxx_write = $xxxx_write.'</div></div>';
+            }
 
 			$xxx = 1;
 			$xxx_write = '<div class="whiteblock" id="milestones"><h2>Milestone for '.$_POST['cpname'].': </h2><div class="content">';
@@ -684,7 +703,7 @@
 				
 						while($row_milestones = $cp_result_milestones->fetch_assoc()) {
 							echo '<button id="'.$row_milestones["milestone_id"].'" type="button" class="accordionm">'.$row_milestones["milestone_year"].'</button>
-							<div id="plus'.$row_reviews["milestone_id"].'" class="panel"><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cprmilestonescontent'.$row_milestones["milestone_content"].'" name="cprmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
+							<div id="plus'.$row_milestones["milestone_id"].'" class="panel"><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cprmilestonescontent'.$row_milestones["milestone_content"].'" name="cprmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
 						}	
 					}
 					else {echo '0 Milestones<br><br>';}
@@ -692,13 +711,35 @@
 			echo '</span>';
 
 		
+			$cp_sql_solarprocat = "SELECT * FROM ".$tablename_project_cat;
+    		$cp_result_solarprocat = $conn->query($cp_sql_solarprocat);	
+			
+			//var_dump($cp_sql_solarprocat);
+
+    		$prod_cat=[];
+    		if ($cp_result_solarprocat->num_rows > 0) {
+    			while($row_proj_cat = $cp_result_solarprocat->fetch_assoc()) {
+    				$cat_index = intval($row_proj_cat["ID"]);
+    				$prod_cat[$cat_index] = $row_proj_cat["cat_name"];
+    			}
+    		}
+			
+			//var_dump($prod_cat);
 
 		    /** Add More btn */
 			echo '<br><br>Solar projects that we supplied:&nbsp;&nbsp;&nbsp;<button type="button" onclick="addsolarprojects()">Add More</button><br><br>';
 			
 			
 			echo '<script>
-					function addsolarprojects() {var s=document.getElementsByClassName("accordions").length+1;document.getElementById("solarprojectsdemo").innerHTML =document.getElementById("solarprojectsdemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordions">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpsolarprojectscat\'+String(s)+\'">Solar Project Category: </label><textarea id="cpsolarprojectscat\'+String(s)+\'" name="cpsolarprojectscat\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpsolarprojectsno\'+String(s)+\'">Model Number: </label>'.
+					function addsolarprojects() {
+					var s=document.getElementsByClassName("accordions").length+1;
+					document.getElementById("solarprojectsdemo").innerHTML =document.getElementById("solarprojectsdemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordions">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpsolarprojectscat\'+String(s)+\'">Solar Project Category: </label>\'+\'<select id="cpsolarprojectscat\'+String(s)+\'" name="cpsolarprojectscat\'+String(s)+\'">';
+  			foreach ($prod_cat as $v) {
+				
+  				echo '<option value="'.array_search($v, $prod_cat).'">'.$v.'</option>';
+			}
+    		
+  					echo '</select><br><label for="cpsolarprojectsno\'+String(s)+\'">Model Number: </label>'.
 					'<textarea id="cpsolarprojectsno\'+String(s)+\'" name="cpsolarprojectsno\'+String(s)+\'"></textarea><br>'.
 					'<br><br><button type="button" onclick="deletemilestones(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
 					document.getElementsByClassName("accordions");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
@@ -706,24 +747,36 @@
 				 </script>';
 
 			echo '<script>function deletemilestones(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
-			wp_enqueue_script( 'jQuery' );
+			wp_enqueue_script( 'jQuery' );	
 			
 			
 			$cp_sql_solarprojects    = "SELECT * FROM ".$tablename_projects." WHERE company_id=".$cp_id;
     		$cp_result_solarprojects = $conn->query($cp_sql_solarprojects);
 
-    		$cp_sql_solarprocat = "SELECT * FROM ".$tablename_project_cat." WHERE company_id=".$cp_id;
-    		$cp_result_solarprocat = $conn->query($cp_sql_solarprocat);
-
+    		
 
 			echo '<style>.accordions {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordions:hover {background-color: #ccc;}.accordions:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
 			
 			echo '<span id="solarprojectsdemo">';
-					if ($cp_result_milestones->num_rows > 0) {
+					if ($cp_result_solarprojects->num_rows > 0) {
 				
-						while($row_milestones = $cp_result_milestones->fetch_assoc()) {
-							echo '<button id="'.$row_milestones["project_id"].'" type="button" class="accordions">'.$row_milestones["project_id"].'</button>
-							<div id="plus'.$row_reviews["project_id"].'" class="panel"><label for="cpsolarprojectscat'.$row_milestones["project_id"].'">Solar Project Category: </label><textarea id="cpsolarprojectscat'.$row_milestones["project_id"].'" name="cpsolarprojectscat'.$row_milestones["project_id"].'" rows="1" cols="50">'.$row_milestones["project_cat_id"].'</textarea><br><label for="cpsolarprojectsno'.$row_milestones["project_id"].'">Model Number: </label><textaea id="cpsolarprojectsno'.$row_milestones["model_no"].'" name="cpmilestonesname'.$row_milestones["project_id"].'" rows="1" cols="80">'.$row_milestones["model_no"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
+						while($row_solarprojects = $cp_result_solarprojects->fetch_assoc()) {
+							echo '<button id="'.$row_solarprojects["project_id"].'" type="button" class="accordions">'.$row_solarprojects["project_id"].'</button>
+							<div id="plus'.$row_solarprojects["project_id"].'" class="panel">
+							  <select id="cpsolarprojectscat'.$row_solarprojects["project_id"].'" name="cpsolarprojectscat'.$row_solarprojects["project_id"].'>';
+  							  foreach ($prod_cat as $v) {
+  							  	if (array_search($v, $prod_cat) == $row_solarprojects["project_id"]){
+  							  		echo '<option value="'.array_search($v, $prod_cat).'" selected>'.$v.'</option>';
+  							  	}
+  								else {
+  									echo '<option value="'.array_search($v, $prod_cat).'">'.$v.'</option>';
+  								}
+							  }
+    		
+  							  echo '</select>
+
+
+							  <br><label for="cpsolarprojectsno'.$row_solarprojects["project_id"].'">Model Number: </label><textaea id="cpsolarprojectsno'.$row_solarprojects["model_no"].'" name="cpmilestonesname'.$row_solarprojects["project_id"].'" rows="1" cols="80">'.$row_solarprojects["model_no"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_solarprojects["milestone_id"].')">Delete</button><br><br></div>';
 						}	
 					}
 					else {echo '0 Solar Projects<br><br>';}
