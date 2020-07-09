@@ -158,8 +158,10 @@
 				$new_cp_comptype   		  = $_POST['cpcomtype'];
 				$new_cp_me                = $_POST['cpme'];
 				
-				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET business_type=".$new_businesstype.", staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."', com_type='".$new_cp_comptype."', mounting_eq='".$new_cp_me." WHERE company_id=".$cp_id;
+				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET business_type=".$new_businesstype.", staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."', com_type='".$new_cp_comptype."', mounting_eq='".$new_cp_me."' WHERE company_id=".$cp_id;
 				$cp_result_details_update = $conn->query($cp_sql_details_update);
+				
+				//var_dump($cp_sql_details_update);
 
             }
             
@@ -327,6 +329,18 @@
 				if ($new_cp_name == ""){
 					$new_cp_name = "Unknown";
 				}
+				if ($new_cp_asname == ""){
+					$new_cp_asname = "Unknown";
+				}
+				if ($$new_cp_founded == ""){
+					$$new_cp_founded = "Unknown";
+				}
+				if ($new_cp_founder == ""){
+					$new_cp_founder = "Unknown";
+				}
+				if ($new_cp_ceo == ""){
+					$new_cp_ceo = "Unknown";
+				}
 				if ($new_cp_address == ""){
 					$new_cp_address = "Unknown";
 				}
@@ -357,10 +371,22 @@
 				if ($new_cp_about == ""){
 					$new_cp_about = "Unknown";
 				}
+
+				if ($new_cp_trading_cap == ""){
+					$new_cp_trading_cap = "Unknown";
+				}
+
+				if ($new_cp_respond  == ""){
+					$new_cp_respond  = "Unknown";
+				}
 					
 				if ($new_cp_staffno == 0){
 					$new_cp_staffno = "Unknown";
 				}
+				if ($new_businesstype == 0){
+					$new_businesstype = "Unknown";
+				}
+				
 				if ($new_cp_crystalline == ""){
 					$new_cp_crystalline = "Unknown";
 				}
@@ -494,6 +520,7 @@
         while($row_detail = $cp_result_detail->fetch_assoc()) {
 
 			$update_cp_staffno      = intval($row_detail['staff_no']);
+			
 			$update_cp_businesstype = intval($row_detail['business_type']);
 			$update_cp_crystalline  = $row_detail['crystalline'];
 			$update_cp_cproduction  = $row_detail['c_production'];
@@ -541,7 +568,7 @@
 				box-shadow: hsl(0, 0%, 80%) 0 0 16px;
 				padding: 20px;
 				margin-right: 15px;
-				
+				position:fixed;
 				
 			}
 			#btn_delete{
@@ -642,12 +669,13 @@
 			echo '<table>';
 			echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input type="text" id="cpstaff_no" name="cpstaff_no" value="'. $update_cp_staffno.'"></td></tr>';
 			
-
+			//var_dump($update_cp_businesstype);
+            
 			if ($update_cp_businesstype == 1) {
 				echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1" selected>Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
 			}
 			elseif ($update_cp_businesstype == 2) {
-				echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1" selected>Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
+				echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1">Distributor</option><option value="2" selected>Manufacturer</option></select></td></tr>';
 			}
 			else {
 				echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1">Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
@@ -709,7 +737,8 @@
 					else {echo '0 Milestones<br><br>';}
 			
 			echo '</span>';
-
+  			echo '<script>var acc = 
+					document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}</script>';
 		
 			$cp_sql_solarprocat = "SELECT * FROM ".$tablename_project_cat;
     		$cp_result_solarprocat = $conn->query($cp_sql_solarprocat);	
@@ -741,12 +770,12 @@
     		
   					echo '</select><br><label for="cpsolarprojectsno\'+String(s)+\'">Model Number: </label>'.
 					'<textarea id="cpsolarprojectsno\'+String(s)+\'" name="cpsolarprojectsno\'+String(s)+\'"></textarea><br>'.
-					'<br><br><button type="button" onclick="deletemilestones(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
+					'<br><br><button type="button" onclick="deletesolarprojects(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
 					document.getElementsByClassName("accordions");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
 					
 				 </script>';
 
-			echo '<script>function deletemilestones(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
+			echo '<script>function deletesolarprojects(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
 			wp_enqueue_script( 'jQuery' );	
 			
 			
@@ -776,14 +805,15 @@
   							  echo '</select>
 
 
-							  <br><label for="cpsolarprojectsno'.$row_solarprojects["project_id"].'">Model Number: </label><textaea id="cpsolarprojectsno'.$row_solarprojects["model_no"].'" name="cpmilestonesname'.$row_solarprojects["project_id"].'" rows="1" cols="80">'.$row_solarprojects["model_no"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_solarprojects["milestone_id"].')">Delete</button><br><br></div>';
+							  <br><label for="cpsolarprojectsno'.$row_solarprojects["project_id"].'">Model Number: </label><textarea id="cpsolarprojectsno'.$row_solarprojects["model_no"].'" name="cpmilestonesname'.$row_solarprojects["project_id"].'" rows="1" cols="80">'.$row_solarprojects["model_no"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_solarprojects["milestone_id"].')">Delete</button><br><br></div>';
 						}	
 					}
 					else {echo '0 Solar Projects<br><br>';}
 			
 			echo '</span>';
 
-
+			echo '<script>var accs = 
+					document.getElementsByClassName("accordions");var is;for (is = 0; is < accs.length; is++) {accs[is].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}</script>';
 
 
             /** Add More btn */
@@ -792,7 +822,7 @@
 			
 			echo '<script>
 					function addreviews() {var s=document.getElementsByClassName("accordion").length+1;document.getElementById("reviewdemo").innerHTML =document.getElementById("reviewdemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordion">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpreviewname\'+String(s)+\'">Name: </label><textarea id="cpreviewname\'+String(s)+\'" name="cpreviewname\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpreviewcontent\'+String(s)+\'">Content: </label>'.
-					'<div id="cpreviewcontent\'+String(s)+\'" name="cpreviewcontent\'+String(s)+\'"></div>'.
+					'<textarea id="cpreviewcontent\'+String(s)+\'" name="cpreviewcontent\'+String(s)+\'" rows="4" cols="50"></textarea>'.
 					'<br><br><button type="button" onclick="deletereviews(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
 					document.getElementsByClassName("accordion");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
 					
