@@ -6,6 +6,9 @@
     $tablename_reviews = "company_profile_reviews";
     $tablename_news    = "company_profile_news";
     $tablename         = "company_profile_short";
+    $tablename_milestones    = "company_profile_milestones";
+    $tablename_projects    = "company_profile_projects";
+    $tablename_project_cat   = "company_profile_project_category";
     
     if($_POST && isset($_POST['deletecpid'])){
         
@@ -15,8 +18,16 @@
         $sql_delete_news    = "DELETE FROM ".$tablename_news." WHERE company_id=".intval($_POST['deletecpid']);
         $result_cp_news     = $conn->query($sql_delete_news);
         
+        $sql_delete_milestones = "DELETE FROM ".$tablename_milestones." WHERE company_id=".intval($_POST['deletecpid']);
+        $result_cp_milestones  = $conn->query($sql_delete_milestones);
+        
+        $sql_delete_projects = "DELETE FROM ".$tablename_projects." WHERE company_id=".intval($_POST['deletecpid']);
+        $result_cp_projects  = $conn->query($sql_delete_projects);
+        
         $sql_get_cp_no      = "SELECT * FROM ".$tablename." WHERE company_id=".intval($_POST['deletecpid']);
         $result_cp_no       = $conn->query($sql_get_cp_no);
+        
+        
 
         if ($result_cp_no->num_rows > 0) {
 

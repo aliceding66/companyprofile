@@ -7,6 +7,9 @@
     $tablename_details = "company_profile";
     $tablename_reviews = "company_profile_reviews";
     $tablename_news    = "company_profile_news";
+    $tablename_milestones    = "company_profile_milestones";
+    $tablename_projects    = "company_profile_projects";
+    $tablename_project_cat   = "company_profile_project_category";
  
     $cp_sql    = "SELECT * FROM ".$tablename;
     $cp_result = $conn->query($cp_sql);
@@ -42,6 +45,50 @@
         if ($cp_result_check->num_rows > 0) {
         }
         else {
+
+            $xxxx = 1;
+            $xxxx_write = '<div class="whiteblock" id="archiveprojects"><h2>Archive Solar Projects for '.$_POST['cpname'].': </h2><div class="content">';
+            $is_projects  = 0;
+
+            while(isset($_POST['cpsolarprojectsno'.$xxxx]) && ($_POST['cpsolarprojectsno'.$xxxx] != '')) {
+                $cp_sql_projects_update       = "INSERT INTO ".$tablename_projects." (company_id, project_cat_id,model_no) VALUES (".$new_cp_id.", ".$_POST['cpsolarprojectscat'.$xxxx].", '".$_POST['cpsolarprojectsno'.$xxxx]."');";
+                $cp_result_projects_update = $conn->query($cp_sql_projects_update);
+                var_dump($cp_sql_projects_update );
+                
+                $xxxx_write  = $xxxx_write.'<div>';
+                $xxxx_write  = $xxxx_write.'<input type="checkbox" id="question'.$xxxx.'" name="q" class="questions"><div class="plus">+</div><label for="question'.$xx.'" class="question">'.$_POST['cpsolarprojectsno'.$xxxx].'</label>';
+                $xxxx_write  = $xxxx_write.'<div class="answers">'.str_replace('\"','',$_POST['cpsolarprojectsno'.$xxxx]).'</div>';
+                $xxxx_write  = $xxxx_write.'</div>';
+                $xxxx++;
+                $is_projects = 1;
+            }
+            
+            if ($is_projects == 1) {
+                $xxxx_write = $xxxx_write.'</div></div>';
+            }
+
+            $xxx = 1;
+            $xxx_write = '<div class="whiteblock" id="milestones"><h2>Milestone for '.$_POST['cpname'].': </h2><div class="content">';
+            $is_milestones  = 0;
+
+            while(isset($_POST['cpmilestonesname'.$xxx]) && ($_POST['cpmilestonesname'.$xxx] != '') && ($_POST['cpmilestonesyear'.$xxx] != '')) {
+                $cp_sql_milestones_update       = "INSERT INTO ".$tablename_milestones." (company_id, milestone_id, milestone_year,milestone_name, milestone_content    ) VALUES (".$new_cp_id.", ".$xxx.",".$_POST['cpmilestonesyear'.$xxx].", '".$_POST['cpmilestonesname'.$xxx]."', '".$_POST['cpmilestonescontent'.$xxx]."');";
+                $cp_result_milestones_update = $conn->query($cp_sql_milestones_update);
+                
+                $xxx_write  = $xxx_write.'<div>';
+                $xxx_write  = $xxx_write.'<input type="checkbox" id="question'.$xxx.'" name="q" class="questions"><div class="plus">+</div><label for="question'.$xxx.'" class="question">'.$_POST['cpmilestonesyear'.$xxx].'</label>';
+                $xxx_write  = $xxx_write.'<div class="answers">'.$_POST['cpmilestonesname'.$xxx].'<br><br>'.str_replace('\"','',$_POST['cpmilestonescontent'.$xxx]).'</div>';
+                $xxx_write  = $xxx_write.'</div>';
+                $xxx++;
+                $is_milestones = 1;
+            }
+            
+            if ($is_milestones == 1) {
+                $xxx_write = $xxx_write.'</div></div>';
+            }
+
+
+
             $y = 1;
             $is_review = 0;
             $x_write   = '<div class="whiteblock" id="userreviews"><h2 style="margin-bottom:0px !important;">Reviews for '.$_POST['cpname'].": </h2>";
@@ -82,126 +129,149 @@
                 $xx_write = $xx_write."</div></div>";
             }
            
-             
-            $new_cp_name           = $_POST['cpname'];
-            $new_cp_address        = $_POST['cpaddress'];
-            $new_cp_phone          = $_POST['cpphone'];
-            $new_cp_email          = $_POST['cpemail'];
-            $new_cp_url            = $_POST['cpurl'];
-            $new_cp_region         = $_POST['cpregion'];
-            $new_cp_facebook       = $_POST['cpfacebook'];
-            $new_cp_linkedin       = $_POST['cplinkedin'];
-            $new_cp_twitter        = $_POST['cptwitter'];
-            $new_cp_youtube        = $_POST['cpyoutube'];
-            $new_cp_about          = str_replace('\"','',$_POST['cpabout']); 
+            $new_cp_name              = $_POST['cpname'];
+            $new_cp_asname            = $_POST['cpasname'];
+            $new_cp_parentname        = $_POST['cpparentname'];
+            $new_cp_founded           = intval($_POST['cpfounded']);
+            $new_cp_founder           = $_POST['cpfounder'];
+            $new_cp_ceo               = $_POST['cpceo'];
+            $new_cp_address           = $_POST['cpaddress'];
+            $new_cp_phone             = $_POST['cpphone'];
+            $new_cp_email             = $_POST['cpemail'];
+            $new_cp_url               = $_POST['cpurl'];
+            $new_cp_region            = $_POST['cpregion'];
+            $new_cp_facebook          = $_POST['cpfacebook'];
+            $new_cp_linkedin          = $_POST['cplinkedin'];
+            $new_cp_twitter           = $_POST['cptwitter'];
+            $new_cp_youtube           = $_POST['cpyoutube'];
+            $new_cp_slogan            = $_POST['cpslogan'];
+            $new_cp_vision            = $_POST['cpvision'];
             $new_cp_image          = $_POST['example-jpg-file'];
-            $new_cp_staffno        = intval($_POST['cpstaff_no']);
-            $new_cp_crystalline    = $_POST['cpcrystalline'];
-            $new_cp_cprl           = $_POST['cpcprl'];
-            $new_cp_cprh           = $_POST['cpcprh'];
-            $new_cp_high_eff       = $_POST['cphigh_eff'];
-            $new_cp_hecprl         = $_POST['cphecprl'];
-            $new_cp_hecprh         = $_POST['cphecprh'];
-           // $new_cp_business_status = $_POST['cpbusiness_status'];
-            $new_cp_comtype        = $_POST['cpcomtype'];
-            $new_cp_cpme           = $_POST['cpme'];
+            $new_cp_about             = str_replace('\"','',$_POST['cpabout']); 
+            $new_cp_trading_cap       = intval($_POST['cptrading_cap']);
+            $new_cp_respond           = floatval($_POST['cprespond']);
+
+            $new_cp_staffno           = intval($_POST['cpstaff_no']);
+            $new_cp_businesstype      = intval($_POST['cpbusiness_type']);
+            $new_cp_crystalline       = $_POST['cpcrystalline'];
+            $new_cp_cprl              = $_POST['cpcprl'];
+            $new_cp_cprh              = $_POST['cpcprh'];
+            $new_cp_high_eff          = $_POST['cphigh_eff'];
+            $new_cp_hecprl            = $_POST['cphecprl'];
+            $new_cp_hecprh            = $_POST['cphecprh'];
+            $new_cp_business_status   = $_POST['cpbusiness_status'];
+            $new_cp_comptype          = $_POST['cpcomtype'];
+            $new_cp_me                = $_POST['cpme'];
             
-            $cp_sql_insert         = "INSERT INTO ".$tablename." (company_id, name, address, phone, email, url, region,facebook, linkedin,twitter,youtube,company_image, about) VALUES (".$new_cp_id.", '".$new_cp_name."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."')";
+            $cp_sql_insert         = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region,slogan, vision, facebook, linkedin,twitter,youtube,company_image, about,trading_capacity,respond) VALUES (".$new_cp_id.", '".$new_cp_name."','".$new_cp_asname."', ".$new_cp_founded.", '".$new_cp_founder."', '".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.")";
             $cp_result_insert      = $conn->query($cp_sql_insert);
              
-            $cp_sql_insert_details = "INSERT INTO ".$tablename_details." (company_id, staff_no, crystalline, cprl, cprh, high_eff, hecprl, hecprh,com_type,mounting_eq) VALUES (".$new_cp_id.",".$new_cp_staffno.",'".$new_cp_crystalline."','".$new_cp_cprl."','".$new_cp_cprh."','".$new_cp_high_eff."','".$new_cp_hecprl."','".$new_cp_hecprh."','".$new_cp_comtype."','".$new_cp_cpme."')";
+            $cp_sql_insert_details = "INSERT INTO ".$tablename_details." (company_id, staff_no, business_type, crystalline, cprl, cprh, high_eff, hecprl, hecprh,com_type,mounting_eq) VALUES (".$new_cp_id.",".$new_cp_staffno.",".$new_cp_businesstype.",'".$new_cp_crystalline."','".$new_cp_cprl."','".$new_cp_cprh."','".$new_cp_high_eff."','".$new_cp_hecprl."','".$new_cp_hecprh."','".$new_cp_comtype."','".$new_cp_cpme."')";
             $cp_result_insert      = $conn->query($cp_sql_insert_details);
-             
-             
-             if ($new_cp_name == ""){
-                 $new_cp_name = "Unknown";
-             }
-             if ($new_cp_address == ""){
-                 $new_cp_address = "Unknown";
-             }
-             if ($new_cp_phone == ""){
-                 $new_cp_phone = "Unknown";
-             }
-             if ($new_cp_email == ""){
-                 $new_cp_email = "Unknown";
-             }
-             if ($new_cp_url == ""){
-                 $new_cp_url = "Unknown";
-             }
-             if ($new_cp_region == ""){
-                 $new_cp_region = "Unknown";
-             }
-             if ($new_cp_facebook == ""){
-                 $new_cp_facebook = "Unknown";
-             }
-             if ($new_cp_linkedin == ""){
-                 $new_cp_linkedin = "Unknown";
-             }
-             if ($new_cp_twitter == ""){
-                 $new_cp_twitter = "Unknown";
-             }
-
-             if ($new_cp_youtube == ""){
-                $new_cp_youtube = "Unknown";
-            }  
-
-             if ($new_cp_about == ""){
-                 $new_cp_about = "Unknown";
-             }
-             
-             if ($new_cp_staffno == 0){
-                 $new_cp_staffno = "Unknown";
-             }
-             if ($new_cp_crystalline == ""){
-                 $new_cp_crystalline = "Unknown";
-             }
-             if ($new_cp_cprl == ""){
-                 $new_cp_cprl = "Unknown";
-             }
-             if ($new_cp_cprh == ""){
-                 $new_cp_cprh = "Unknown";
-             }
-             if ($new_cp_high_eff == ""){
-                 $new_cp_high_eff = "Unknown";
-             }
-             if ($new_cp_hecprl == ""){
-                 $new_cp_hecprl = "Unknown";
-             }
-             if ($new_cp_hecprh == ""){
-                 $new_cp_hecprh = "Unknown";
-             }
-             if ($new_cp_comtype == ""){
-                $new_cp_comtype = "Unknown";
-             }
-             if ($new_cp_cpme == ""){
-                $new_cp_cpme = "Unknown";
-             }
-             
-             if ($new_cp_crystalline == "0"){
-                 $new_cp_crystalline = "Unknown";
-             }
-             if ($new_cp_cprl == "0"){
-                 $new_cp_cprl = "Unknown";
-             }
-             if ($new_cp_cprh == "0"){
-                 $new_cp_cprh = "Unknown";
-             }
-             if ($new_cp_high_eff == "0"){
-                 $new_cp_high_eff = "Unknown";
-             }
-             if ($new_cp_hecprl == "0"){
-                 $new_cp_hecprl = "Unknown";
-             }
-             if ($new_cp_hecprh == "0"){
-                 $new_cp_hecprh = "Unknown";
-             }
             
-             if ($new_cp_comtype == ""){
-                $new_cp_comtype = "Unknown";
-             }
-             if ($new_cp_cpme == ""){
-                $new_cp_cpme = "Unknown";
-             } 
+
+             
+            if ($new_cp_name == ""){
+                    $new_cp_name = "Unknown";
+                }
+                if ($new_cp_asname == ""){
+                    $new_cp_asname = "Unknown";
+                }
+                if ($$new_cp_founded == ""){
+                    $$new_cp_founded = "Unknown";
+                }
+                if ($new_cp_founder == ""){
+                    $new_cp_founder = "Unknown";
+                }
+                if ($new_cp_ceo == ""){
+                    $new_cp_ceo = "Unknown";
+                }
+                if ($new_cp_address == ""){
+                    $new_cp_address = "Unknown";
+                }
+                if ($new_cp_phone == ""){
+                    $new_cp_phone = "Unknown";
+                }
+                if ($new_cp_email == ""){
+                    $new_cp_email = "Unknown";
+                }
+                if ($new_cp_url == ""){
+                    $new_cp_url = "Unknown";
+                }
+                if ($new_cp_region == ""){
+                    $new_cp_region = "Unknown";
+                }
+                if ($new_cp_facebook == ""){
+                    $new_cp_facebook = "Unknown";
+                }
+                if ($new_cp_linkedin == ""){
+                    $new_cp_linkedin = "Unknown";
+                }
+                if ($new_cp_twitter == ""){
+                    $new_cp_twitter = "Unknown";
+                }
+                if ($new_cp_youtube == ""){
+                    $new_cp_youtube = "Unknown";
+                }
+                if ($new_cp_about == ""){
+                    $new_cp_about = "Unknown";
+                }
+
+                if ($new_cp_trading_cap == ""){
+                    $new_cp_trading_cap = "Unknown";
+                }
+
+                if ($new_cp_respond  == ""){
+                    $new_cp_respond  = "Unknown";
+                }
+                    
+                if ($new_cp_staffno == 0){
+                    $new_cp_staffno = "Unknown";
+                }
+                if ($new_businesstype == 0){
+                    $new_businesstype = "Unknown";
+                }
+                
+                if ($new_cp_crystalline == ""){
+                    $new_cp_crystalline = "Unknown";
+                }
+                if ($new_cp_cprl == ""){
+                    $new_cp_cprl = "Unknown";
+                }
+                if ($new_cp_cprh == ""){
+                    $new_cp_cprh = "Unknown";
+                }
+                if ($new_cp_high_eff == ""){
+                    $new_cp_high_eff = "Unknown";
+                }
+                if ($new_cp_hecprl == ""){
+                    $new_cp_hecprl = "Unknown";
+                }
+                if ($new_cp_hecprh == ""){
+                    $new_cp_hecprh = "Unknown";
+                }   
+                        
+                if ($new_cp_crystalline == "0"){
+                    $new_cp_crystalline = "Unknown";
+                }
+                if ($new_cp_cprl == "0"){
+                    $new_cp_cprl = "Unknown";
+                }
+                if ($new_cp_cprh == "0"){
+                    $new_cp_cprh = "Unknown";
+                }
+                if ($new_cp_high_eff == "0"){
+                    $new_cp_high_eff = "Unknown";
+                }
+                if ($new_cp_hecprl == "0"){
+                    $new_cp_hecprl = "Unknown";
+                }
+                if ($new_cp_hecprh == "0"){
+                    $new_cp_hecprh = "Unknown";
+                }
+                if ($new_cp_business_status == ""){
+                    $new_cp_business_status = "Unknown";
+                }
              
              
             $cpcreatecontent = "<?php require_once('".$_SERVER['DOCUMENT_ROOT']."/wp-load.php'); get_header();?>";
@@ -231,10 +301,10 @@
             }
             </style>";
             if ( is_user_logged_in() ) {
-				$edit_url= get_site_url()."/wp-admin/admin.php?page=cpcustomsubpage&company_id=".$new_cp_id;
-				$add_url = get_site_url()."/wp-admin/admin.php?page=cpcreatepage";
-				$admin_url = get_site_url()."/wp-admin";
-				$cpcreatecontent = $cpcreatecontent."<div id='mfp-topbar'><ul><li><a href='".$edit_url."'>Edit this page</a> |</li><li><a href='".$add_url."'>Add a new profile</a> |</li><li><a href='".$admin_url."'>WP Dashboard</a></li></ul></div>";
+                $edit_url= get_site_url()."/wp-admin/admin.php?page=cpcustomsubpage&company_id=".$new_cp_id;
+                $add_url = get_site_url()."/wp-admin/admin.php?page=cpcreatepage";
+                $admin_url = get_site_url()."/wp-admin";
+                $cpcreatecontent = $cpcreatecontent."<div id='mfp-topbar'><ul><li><a href='".$edit_url."'>Edit this page</a> |</li><li><a href='".$add_url."'>Add a new profile</a> |</li><li><a href='".$admin_url."'>WP Dashboard</a></li></ul></div>";
                 }
     
             $cpcreatecontent = $cpcreatecontent.'<section class="d-70">';
@@ -243,10 +313,10 @@
             $cpcreatecontent = $cpcreatecontent.' | <a href="#userreviews">'.strval($y-1).' Reviews</a> | <a href="#archivenews">'.strval($yy-1)." News</a><br></div>";
             $cpcreatecontent = $cpcreatecontent.'<hr style="width:50%;text-align:left;margin-left:0">'; 
             if ($new_cp_business_status == "Closed permanently"){
-				$cpcreatecontent = $cpcreatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 0px 30px 12px 30px !important;'><h4 style='color: #a94442; line-height: 0.1; font-size: 14px;'><i class='fa fa-exclamation-circle' style='font-size:16px;color:red'></i> Removed Listing</h4>";
-				$cpcreatecontent = $cpcreatecontent.'<span style="color: #a94442; font-size: 12px;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442; font-size: 12px;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
-				$cpcreatecontent = $cpcreatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@shop.solarfeeds.com</b></span>';
-				$cpcreatecontent = $cpcreatecontent.'</div>';
+                $cpcreatecontent = $cpcreatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 0px 30px 12px 30px !important;'><h4 style='color: #a94442; line-height: 0.1; font-size: 14px;'><i class='fa fa-exclamation-circle' style='font-size:16px;color:red'></i> Removed Listing</h4>";
+                $cpcreatecontent = $cpcreatecontent.'<span style="color: #a94442; font-size: 12px;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442; font-size: 12px;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
+                $cpcreatecontent = $cpcreatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@shop.solarfeeds.com</b></span>';
+                $cpcreatecontent = $cpcreatecontent.'</div>';
             }  
             $cpcreatecontent = $cpcreatecontent.'<hr style="width:50%;text-align:left;margin-left:0">';   
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><h2>About '.$new_cp_name.": </h2>".$new_cp_about."</div><br>";
@@ -259,33 +329,33 @@
             // $cpcreatecontent = $cpcreatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div>'.'<div><a href="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a> '.$new_cp_facebook.'</div>'.'<div><a href="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a> '.$new_cp_linkedin.'</div>'.'<div><a href="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a> '.$new_cp_twitter.'</div></div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
             // $cpcreatecontent = $cpcreatecontent."</div>";
             $cpcreatecontent = $cpcreatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div>';
-				if($new_cp_facebook != 'Unknown'){
-					$cpcreatecontent = $cpcreatecontent.'<span ><a target = "_blank" href="'.$new_cp_facebook.'" title="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a></span>';
-				}
-				if($new_cp_linkedin != 'Unknown'){
-					$cpcreatecontent = $cpcreatecontent.'<span style="padding-left:7px"> <a target = "_blank" href="'.$new_cp_linkedin.'" title="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a></span>';
-				}
-				if($new_cp_twitter != 'Unknown'){
-					$cpcreatecontent = $cpcreatecontent.'<span style="padding-left:7px"><a target = "_blank" href="'.$new_cp_twitter.'" title="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a></span>';
-				}
-				if($new_cp_youtube != 'Unknown'){
-					$cpcreatecontent = $cpcreatecontent.'<span style="padding-left:7px"><a target = "_blank" href="'.$new_cp_youtube.'" title="'.$new_cp_youtube.'"><i class="fa fa-youtube" aria-hidden="true"></i></a></span>';
-				}
-			$cpcreatecontent = $cpcreatecontent."</div>";
-			$cpcreatecontent = $cpcreatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
+                if($new_cp_facebook != 'Unknown'){
+                    $cpcreatecontent = $cpcreatecontent.'<span ><a target = "_blank" href="'.$new_cp_facebook.'" title="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a></span>';
+                }
+                if($new_cp_linkedin != 'Unknown'){
+                    $cpcreatecontent = $cpcreatecontent.'<span style="padding-left:7px"> <a target = "_blank" href="'.$new_cp_linkedin.'" title="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a></span>';
+                }
+                if($new_cp_twitter != 'Unknown'){
+                    $cpcreatecontent = $cpcreatecontent.'<span style="padding-left:7px"><a target = "_blank" href="'.$new_cp_twitter.'" title="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a></span>';
+                }
+                if($new_cp_youtube != 'Unknown'){
+                    $cpcreatecontent = $cpcreatecontent.'<span style="padding-left:7px"><a target = "_blank" href="'.$new_cp_youtube.'" title="'.$new_cp_youtube.'"><i class="fa fa-youtube" aria-hidden="true"></i></a></span>';
+                }
+            $cpcreatecontent = $cpcreatecontent."</div>";
+            $cpcreatecontent = $cpcreatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
             $cpcreatecontent = $cpcreatecontent."</div>";
                 
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
             if(count($related_profiles)> 0){
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><h2 style=" line-height: 0.1;"> Related Profiles</h2>';
-		
+        
                 foreach($related_profiles as $related){
                     $c_url = str_replace(",","",$related["name"]);
                     $c_url = str_replace(".","",$c_url);
                     $c_url = str_replace(' ', '-', $c_url);
                     $cpcreatecontent = $cpcreatecontent.'<a href="https://shop.solarfeeds.com/brands/'.$c_url.'">'.$related["name"].'</a></br>';
                     }
-			
+            
             $cpcreatecontent = $cpcreatecontent.'<br><br></div><br>';
             }
             $cpcreatecontent = $cpcreatecontent. "</aside>";
@@ -322,6 +392,10 @@
     echo '<table>';
     echo '<tr><td><label for="cpname">Manufacturer Name: </label></td>';
     echo '<td><input type="text" id="cpname" name="cpname" required></td></tr>';
+    echo '<tr><td><label for="cpasname">Do Business As: </label></td>';
+    echo '<td><input type="text" id="cpasname" name="cpasname"><br><br></td></tr>';
+    echo '<tr><td><label for="cpname">Parent Manufacturer Name: </label></td>';
+    echo '<td><input type="text" id="cpparentname" name="cpparentname"> <br><br></td></tr>';
     add_action ('admin_enqueue_scripts', function() {
         if(is_admin())
             wp_enqueue_media(); 
@@ -347,7 +421,23 @@
                     }
                     });
          </script>";
- 
+
+
+    echo '<tr><td><label for="cpfounded">Founded: </label></td>';
+    echo '<td><input type="text" id="cpfounded" name="cpfounded"></td></tr>';
+
+    echo '<tr><td><label for="cpfounder">Founder(s): </label></td>';
+    echo '<td><input type="text" id="cpfounder" name="cpfounder"></td></tr>';
+
+    echo '<tr><td><label for="cpceo">CEO: </label></td>';
+    echo '<td><input type="text" id="cpceo" name="cpceo"></td></tr>';
+
+    echo '<tr><td><label for="cpslogan">Slogan: </label></td>';
+    echo '<td><textarea id="cpslogan" name="cpslogan" rows="1" cols="80">'.'</textarea></td></tr>';
+
+    echo '<tr><td><label for="cpvision">Vision/Mission Statement: </label></td>';
+    echo '<td><textarea id="cpvision" name="cpvision" rows="4" cols=80">'.'</textarea></td></tr>';
+
  
     /** Manufacturer Profile Table1 */
     echo '<tr><td><label for="cpaddress">Manufacturer Address: </label></td>';
@@ -377,7 +467,14 @@
     echo '<tr><td><label for="cpyoutube">YouTube: </label></td>';
     echo '<td><input type="text" id="cpyoutube"  placeholder="https://www.youtube.com" name="cpyoutube"></td></tr>';
 
+    echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="text" id="cptrading_cap" name="cptrading_cap">&nbsp;Watts</td></tr>';
+
+
+    echo '<tr><td><label for="corespond">Average Respond Time: </label></td><td><input type="text" id="cprespond" name="cprespond">&nbsp;Hours</td></tr>';
+
     echo '<tr><td><label for="cpabout">About: </label></td>';
+
+    
     $content   = '';
     $editor_id = 'cpabout';
     $settings  = array( 'media_buttons' => true);
@@ -394,6 +491,7 @@
     /** Manufacturer Profile Table2 */
     echo '<table>';
     echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input type="text" id="cpstaff_no" name="cpstaff_no"></td></tr>';
+    echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1">Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
     echo '<tr><td><label for="cpcrystalline">Crystalline: </label></td><td><input type="text" id="cpcrystalline" name="cpcrystalline"></td></tr>';
     echo '<tr><td><label for="cpcprl">Crystalline Power Range (Low): </label></td><td><input type="text" id="cpcprl" name="cpcprl"></td></tr>';
     echo '<tr><td><label for="cpcprh">Crystalline Power Range (High): </label></td><td><input type="text" id="cpcprh" name="cpcprh"></td></tr>';
@@ -403,10 +501,93 @@
     echo '</table>';
 
      /** Manufacturer Profile update_Table3 */
-	echo '<table>';
-	echo '<tr><td><label for="cpcomtype">Component Type: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" ></td></tr>';
-	echo '<tr><td><label for="cpme">Mounting Equipment: </label></td><td><input type="text" id="cpme" name="cpme" ></td></tr>';
-	echo '</table>';
+    echo '<table>';
+    echo '<tr><td><label for="cpcomtype">Component Type: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" ></td></tr>';
+    echo '<tr><td><label for="cpme">Mounting Equipment: </label></td><td><input type="text" id="cpme" name="cpme" ></td></tr>';
+    echo '</table>';
+
+
+    
+    /** Add More btn */
+    echo '<br><br>Milestones&nbsp;&nbsp;&nbsp;<button type="button" onclick="addmilestones()">Add More</button><br><br>';
+            
+            
+    echo '<script>
+                    function addmilestones() {var s=document.getElementsByClassName("accordionm").length+1;document.getElementById("milestonedemo").innerHTML =document.getElementById("milestonedemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordionm">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpmilestonesyear\'+String(s)+\'">Year: </label><textarea id="cpmilestonesyear\'+String(s)+\'" name="cpmilestonesyear\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpmilestonesname\'+String(s)+\'">Name: </label>'.
+                    '<textarea id="cpmilestonesname\'+String(s)+\'" name="cpmilestonesname\'+String(s)+\'"></textarea><br>'.'<label for="cpmilestonescontent\'+String(s)+\'">Content: </label>'.'<textarea id="cpmilestonescontent\'+String(s)+\'" name="cpmilestonescontent\'+String(s)+\'"></textarea><br>'.
+                    '<br><br><button type="button" onclick="deletemilestones(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
+                    document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
+                    
+                 </script>';
+
+    echo '<script>function deletemilestones(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
+    wp_enqueue_script( 'jQuery' );
+            
+            
+    $cp_sql_milestones    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".$cp_id;
+    $cp_result_milestones = $conn->query($cp_sql_milestones);
+    echo '<style>.accordionm {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordionm:hover {background-color: #ccc;}.accordionm:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
+            
+    echo '<span id="milestonedemo">';
+    
+            
+    echo '</span>';
+    echo '<script>var acc = 
+                    document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}</script>';
+        
+    $cp_sql_solarprocat = "SELECT * FROM ".$tablename_project_cat;
+    $cp_result_solarprocat = $conn->query($cp_sql_solarprocat); 
+            
+    //var_dump($cp_sql_solarprocat);
+
+    $prod_cat=[];
+    if ($cp_result_solarprocat->num_rows > 0) {
+        while($row_proj_cat = $cp_result_solarprocat->fetch_assoc()) {
+            $cat_index = intval($row_proj_cat["ID"]);
+            $prod_cat[$cat_index] = $row_proj_cat["cat_name"];
+        }
+    }
+            
+            //var_dump($prod_cat);
+
+            /** Add More btn */
+    echo '<br><br>Solar projects that we supplied:&nbsp;&nbsp;&nbsp;<button type="button" onclick="addsolarprojects()">Add More</button><br><br>';
+            
+            
+    echo '<script>
+                    function addsolarprojects() {
+                    var s=document.getElementsByClassName("accordions").length+1;
+                    document.getElementById("solarprojectsdemo").innerHTML =document.getElementById("solarprojectsdemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordions">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpsolarprojectscat\'+String(s)+\'">Solar Project Category: </label>\'+\'<select id="cpsolarprojectscat\'+String(s)+\'" name="cpsolarprojectscat\'+String(s)+\'">';
+    foreach ($prod_cat as $v) {
+                
+        echo '<option value="'.array_search($v, $prod_cat).'">'.$v.'</option>';
+    }
+            
+    echo '</select><br><label for="cpsolarprojectsno\'+String(s)+\'">Model Number: </label>'.
+                    '<textarea id="cpsolarprojectsno\'+String(s)+\'" name="cpsolarprojectsno\'+String(s)+\'"></textarea><br>'.
+                    '<br><br><button type="button" onclick="deletesolarprojects(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
+                    document.getElementsByClassName("accordions");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
+                    
+                 </script>';
+
+    echo '<script>function deletesolarprojects(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
+    wp_enqueue_script( 'jQuery' );  
+            
+            
+    $cp_sql_solarprojects    = "SELECT * FROM ".$tablename_projects." WHERE company_id=".$cp_id;
+    $cp_result_solarprojects = $conn->query($cp_sql_solarprojects);
+
+            
+
+    echo '<style>.accordions {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordions:hover {background-color: #ccc;}.accordions:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
+            
+    echo '<span id="solarprojectsdemo">';
+            
+            echo '</span>';
+
+            echo '<script>var accs = 
+                    document.getElementsByClassName("accordions");var is;for (is = 0; is < accs.length; is++) {accs[is].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}</script>';
+   
             
     
     /** Add More btn */

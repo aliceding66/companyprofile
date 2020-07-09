@@ -31,7 +31,23 @@
 				$cp_sql_reviews_delete    ="DELETE FROM ".$tablename_reviews." WHERE company_id = ".$cp_id;
 				$cp_result_reviews_delete = $conn->query($cp_sql_reviews_delete);
 			}
-		
+			
+			$cp_sql_milestones     = "SELECT * FROM ".$tablename_milestones." WHERE company_id = ".$cp_id;
+			$cp_result_milestones  = $conn->query($cp_sql_milestones);
+
+			if ($cp_result_milestones->num_rows > 0) {
+				$cp_sql_milestones_delete    ="DELETE FROM ".$tablename_milestones." WHERE company_id = ".$cp_id;
+				$cp_result_milestones_delete = $conn->query($cp_sql_milestones_delete);
+			}
+			
+			$cp_sql_projects     = "SELECT * FROM ".$tablename_projects." WHERE company_id = ".$cp_id;
+			$cp_result_projects  = $conn->query($cp_sql_projects);
+
+			if ($cp_result_projects->num_rows > 0) {
+				$cp_sql_projects_delete    ="DELETE FROM ".$tablename_projects." WHERE company_id = ".$cp_id;
+				$cp_result_projects_delete = $conn->query($cp_sql_projects_delete);
+			}
+			
 			$related_profiles = realted_manufacturer($_POST['cpregion'], $_POST['cpcomtype'], $_POST['cpcrystalline'],$_GET['company_id']);
 			// print_r($related_profiles);
 			// exit(); 
@@ -191,6 +207,7 @@
 				
 			if ($cp_result_check->num_rows > 0) {
 				$new_cp_name      = $_POST['cpname'];
+				$new_cp_parentname = $_POST['cpparentname'];
 				$new_cp_asname      = $_POST['cpasname'];
 				$new_cp_founded      = $_POST['cpfounded'];
 				$new_cp_founder     = $_POST['cpfounder'];
@@ -219,7 +236,7 @@
 			
             
 			$old_product_no   = $_POST['cpoldname'];
-			$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."',as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."' WHERE company_id=".$cp_id;
+			$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."', parent_company='".$new_cp_parentname."', as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."' WHERE company_id=".$cp_id;
 			$cp_result_update = $conn->query($cp_sql_update);
 				
 			if ($cp_result_update){
