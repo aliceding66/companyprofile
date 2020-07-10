@@ -52,6 +52,15 @@
 			// print_r($related_profiles);
 			// exit(); 
 
+
+			// Condition for Company name
+			if(empty($_POST['cpasname'])){
+				$final_company_name = $_POST['cpname'];
+			}else{
+				$final_company_name = $_POST['cpasname'];
+			}
+			// Condition for company name end
+
 			$xxxx = 1;
 			$xxxx_write = '<div class="whiteblock" id="archiveprojects"><h2>Archive Solar Projects for '.$_POST['cpname'].': </h2><div class="content">';
 			$is_projects  = 0;
@@ -96,7 +105,8 @@
 
 
 			$xx = 1;
-			$xx_write = '<div class="whiteblock" id="archivenews"><h2>Archive News for '.$_POST['cpname'].': </h2><div class="content">';
+			// Archive News for Company		
+			$xx_write = '<div class="whiteblock" id="archivenews"><h2>Archive News for '.$final_company_name.': </h2><div class="content">';			
 			$is_news  = 0;
 
 			while(isset($_POST['cpnewsname'.$xx]) && ($_POST['cpnewsname'.$xx] != '') && ($_POST['cpnewscontent'.$xx] != '')) {
@@ -117,7 +127,9 @@
 			
 			$x = 1;
 			$is_review = 0;
-			$x_write   = '<div class="whiteblock" id="userreviews"><h2 style="margin-bottom:0px !important;">Reviews for '.$_POST['cpname'].": </h2>";
+			/* Reviews For Company */
+			$x_write   = '<div class="whiteblock" id="userreviews"><h2 style="margin-bottom:0px !important;">Reviews for '.$final_company_name.": </h2>";
+			/* Reviews for company end */
 			
 			while(isset($_POST['cpreviewname'.$x])) {
 				$x_write                  = $x_write.'<br>';
@@ -137,7 +149,6 @@
 			
 			$cp_sql_details_check     = "SELECT * FROM ".$tablename_details." WHERE company_id = ".$cp_id;
 			$cp_result_details_check  = $conn->query($cp_sql_details_check);
-			
 			
 			if ($cp_result_details_check->num_rows > 0) {
 				$new_cp_name              = $_POST['cpname'];
@@ -444,12 +455,13 @@
 				if ($new_cp_business_status == ""){
 					$new_cp_business_status = "Unknown";
 				}
-					
+				// Comapany Name & Product Review	
 				$updatecontent = $updatecontent.'<section class="d-70">';
-				$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$new_cp_name.' | Product Reviews</h1>';
+				$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$final_company_name.' | Product Reviews</h1>';				
 				$updatecontent = $updatecontent."Factory Location: ".$new_cp_region."      ";
-				$updatecontent = $updatecontent.' | <a href="#userreviews">'.strval($x-1).' Reviews</a> | <a href="#archivenews">'.strval($xx-1)." News</a><br></div>";
+				$updatecontent = $updatecontent.' | <a href="#userreviews">'.strval($x-1).' Reviews</a> | <a href="#archivenews">'.strval($xx-1)." News</a><br></div>";					
 				$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
+				// Comapany Name & Product Review End
 				if ($new_cp_business_status == "Closed permanently"){
 					$updatecontent = $updatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 0px 30px 12px 30px !important;'><h4 style='color: #a94442; line-height: 0.1; font-size: 14px;'><i class='fa fa-exclamation-circle' style='font-size:16px;color:red'></i> Removed Listing</h4>";
 					$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442; font-size: 12px;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
@@ -458,7 +470,8 @@
 				 } 
 				$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
 				$updatecontent = $updatecontent.$_POST['mycustomeditor'];
-				$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$new_cp_name.": </h2>".$new_cp_about."</div><br>";
+				// About Company
+				$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$final_company_name.": </h2>".$final_company_name."</div><br>";			
 				$updatecontent = '<br>'.$updatecontent.$x_write.'<br>';
 				$updatecontent = $updatecontent.$xx_write."<br>";
 				$updatecontent = $updatecontent."</section>";
