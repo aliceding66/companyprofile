@@ -64,7 +64,6 @@
 			$xxxx = 1;
 			$xxxx_write = '<div class="whiteblock" id="archiveprojects"><h2>Archive Solar Projects for '.$_POST['cpname'].': </h2><div class="content">';
 			$is_projects  = 0;
-
 			while(isset($_POST['cpsolarprojectsno'.$xxxx]) && ($_POST['cpsolarprojectsno'.$xxxx] != '')) {
     			$cp_sql_projects_update       = "INSERT INTO ".$tablename_projects." (company_id, project_cat_id,model_no) VALUES (".$cp_id.", ".$_POST['cpsolarprojectscat'.$xxxx].", '".$_POST['cpsolarprojectsno'.$xxxx]."');";
 				$cp_result_projects_update = $conn->query($cp_sql_projects_update);
@@ -102,13 +101,12 @@
                 $xxx_write = $xxx_write.'</div></div>';
             }
 
-
+			
 
 			$xx = 1;
 			// Archive News for Company		
 			$xx_write = '<div class="whiteblock" id="archivenews"><h2>Archive News for '.$final_company_name.': </h2><div class="content">';			
 			$is_news  = 0;
-
 			while(isset($_POST['cpnewsname'.$xx]) && ($_POST['cpnewsname'.$xx] != '') && ($_POST['cpnewscontent'.$xx] != '')) {
     			$cp_sql_news_update       = "INSERT INTO ".$tablename_news." (company_id, news_id, date,title, content) VALUES (".$cp_id.", ".$xx.",2020".", '".$_POST['cpnewsname'.$xx]."', '".$_POST['cpnewscontent'.$xx]."');";
 				$cp_result_reviews_update = $conn->query($cp_sql_news_update);
@@ -121,10 +119,37 @@
 				$is_news = 1;
             }
             
-			if ($is_news == 1) {
+			//if ($is_news == 1) {
                 $xx_write = $xx_write.'</div></div>';
-            }
+			//}
 			
+			/*Milestone Timeline */
+			  $cp_sql_milestones    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".$cp_id;
+			  $cp_result_milestones = $conn->query($cp_sql_milestones);
+			  if ($cp_result_milestones->num_rows > 0) {				
+				while($row_milestones = $cp_result_milestones->fetch_assoc()) {
+					$company_year = $row_milestones["milestone_year"];
+					$company_name = $row_milestones["milestone_name"];
+					$company_content = $row_milestones["milestone_content"];
+					$company_milestone = '<div class="whiteblock" id="company_mile"><h2>Milestone for '.$final_company_name.': </h2>
+					
+					<div class="history-tl-container">
+						<ul class="tl">
+							<li class="tl-item" ng-repeat="item in retailer_history">
+								<div class="timestamp">'.$company_year.'<br>
+								</div>
+								<div class="item-title"><p>'.$company_name.'</p></div>
+								<div class="item-detail"><p>'.$company_content.'</p></div>
+							</li>											
+						</ul>
+						</div>
+					</div>';
+					/* Fetch Milestone End */
+				}	
+			}
+			else {echo '0 Milestones<br><br>';}
+			/*Milestone Timeline End*/ 
+
 			$x = 1;
 			$is_review = 0;
 			/* Reviews For Company */
@@ -146,7 +171,9 @@
 			}else {
 				$x_write=$x_write.'</div>';
 			}	
-			
+
+
+
 			$cp_sql_details_check     = "SELECT * FROM ".$tablename_details." WHERE company_id = ".$cp_id;
 			$cp_result_details_check  = $conn->query($cp_sql_details_check);
 			
@@ -340,7 +367,77 @@
 																#mfp-topbar ul li a {
 																	color: #eee !important;
 																	font-size: 14px;
+																}	
+																
+
+																
+																.history-tl-container{
+																font-family: "Roboto",sans-serif;
+																width:100%;
+																margin:auto;
+																display:block;
+																position:relative;
 																}
+																.history-tl-container ul.tl{
+																	margin:20px 0;
+																	padding:0;
+																	display:inline-block;
+
+																}
+																.history-tl-container ul.tl li{
+																	list-style: none;
+																	margin:auto;
+																	margin-left:70px;
+																	min-height:50px;
+																	/*background: rgba(255,255,0,0.1);*/
+																	border-left:1px dashed #86D6FF;
+																	padding:0 0 50px 30px;
+																	position:relative;
+																}
+																.history-tl-container .item-title > p{
+																	font-size:18px;
+																	margin: 0 !important;
+																	font-family: Work Sans, Arial, sans-serif;
+																}
+																.history-tl-container ul.tl li:last-child{ border-left:0;}
+																.history-tl-container ul.tl li::before{
+																	position: absolute;
+																	left: -11px;
+																	top: -5px;
+																	content: " ";
+																	border: 8px solid rgba(255, 255, 255, 0.74);
+																	border-radius: 500%;
+																	background: #258CC7;
+																	height: 20px;
+																	width: 20px;
+																	transition: all 500ms ease-in-out;
+
+																}
+																.history-tl-container ul.tl li:hover::before{
+																	border-color:  #258CC7;
+																	transition: all 1000ms ease-in-out;
+																}
+
+																.history-tl-container ul.tl li .item-detail{
+																	color:rgba(0,0,0,0.5);
+																	font-size:14px;
+																}
+																.history-tl-container ul.tl li .timestamp{
+																	color: #8D8D8D;
+																	position: absolute;
+																width:100px;
+																	left:-135px;
+																	top:-7px;
+																	text-align: right;
+																	font-size: 17px;
+																	font-family: Work Sans, Arial, sans-serif;
+																}				
+																.history-tl-container ul.tl li .item-title{
+																	color: #8D8D8D;
+																	position: inherit;
+																	top: -9px;
+																}											
+																
 																
 																</style>';
 
@@ -455,6 +552,8 @@
 				if ($new_cp_business_status == ""){
 					$new_cp_business_status = "Unknown";
 				}
+
+
 				// Comapany Name & Product Review	
 				$updatecontent = $updatecontent.'<section class="d-70">';
 				$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$final_company_name.' | Product Reviews</h1>';				
@@ -471,11 +570,14 @@
 				$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
 				$updatecontent = $updatecontent.$_POST['mycustomeditor'];
 				// About Company
-				$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$final_company_name.": </h2>".$final_company_name."</div><br>";			
+				$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$final_company_name.": </h2>".$final_company_name."</div><br>";
+						
 				$updatecontent = '<br>'.$updatecontent.$x_write.'<br>';
 				$updatecontent = $updatecontent.$xx_write."<br>";
+				$updatecontent = $updatecontent.$company_milestone."<br>";
+				// $updatecontent = $updatecontent.$xxx_write."<br>";
+				
 				$updatecontent = $updatecontent."</section>";
-					
 				$updatecontent = $updatecontent.'<aside class="d-30">';
 				$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="'.get_site_url().'/list-your-business/ "><img src="'.get_site_url().'/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
 				
@@ -786,7 +888,8 @@
 				
 						while($row_milestones = $cp_result_milestones->fetch_assoc()) {
 							echo '<button id="'.$row_milestones["milestone_id"].'" type="button" class="accordionm">'.$row_milestones["milestone_year"].'</button>
-							<div id="plus'.$row_milestones["milestone_id"].'" class="panel"><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cprmilestonescontent'.$row_milestones["milestone_content"].'" name="cprmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
+							
+							<div id="plus'.$row_milestones["milestone_id"].'" class="panel"><label for="cpmilestonesyear'.$row_milestones["milestone_id"].'">Year: </label><input type="text" id="cpmilestonesyear'.$row_milestones["milestone_year"].'" name="cpmilestonesyear'.$row_milestones["milestone_id"].'" rows="1" cols="80" >'.$row_milestones["milestone_year"].'<br><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cpmilestonescontent'.$row_milestones["milestone_content"].'" name="cpmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
 						}	
 					}
 					else {echo '0 Milestones<br><br>';}
@@ -1065,7 +1168,7 @@
 			echo '<input id="deletecpid" name="deletecpid" type="hidden" value="'.$cp_id.'">';
 			echo '&nbsp;&nbsp;<span><a href="'.get_site_url().'/wp-admin/admin.php?page=cpcustompage">Back to Manufacturer Profile List</a></span>';
 			echo '</form>';
-            
+
         }
         
     }
