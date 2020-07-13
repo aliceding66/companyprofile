@@ -765,8 +765,13 @@
 			echo '<div class="mfp-editbox">';
 			echo '<div class="mfp-edit-left">';
 			echo '<input id="updatecpid" name="updatecpid" type="hidden" value="1">';
-    		echo '<input type="hidden" id="cpoldname" name="cpoldname" value="'. $row["name"].'">';
-			echo '<label for="cpname">Manufacturer Name: </label>';
+			echo '<input type="hidden" id="cpoldname" name="cpoldname" value="'. $row["name"].'">';
+			
+			
+			
+			
+
+			echo '<br><br><label for="cpname">Manufacturer Name: </label>';
     		echo '<input type="text" id="cpname" name="cpname" value="'. $row["name"].'"> <br><br>';
 
     		echo '<label for="cpasname">Do Business As: </label>';
@@ -1163,8 +1168,17 @@
 
 			echo '<label for="cplastedit">Last Edit Date: </label>';
 			echo '<input type="text" id="cplastedit" name="cplastedit" value="'. $row["last_edit"].'"><br><br>';		
-			
-		    echo "Business status : "; 
+			// Get Menufacturer Owner
+			$args1 = array(
+				'role' => 'mfp_owner',
+				'orderby' => 'user_nicename',
+				'order' => 'ASC'
+			   );
+				$menufacturer_owner = get_users($args1);
+				echo '<label for="business_role">Manufacturer Owner: </label>';
+				wp_dropdown_users($args1).'<br><br>';
+			// Get Menufacturer Owner End
+		    echo "<br><br>Business status : "; 
 			echo '<select name="cpbusiness_status">'; ?>
 			<option value="">Select</option>
 			<option value="Closed permanently" <?php if($row["status"] == "Closed permanently"){echo $select_attribute = 'selected'; } ?> >Closed permanently</option>;
