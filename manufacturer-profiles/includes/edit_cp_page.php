@@ -123,32 +123,7 @@
                 $xx_write = $xx_write.'</div></div>';
 			//}
 			
-			/*Milestone Timeline */
-			  $cp_sql_milestones    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".$cp_id;
-			  $cp_result_milestones = $conn->query($cp_sql_milestones);
-			  if ($cp_result_milestones->num_rows > 0) {				
-				while($row_milestones = $cp_result_milestones->fetch_assoc()) {
-					$company_year = $row_milestones["milestone_year"];
-					$company_name = $row_milestones["milestone_name"];
-					$company_content = $row_milestones["milestone_content"];
-					$company_milestone = '<div class="whiteblock" id="company_mile"><h2>Milestone for '.$final_company_name.': </h2>
-					
-					<div class="history-tl-container">
-						<ul class="tl">
-							<li class="tl-item" ng-repeat="item in retailer_history">
-								<div class="timestamp">'.$company_year.'<br>
-								</div>
-								<div class="item-title"><p>'.$company_name.'</p></div>
-								<div class="item-detail"><p>'.$company_content.'</p></div>
-							</li>											
-						</ul>
-						</div>
-					</div>';
-					/* Fetch Milestone End */
-				}	
-			}
-			else {echo '0 Milestones<br><br>';}
-			/*Milestone Timeline End*/ 
+			
 
 			$x = 1;
 			$is_review = 0;
@@ -384,10 +359,11 @@
 																	display:inline-block;
 
 																}
+																
 																.history-tl-container ul.tl li{
 																	list-style: none;
 																	margin:auto;
-																	margin-left:70px;
+																	margin-left:80px;
 																	min-height:50px;
 																	/*background: rgba(255,255,0,0.1);*/
 																	border-left:1px dashed #86D6FF;
@@ -553,6 +529,46 @@
 					$new_cp_business_status = "Unknown";
 				}
 
+				/*Milestone Section Start */
+				$cp_sql_milestones    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".$cp_id;
+				$cp_result_milestones = $conn->query($cp_sql_milestones);
+				if ($cp_result_milestones->num_rows > 0) {				
+				  while($row_milestones = $cp_result_milestones->fetch_assoc()) {
+					  $company_year = $row_milestones["milestone_year"];
+					  $company_name = $row_milestones["milestone_name"];
+					  $company_content = $row_milestones["milestone_content"];
+					  $company_milestone = '<div class="whiteblock" id="company_mile"><h2>Milestones for '.$final_company_name.': </h2>
+					  
+					  <div class="history-tl-container">
+						  <ul class="tl">
+							  <li class="tl-item" ng-repeat="item in retailer_history">
+								  <div class="timestamp">'.$company_year.'<br>
+								  </div>
+								  <div class="item-title"><p>'.$company_name.'</p></div>
+								  <div class="item-detail"><p>'.$company_content.'</p></div>
+							  </li>											
+						  </ul>
+						  </div>
+					  </div>';
+					  /* Fetch Milestone End */
+				  }	
+			  }
+			  else{
+				  $company_milestone = '<div class="whiteblock" id="company_mile"><h2>Milestones for '.$final_company_name.':</h2>
+				  <div class="history-tl-container">
+						  <ul class="tl">
+							  <li class="tl-item tl-else" ng-repeat="item in retailer_history">
+								  <div class="timestamp">'.$new_cp_founded.'<br>
+								  </div>
+								  <div class="item-title"><p>'.$final_company_name.'. '.$new_cp_founded.'</p></div>
+								  <div class="item-detail"><p></p></div>
+							  </li>											
+						  </ul>
+						  </div>
+					  </div>';
+			  }
+			  
+			  /*Milestone Section End*/ 
 
 				// Comapany Name & Product Review	
 				$updatecontent = $updatecontent.'<section class="d-70">';
