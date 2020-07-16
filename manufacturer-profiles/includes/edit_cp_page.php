@@ -1,5 +1,4 @@
 <?php
-     
     // Create connection
     $conn  = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
@@ -11,7 +10,7 @@
 	$tablename_projects    = "company_profile_projects";
 	$tablename_project_cat   = "company_profile_project_category";
 	
-    $cp_id             = $_GET['company_id'];
+    $cp_id            = $_GET['company_id'];
 	
 	if($_POST && isset($_POST['updatecpid'])){
 		if (isset($_GET['company_id'])){	
@@ -64,10 +63,12 @@
 			$xxxx = 1;
 			$xxxx_write = '<div class="whiteblock" id="archiveprojects"><h2>Archive Solar Projects for '.$_POST['cpname'].': </h2><div class="content">';
 			$is_projects  = 0;
+			//var_dump($_POST['cpsolarprojectsno1']);
+			//var_dump($_POST['cpsolarprojectsno2']);
 			while(isset($_POST['cpsolarprojectsno'.$xxxx]) && ($_POST['cpsolarprojectsno'.$xxxx] != '')) {
     			$cp_sql_projects_update       = "INSERT INTO ".$tablename_projects." (company_id, project_cat_id,model_no) VALUES (".$cp_id.", ".$_POST['cpsolarprojectscat'.$xxxx].", '".$_POST['cpsolarprojectsno'.$xxxx]."');";
 				$cp_result_projects_update = $conn->query($cp_sql_projects_update);
-				var_dump($cp_sql_projects_update );
+				//var_dump($cp_sql_projects_update );
 				
 				$xxxx_write  = $xxxx_write.'<div>';
 				$xxxx_write  = $xxxx_write.'<input type="checkbox" id="question'.$xxxx.'" name="q" class="questions"><div class="plus">+</div><label for="question'.$xx.'" class="question">'.$_POST['cpsolarprojectsno'.$xxxx].'</label>';
@@ -84,9 +85,11 @@
 			$xxx = 1;
 			$xxx_write = '<div class="whiteblock" id="milestones"><h2>Milestone for '.$_POST['cpname'].': </h2><div class="content">';
 			$is_milestones  = 0;
-
+			//var_dump($_POST['cpmilestonesyear'.$xxx]);
+			//var_dump($_POST['cpmilestonesname'.$xxx]);
 			while(isset($_POST['cpmilestonesname'.$xxx]) && ($_POST['cpmilestonesname'.$xxx] != '') && ($_POST['cpmilestonesyear'.$xxx] != '')) {
     			$cp_sql_milestones_update       = "INSERT INTO ".$tablename_milestones." (company_id, milestone_id, milestone_year,milestone_name, milestone_content	) VALUES (".$cp_id.", ".$xxx.",".$_POST['cpmilestonesyear'.$xxx].", '".$_POST['cpmilestonesname'.$xxx]."', '".$_POST['cpmilestonescontent'.$xxx]."');";
+				//var_dump($cp_sql_milestones_update);
 				$cp_result_milestones_update = $conn->query($cp_sql_milestones_update);
 				
 				$xxx_write  = $xxx_write.'<div>';
@@ -713,13 +716,24 @@
 		}
 	}
 	
+	         
+
 	
 
     if ($cp_result->num_rows > 0) {
    
         while($row = $cp_result->fetch_assoc()) {
 
-			
+		$currentUserRole = wp_get_current_user();
+    	if ( in_array( 'mfp_owner', (array) $currentUserRole->roles ) ) {
+            $currentUserId = get_current_user_id();
+			$comapnyOwnerId = $row['company_owner'];
+			if ($currentUserId != $comapnyOwnerId) {
+				echo 'You are not authorised to access this page';
+				exit();
+			}
+		}           
+       
 
 			echo '<style>
 			.mfp-editbox {
@@ -910,7 +924,7 @@
 						while($row_milestones = $cp_result_milestones->fetch_assoc()) {
 							echo '<button id="'.$row_milestones["milestone_id"].'" type="button" class="accordionm">'.$row_milestones["milestone_year"].'</button>
 							
-							<div id="plus'.$row_milestones["milestone_id"].'" class="panel"><label for="cpmilestonesyear'.$row_milestones["milestone_id"].'">Year: </label><input type="text" id="cpmilestonesyear'.$row_milestones["milestone_year"].'" name="cpmilestonesyear'.$row_milestones["milestone_id"].'" rows="1" cols="80" >'.$row_milestones["milestone_year"].'<br><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cpmilestonescontent'.$row_milestones["milestone_content"].'" name="cpmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
+							<div id="plus'.$row_milestones["milestone_id"].'" class="panel"><label for="cpmilestonesyear'.$row_milestones["milestone_id"].'">Year: </label><input type="text" id="cpmilestonesyear'.$row_milestones["milestone_year"].'" name="cpmilestonesyear'.$row_milestones["milestone_id"].'" rows="1" cols="80" value="'.$row_milestones["milestone_year"].'">'.'<br><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cpmilestonescontent'.$row_milestones["milestone_content"].'" name="cpmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
 						}	
 					}
 					else {echo '0 Milestones<br><br>';}
@@ -941,20 +955,20 @@
 			echo '<script>
 					function addsolarprojects() {
 					var s=document.getElementsByClassName("accordions").length+1;
-					document.getElementById("solarprojectsdemo").innerHTML =document.getElementById("solarprojectsdemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordions">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpsolarprojectscat\'+String(s)+\'">Solar Project Category: </label>\'+\'<select id="cpsolarprojectscat\'+String(s)+\'" name="cpsolarprojectscat\'+String(s)+\'">';
+					document.getElementById("solarprojectsdemo").innerHTML =document.getElementById("solarprojectsdemo").innerHTML+\'<button id="pp\'+String(s)+\'" type="button" class="accordions">New</button><div id="pplus\'+String(s)+\'" class="panel"><label for="cpsolarprojectscat\'+String(s)+\'">Solar Project Category: </label>\'+\'<select id="cpsolarprojectscat\'+String(s)+\'" name="cpsolarprojectscat\'+String(s)+\'">';
   			foreach ($prod_cat as $v) {
 				
   				echo '<option value="'.array_search($v, $prod_cat).'">'.$v.'</option>';
 			}
     		
   					echo '</select><br><label for="cpsolarprojectsno\'+String(s)+\'">Model Number: </label>'.
-					'<textarea id="cpsolarprojectsno\'+String(s)+\'" name="cpsolarprojectsno\'+String(s)+\'"></textarea><br>'.
+					'<input id="cpsolarprojectsno\'+String(s)+\'" name="cpsolarprojectsno\'+String(s)+\'"><br>'.
 					'<br><br><button type="button" onclick="deletesolarprojects(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
 					document.getElementsByClassName("accordions");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
 					
 				 </script>';
 
-			echo '<script>function deletesolarprojects(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
+			echo '<script>function deletesolarprojects(a) {var myobj = document.getElementById("pp"+String(a));myobj.remove();var myobjplus = document.getElementById("pplus"+String(a));myobjplus.remove();}</script>';
 			wp_enqueue_script( 'jQuery' );	
 			
 			
@@ -967,13 +981,14 @@
 			
 			echo '<span id="solarprojectsdemo">';
 					if ($cp_result_solarprojects->num_rows > 0) {
-				
+						$project_count = 1;
 						while($row_solarprojects = $cp_result_solarprojects->fetch_assoc()) {
-							echo '<button id="'.$row_solarprojects["project_id"].'" type="button" class="accordions">'.$row_solarprojects["model_no"].'</button>
-							<div id="plus'.$row_solarprojects["model_no"].'" class="panel">
-							  <select id="cpsolarprojectscat'.$row_solarprojects["project_id"].'" name="cpsolarprojectscat'.$row_solarprojects["project_id"].'>';
+							echo '<button id="pp'.strval($project_count).'" type="button" class="accordions">'.$row_solarprojects["model_no"].'</button>
+							<div id="pplus'.$project_count.'" class="panel">
+							  Solar Project Category: <select id="cpsolarprojectscat'.$project_count.'" name="cpsolarprojectscat'.$project_count.'">';
+							
   							  foreach ($prod_cat as $v) {
-  							  	if (array_search($v, $prod_cat) == $row_solarprojects["project_id"]){
+  							  	if (array_search($v, $prod_cat) == $row_solarprojects["project_cat_id"]){
   							  		echo '<option value="'.array_search($v, $prod_cat).'" selected>'.$v.'</option>';
   							  	}
   								else {
@@ -984,7 +999,8 @@
   							  echo '</select>
 
 
-							  <br><label for="cpsolarprojectsno'.$row_solarprojects["project_id"].'">Model Number: </label><textarea id="cpsolarprojectsno'.$row_solarprojects["model_no"].'" name="cpmilestonesname'.$row_solarprojects["project_id"].'" rows="1" cols="80">'.$row_solarprojects["model_no"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_solarprojects["milestone_id"].')">Delete</button><br><br></div>';
+							  <br><label for="cpsolarprojectsno'.$project_count.'">Model Number: </label><input id="cpsolarprojectsno'.$project_count.'" name="cpsolarprojectsno'.$project_count.'" rows="1" cols="80" value="'.$row_solarprojects["model_no"].'">'.'<br><br><button type="button" onclick="deletesolarprojects('.$project_count.')">Delete</button><br><br></div>';
+							$project_count = $project_count + 1;
 						}	
 					}
 					else {echo '0 Solar Projects<br><br>';}
@@ -1201,9 +1217,12 @@
 			echo '</div>';	
 			echo '</div>';	
 			echo '</form><br>';
-            
-			echo '<form action="'.get_site_url().'/wp-admin/admin.php?page=cpcustompage" method="POST" onsubmit="setFormSubmitting(); return confirm(\'Are you sure you want to delete this profile?\');"><input type="submit" value="Delete" id="btn_delete">';
-			echo '<input id="deletecpid" name="deletecpid" type="hidden" value="'.$cp_id.'">';
+			
+			$adminRole = wp_get_current_user();
+    		if ( in_array( 'administrator', (array) $adminRole->roles ) ) {
+				echo '<form action="'.get_site_url().'/wp-admin/admin.php?page=cpcustompage" method="POST" onsubmit="setFormSubmitting(); return confirm(\'Are you sure you want to delete this profile?\');"><input type="submit" value="Delete" id="btn_delete">';
+				echo '<input id="deletecpid" name="deletecpid" type="hidden" value="'.$cp_id.'">';
+			}
 			echo '&nbsp;&nbsp;<span><a href="'.get_site_url().'/wp-admin/admin.php?page=cpcustompage">Back to Manufacturer Profile List</a></span>';
 			echo '</form>';
 
