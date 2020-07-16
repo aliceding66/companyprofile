@@ -681,8 +681,7 @@
 	
 	$cp_name           = $_POST['cpname'];
 	$cp_sql            = "SELECT * FROM ".$tablename." WHERE company_id=".$cp_id;
-    $cp_result         = $conn->query($cp_sql);
-	
+	$cp_result         = $conn->query($cp_sql);
 	$cp_sql_detail     = "SELECT * FROM ".$tablename_details." WHERE company_id=".$cp_id;
     $cp_result_detail  = $conn->query($cp_sql_detail);
 
@@ -788,7 +787,8 @@
             echo '<input type="text" id="cpfounder" name="cpfounder" value="'. $row["founder"].'"><br><br>';
 
             echo '<label for="cpceo">CEO: </label></td>';
-            echo '<input type="text" id="cpceo" name="cpceo" value="'. $row["ceo"].'"><br><br>';
+			echo '<input type="text" id="cpceo" name="cpceo" value="'. $row["ceo"].'"><br><br>';
+			
 
             echo '<label for="cpslogan">Slogan: </label></td>';
             echo '<textarea id="cpslogan" name="cpslogan" rows="1" cols="80">'.$row["slogan"].'</textarea><br><br>';
@@ -1167,17 +1167,25 @@
 					}
 
 			echo '<label for="cplastedit">Last Edit Date: </label>';
-			echo '<input type="text" id="cplastedit" name="cplastedit" value="'. $row["last_edit"].'"><br><br>';		
+			echo '<input type="text" id="cplastedit" name="cplastedit" value="'. $row["last_edit"].'"><br><br>';
+			
+
+			
+			
 			// Get Menufacturer Owner
 			$args1 = array(
 				'role' => 'mfp_owner',
 				'orderby' => 'user_nicename',
-				'order' => 'ASC'
+				'order' => 'ASC',
+				'show_option_none' => 'Select',
+				'selected' => $row['company_owner']
 			   );
 				$menufacturer_owner = get_users($args1);
-				echo '<label for="business_role">Manufacturer Owner: </label>';
+				echo '<label for="business_role">Company Owner: </label>';
 				wp_dropdown_users($args1).'<br><br>';
+
 			// Get Menufacturer Owner End
+
 		    echo "<br><br>Business status : "; 
 			echo '<select name="cpbusiness_status">'; ?>
 			<option value="">Select</option>
