@@ -370,7 +370,7 @@
 																	min-height:50px;
 																	/*background: rgba(255,255,0,0.1);*/
 																	border-left:1px dashed #86D6FF;
-																	padding:0 0 50px 30px;
+																	padding:0 0 0px 30px;
 																	position:relative;
 																}
 																.history-tl-container .item-title > p{
@@ -425,10 +425,11 @@
 				//if ( is_user_logged_in() ) {
 				$edit_url= get_site_url()."/wp-admin/admin.php?page=cpcustomsubpage&company_id=".$cp_id;
 				$add_url = get_site_url()."/wp-admin/admin.php?page=cpcreatepage";
-				$admin_url = get_site_url()."/wp-admin";
-				$updatecontent = $updatecontent."<?php if ( is_user_logged_in() ) { ?>";
-				$updatecontent = $updatecontent."<div id='mfp-topbar'><ul><li><a href='".$edit_url."'>Edit this page</a> |</li><li><a href='".$add_url."'>Add a new profile</a> |</li><li><a href='".$admin_url."'>WP Dashboard</a></li></ul></div>";
-				$updatecontent = $updatecontent."<?php } ?>";
+				$admin_url = get_site_url()."/wp-admin";	
+
+				$updatecontent = $updatecontent."<?php if ( is_user_logged_in() ) { ?>";					
+					$updatecontent = $updatecontent."<div id='mfp-topbar'><ul><li><a href='".$edit_url."'>Edit this page</a> |</li><li><a href='".$add_url."'>Add a new profile</a> |</li><li><a href='".$admin_url."'>WP Dashboard</a></li></ul></div>";
+				$updatecontent = $updatecontent."<?php	} ?>";
 				//}
 				if ($new_cp_name == ""){
 					$new_cp_name = "Unknown";
@@ -540,40 +541,34 @@
 					  $company_year = $row_milestones["milestone_year"];
 					  $company_name = $row_milestones["milestone_name"];
 					  $company_content = $row_milestones["milestone_content"];
-					  $company_milestone = '<div class="whiteblock" id="company_mile"><h2>Milestones for '.$final_company_name.': </h2>
-					  
-					  <div class="history-tl-container">
-						  <ul class="tl">
-							  <li class="tl-item" ng-repeat="item in retailer_history">
-								  <div class="timestamp">'.$company_year.'<br>
-								  </div>
-								  <div class="item-title"><p>'.$company_name.'</p></div>
-								  <div class="item-detail"><p>'.$company_content.'</p></div>
-							  </li>											
-						  </ul>
-						  </div>
-					  </div>';
+					  $company_milestone = $company_milestone.'<div class="history-tl-container">
+								<ul class="tl">
+									<li class="tl-item" ng-repeat="item in retailer_history">
+										<div class="timestamp">'.$company_year.'<br></div>
+										<div class="item-title"><p>'.$company_name.'</p></div>
+										<div class="item-detail"><p>'.$company_content.'</p></div>
+									</li>
+								</ul>
+								</div>';
 					  /* Fetch Milestone End */
 				  }	
 			  }
-			  else{
-				  $company_milestone = '<div class="whiteblock" id="company_mile"><h2>Milestones for '.$final_company_name.':</h2>
-				  <div class="history-tl-container">
-						  <ul class="tl">
-							  <li class="tl-item tl-else" ng-repeat="item in retailer_history">
-								  <div class="timestamp">'.$new_cp_founded.'<br>
-								  </div>
-								  <div class="item-title"><p>'.$final_company_name.'. '.$new_cp_founded.'</p></div>
-								  <div class="item-detail"><p></p></div>
-							  </li>											
-						  </ul>
-						  </div>
-					  </div>';
+			  else{	
+				$company_milestone ='<div class="history-tl-container">
+						<ul class="tl">
+							<li class="tl-item tl-else" ng-repeat="item in retailer_history">
+								<div class="timestamp">'.$new_cp_founded.'<br></div>
+								<div class="item-title"><p>'.$final_company_name.'. '.$new_cp_founded.'</p></div>
+								<div class="item-detail"><p></p></div>
+							</li>											
+						 </ul>
+					</div>';				 
 			  }
 			  
 			  /*Milestone Section End*/ 
 
-				// Comapany Name & Product Review	
+
+			    // Comapany Name & Product Review	
 				$updatecontent = $updatecontent.'<section class="d-70">';
 				$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$final_company_name.' | Product Reviews</h1>';				
 				$updatecontent = $updatecontent."Factory Location: ".$new_cp_region."      ";
@@ -593,11 +588,13 @@
 						
 				$updatecontent = '<br>'.$updatecontent.$x_write.'<br>';
 				$updatecontent = $updatecontent.$xx_write."<br>";
-				$updatecontent = $updatecontent.$company_milestone."<br>";
+				$updatecontent = $updatecontent."<div class='whiteblock' id='company_mile'><h2>Milestones for '.$final_company_name.': </h2>";
+				$updatecontent = $updatecontent.$company_milestone;
+				$updatecontent = $updatecontent."</div>";
 				// $updatecontent = $updatecontent.$xxx_write."<br>";
 				
 				$updatecontent = $updatecontent."</section>";
-				$updatecontent = $updatecontent.'<aside class="d-30">';
+				$updatecontent = $updatecontent.'<aside class="d-30">';       			
 				$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="'.get_site_url().'/list-your-business/ "><img src="'.get_site_url().'/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
 				
 				/*Comapany Info*/				
