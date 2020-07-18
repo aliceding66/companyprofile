@@ -357,11 +357,12 @@
 																position:relative;
 																}
 																.history-tl-container ul.tl{
-																	margin:20px 0;
+																	margin:0px 0 !important;
 																	padding:0;
 																	display:inline-block;
 
 																}
+																
 																
 																.history-tl-container ul.tl li{
 																	list-style: none;
@@ -369,8 +370,8 @@
 																	margin-left:80px;
 																	min-height:50px;
 																	/*background: rgba(255,255,0,0.1);*/
-																	border-left:1px dashed #86D6FF;
-																	padding:0 0 0px 30px;
+																	border-left:1px dashed #86D6FF !important;
+																	padding:0 0 1px 30px;
 																	position:relative;
 																}
 																.history-tl-container .item-title > p{
@@ -588,7 +589,7 @@
 						
 				$updatecontent = '<br>'.$updatecontent.$x_write.'<br>';
 				$updatecontent = $updatecontent.$xx_write."<br>";
-				$updatecontent = $updatecontent."<div class='whiteblock' id='company_mile'><h2>Milestones for '.$final_company_name.': </h2>";
+				$updatecontent = $updatecontent.'<div class="whiteblock" id="company_mile"><h2>Milestones for '.$final_company_name.': </h2>';
 				$updatecontent = $updatecontent.$company_milestone;
 				$updatecontent = $updatecontent."</div>";
 				// $updatecontent = $updatecontent.$xxx_write."<br>";
