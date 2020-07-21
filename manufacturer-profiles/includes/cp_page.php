@@ -172,29 +172,50 @@
             $new_cp_hecprl            = $_POST['cphecprl'];
             $new_cp_hecprh            = $_POST['cphecprh'];
             $new_cp_business_status   = $_POST['cpbusiness_status'];
-            $new_cp_comptype          = $_POST['cpcomtype'];
+            $new_cp_comtype          = $_POST['cpcomtype'];
             $new_cp_me                = $_POST['cpme'];
 
-            
-            if(empty($new_cp_image) || empty($new_cp_name) || empty($new_cp_asname) || empty($new_cp_region) || empty($new_cp_about) || empty($new_cp_founded) || empty($new_cp_founder) || empty($new_cp_ceo) || empty($new_cp_phone) || empty($new_cp_email) || empty($new_cp_url) || empty($new_cp_comptype))
-            {
-                echo '<span style="color: red !important;">* Please Fill Required Feilds</span><br>';
+
+            if(empty($new_cp_image)){
+            echo '<span style="color: red !important;">Image is empty! Please fill all required fields *</span><br>';	
+            }elseif (empty($new_cp_name)) {
+                echo '<span style="color: red !important;">Manufacturer Name is empty! Please fill all required fields *</span><br>';
+            }elseif (empty($new_cp_asname)) {
+                echo '<span style="color: red !important;">Do Business As is empty! Please fill all required fields *</span><br>';
+            }elseif (empty($new_cp_region)) {
+                echo '<span style="color: red !important;">Region is empty! Please fill all required fields *</span><br>';
+            }elseif (empty($new_cp_about)) {
+                echo '<span style="color: red !important;">About is empty! Please fill all required fields *</span><br>';
+            }elseif (empty($new_cp_founded)) {
+                echo '<span style="color: red !important;">Founded Year is empty! Please fill all required fields *</span><br>';
+            }elseif (empty($new_cp_founder)) {
+                echo '<span style="color: red !important;">Founder is empty! Please fill all required fields *</span><br>';
+            }elseif (empty($new_cp_ceo)) {
+                echo '<span style="color: red !important;">CEO is empty! Please fill all required fields *</span><br>';
+            }elseif (empty($new_cp_url)) {
+                echo '<span style="color: red !important;">URL is empty! Please fill all required fields *</span><br>';
+            }elseif (empty($new_cp_phone)) {
+                echo '<span style="color: red !important;">Phone is empty! Please fill all required fields *</span><br>';
+            }elseif (empty($new_cp_email)) {
+                echo '<span style="color: red !important;">Email is empty! Please fill all required fields *</span><br>';
             }else{
                 if($new_cp_owner != -1){
                     $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond, company_owner) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.",".$new_cp_owner.")";
                 }else{
-                    $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond, company_owner) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.")";
+                    $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.")";
                 }
             }
-            $cp_result_insert      = $conn->query($cp_sql_insert);
+            $cp_result_insert = $conn->query($cp_sql_insert);
 
             if(empty($new_cp_crystalline)){
                 echo '<span style="color: red !important;">* Please Fill Required Feilds</span><br>';
+            }elseif(empty($new_cp_comtype)){
+                echo '<span style="color: red !important;">* Please Fill Required Feilds</span><br>';
             }else{
-            $cp_sql_insert_details = "INSERT INTO ".$tablename_details." (company_id, staff_no, business_type, crystalline, cprl, cprh, high_eff, hecprl, hecprh,com_type,mounting_eq) VALUES (".$new_cp_id.",".$new_cp_staffno.",".$new_cp_businesstype.",'".$new_cp_crystalline."','".$new_cp_cprl."','".$new_cp_cprh."','".$new_cp_high_eff."','".$new_cp_hecprl."','".$new_cp_hecprh."','".$new_cp_comtype."','".$new_cp_cpme."')";
+            $cp_sql_insert_details = "INSERT INTO ".$tablename_details." (company_id, staff_no, business_type, crystalline, cprl, cprh, high_eff, hecprl, hecprh, com_type, mounting_eq) VALUES (".$new_cp_id.",".$new_cp_staffno.",".$new_cp_businesstype.",'".$new_cp_crystalline."','".$new_cp_cprl."','".$new_cp_cprh."','".$new_cp_high_eff."','".$new_cp_hecprl."','".$new_cp_hecprh."','".$new_cp_comtype."','".$new_cp_cpme."')";
             $cp_result_insert      = $conn->query($cp_sql_insert_details);
             }
-
+            
              
             if ($new_cp_name == ""){
                     $new_cp_name = "Unknown";
@@ -565,11 +586,11 @@
     /*Backend basic Info Section Start */
     echo'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Basic Info</h2>';
     echo '<table>';
-    echo '<tr><td><label for="cpname"><span style="color: red !important;">*</span>Manufacturer Name: </label></td>';
+    echo '<tr><td><label for="cpname">Manufacturer Name<span style="color: red !important;">*</span>: </label></td>';
     echo '<td><input type="text" id="cpname" name="cpname" required></td></tr>';
-    echo '<tr><td><label for="cpasname"><span style="color: red !important;">*</span>Do Business As: </label></td>';
+    echo '<tr><td><label for="cpasname">Do Business As<span style="color: red !important;">*</span>: </label></td>';
     echo '<td><input type="text" id="cpasname" name="cpasname" required><br><br></td></tr>';
-    echo '<tr><td><label for="cpname"><span style="color: red !important;">*</span>Parent Manufacturer Name: </label></td>';
+    echo '<tr><td><label for="cpname">Parent Manufacturer Name<span style="color: red !important;">*</span>: </label></td>';
     echo '<td><input type="text" id="cpparentname" name="cpparentname" required> <br><br></td></tr>';
     add_action ('admin_enqueue_scripts', function() {
         if(is_admin())
@@ -597,7 +618,7 @@
                     });
          </script>";
 
-    echo '<tr><td><label for="cpregion"><span style="color: red !important;">*</span>Region: </label></td>';
+    echo '<tr><td><label for="cpregion">Region<span style="color: red !important;">*</span>: </label></td>';
     echo '<td><input type="text" id="cpregion" name="cpregion" required></td></tr>';
 
     echo '<tr><td><label for="cpslogan">Slogan: </label></td>';
@@ -606,7 +627,7 @@
     echo '<tr><td><label for="cpvision">Vision/Mission Statement: </label></td>';
     echo '<td><textarea id="cpvision" name="cpvision" rows="4" cols=80">'.'</textarea></td></tr>';
     
-    echo '<tr><td><label for="cpabout"><span style="color: red !important;">*</span>About: </label></td>';
+    echo '<tr><td><label for="cpabout">About<span style="color: red !important;">*</span>: </label></td>';
 
     
     $content   = '';
@@ -622,16 +643,16 @@
     /*Backend Company Info Section Start */
     echo'<br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Company Info</h2>';
     echo '<table>';
-    echo '<tr><td><label for="cpfounded"><span style="color: red !important;">*</span>Founded: </label></td>';
-    echo '<td><input type="text" id="cpfounded" name="cpfounded" required></td></tr>';
+    echo '<tr><td><label for="cpfounded">Founded<span style="color: red !important;">*</span>: </label></td>';
+    echo '<td><input type="text" id="cpfounded" name="cpfounded" maxlength="4" required onchange="checkIsValid(this.value);"></td></tr>';
 
-    echo '<tr><td><label for="cpfounder"><span style="color: red !important;">*</span>Founder(s): </label></td>';
+    echo '<tr><td><label for="cpfounder">Founder(s)<span style="color: red !important;">*</span>: </label></td>';
     echo '<td><input type="text" id="cpfounder" name="cpfounder" required></td></tr>';
 
-    echo '<tr><td><label for="cpceo"><span style="color: red !important;">*</span>CEO: </label></td>';
+    echo '<tr><td><label for="cpceo">CEO<span style="color: red !important;">*</span>: </label></td>';
     echo '<td><input type="text" id="cpceo" name="cpceo" required></td></tr>';
 
-    echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input type="text" id="cpstaff_no" name="cpstaff_no"></td></tr>';
+    echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input title="Company Employee Number" type="text" id="cpstaff_no" name="cpstaff_no" onkeypress="return isNumberKey(event)"></td></tr>';
     echo '<tr><td><label for="cpbusiness_type">Business Type<span style="color: red !important;">*</span>: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type" required><option value="1">Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
     echo '</table>';
     /*Backend Company Info Section end */
@@ -654,14 +675,14 @@
     echo '<tr><td><label for="cpaddress">Manufacturer Address: </label></td>';
     echo '<td><input type="text" id="cpaddress" name="cpaddress"></td></tr>';
 
-    echo '<tr><td><label for="cpphone"><span style="color: red !important;">*</span>Phone: </label></td>';
+    echo '<tr><td><label for="cpphone">Phone<span style="color: red !important;">*</span>: </label></td>';
     echo '<td><input type="text" id="cpphone" name="cpphone" required></td></tr>';
 
-    echo '<tr><td><label for="cpemail"><span style="color: red !important;">*</span>Email: </label></td>';
-    echo '<td><input type="text" id="cpemail" name="cpemail" required></td></tr>';
+    echo '<tr><td><label for="cpemail">Email<span style="color: red !important;">*</span>: </label></td>';
+    echo '<td><input type="text" id="cpemail" name="cpemail" required onchange="validateEmail(this.value);"></td></tr>';
 
-    echo '<tr><td><label for="cpurl"><span style="color: red !important;">*</span>Url: </label></td>';
-    echo '<td><input type="text" id="cpurl" name="cpurl" required></td></tr>';
+    echo '<tr><td><label for="cpurl">Url<span style="color: red !important;">*</span>: </label></td>';
+    echo '<td><input type="text" id="cpurl" name="cpurl" required onchange="validateURL(this.value);"></td></tr>';
     echo '</table>';
      /*Backend Company Info Section End */
 
@@ -684,11 +705,11 @@
 
 
     /** Manufacturer Profile Table1 */
-    echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="text" id="cptrading_cap" name="cptrading_cap">&nbsp;Watts</td></tr>';
-    echo '<tr><td><label for="corespond">Average Respond Time: </label></td><td><input type="text" id="cprespond" name="cprespond">&nbsp;Hours</td></tr>';
+    echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="number" id="cptrading_cap" name="cptrading_cap">&nbsp;Watts</td></tr>';
+    echo '<tr><td><label for="corespond">Average Respond Time: </label></td><td><input type="number" id="cprespond" name="cprespond">&nbsp;Hours</td></tr>';
     echo '</tr>';
     /** Manufacturer Profile Table2 */
-    echo '<tr><td><label for="cpcrystalline"><span style="color: red !important;">*</span>Crystalline: </label></td><td><input type="text" id="cpcrystalline" name="cpcrystalline" required></td></tr>';
+    echo '<tr><td><label for="cpcrystalline">Crystalline<span style="color: red !important;">*</span>: </label></td><td><input type="text" id="cpcrystalline" name="cpcrystalline" required></td></tr>';
     echo '<tr><td><label for="cpcprl">Crystalline Power Range (Low): </label></td><td><input type="text" id="cpcprl" name="cpcprl"></td></tr>';
     echo '<tr><td><label for="cpcprh">Crystalline Power Range (High): </label></td><td><input type="text" id="cpcprh" name="cpcprh"></td></tr>';
     echo '<tr><td><label for="cphigh_eff">High Efficiency Crystalline: </label></td><td><input type="text" id="cphigh_eff" name="cphigh_eff"></td></tr>';
@@ -696,7 +717,7 @@
     echo '<tr><td><label for="cphecprh">High Efficiency Crystalline Power Range (High): </label></td><td><input type="text" id="cphecprh" name="cphecprh"></td></tr>';
 
      /** Manufacturer Profile update_Table3 */
-    echo '<tr><td><label for="cpcomtype"><span style="color: red !important;">*</span>Component Type: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" required></td></tr>';
+    echo '<tr><td><label for="cpcomtype">Component Type<span style="color: red !important;">*</span>: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" required></td></tr>';
     echo '<tr><td><label for="cpme">Mounting Equipment: </label></td><td><input type="text" id="cpme" name="cpme" ></td></tr>';
     echo'</table>';
 
@@ -871,8 +892,49 @@
     echo '<br><br>';
     echo '<input type="submit" value="Submit">';
     echo '&nbsp;&nbsp;<span><a href="'.get_site_url().'/wp-admin/admin.php?page=cpcustompage">Back to Manufacturer Profile List</a></span>';
-    echo '</form>';
-   
+    echo '</form>';?>
+
+    <!-- Validation for Founded Year -->
+			<script>
+			function checkIsValid(_data){
+				if ((_data.length != 4) || (!_data.match(/\d{4}/))){
+					alert("This is not a valid year");
+				}
+				
+            }
+            // Validation for Founded Year End
+
+            // Validation for email
+			function validateEmail(_data){
+				if(!_data.match(/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/)){
+					alert("You have entered an invalid email address!");
+				}
+			}
+            //Validation for email End
+            
+            //Validation for URL
+
+			function validateURL(_data){
+			if(!_data.match(/^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/)){
+					alert("You have entered an invalid URL!");
+				}
+			}
+            //Validation for URL End
+            
+            // Validation for number only
+            function isNumberKey(evt)
+            {
+                var charCode = (evt.which) ? evt.which : event.keyCode
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
+
+                return true;
+            }
+            // Validation for number only end
+            
+			</script>
+
+   <?php
     $conn->close();
 
 ?>

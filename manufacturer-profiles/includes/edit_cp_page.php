@@ -187,16 +187,17 @@
 				$new_cp_hecprl            = $_POST['cphecprl'];
 				$new_cp_hecprh            = $_POST['cphecprh'];
 				$new_cp_business_status   = $_POST['cpbusiness_status'];
-				$new_cp_comptype   		  = $_POST['cpcomtype'];
+				$new_cp_comtype   		  = $_POST['cpcomtype'];
 				$new_cp_me                = $_POST['cpme'];
 				
 				
-				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET business_type=".$new_businesstype.", staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."', com_type='".$new_cp_comptype."', mounting_eq='".$new_cp_me."' WHERE company_id=".$cp_id;
+				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET business_type=".$new_businesstype.", staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."', com_type='".$new_cp_comtype."', mounting_eq='".$new_cp_me."' WHERE company_id=".$cp_id;
 				$cp_result_details_update = $conn->query($cp_sql_details_update);
 				
 				//var_dump($cp_sql_details_update);
 
-            }
+			}
+
             
 			$file["url"] = $_POST['cimage'];
 						
@@ -222,44 +223,65 @@
 				        }
 			    }
 				
-			if ($cp_result_check->num_rows > 0) {
-				$new_cp_name      = $_POST['cpname'];
-				$new_cp_parentname = $_POST['cpparentname'];
-				$new_cp_asname      = $_POST['cpasname'];
-				$new_cp_founded      = $_POST['cpfounded'];
-				$new_cp_founder     = $_POST['cpfounder'];
-				$new_cp_ceo     = $_POST['cpceo'];
 				$new_cp_image     = $file["url"];
-				$new_cp_address   = $_POST['cpaddress'];
-				$new_cp_phone     = $_POST['cpphone'];
-				$new_cp_email     = $_POST['cpemail'];
-				$new_cp_url       = $_POST['cpurl'];
-				$new_cp_region    = $_POST['cpregion'];
-				$new_cp_facebook  = $_POST['cpfacebook'];
-				$new_cp_linkedin  = $_POST['cplinkedin'];
-				$new_cp_twitter   = $_POST['cptwitter'];
-				$new_cp_youtube   = $_POST['cpyoutube'];
-				$new_cp_trading_cap   = intval($_POST['cptrading_cap']);
-				$new_cp_business_status = $_POST['cpbusiness_status'];
-				$new_cp_about     = str_replace('\"','',$_POST['cpabout']); 
-				$new_cp_cpcomtype	  = $_POST['cpcomtype'];
-				$new_cp_respond   	  = floatval($_POST['cprespond']);
-				$new_cp_slogan    = $_POST['cpslogan'];
-				$new_cp_vision    = $_POST['cpvision'];
+			//if ($cp_result_check->num_rows > 0) {
+			// 	$new_cp_name      = $_POST['cpname'];
+			// 	$new_cp_parentname = $_POST['cpparentname'];
+			// 	$new_cp_asname      = $_POST['cpasname'];
+			// 	$new_cp_founded      = $_POST['cpfounded'];
+			// 	$new_cp_founder     = $_POST['cpfounder'];
+			// 	$new_cp_ceo     = $_POST['cpceo'];
+			// 	$new_cp_image     = $file["url"];
+			// 	$new_cp_address   = $_POST['cpaddress'];
+			// 	$new_cp_phone     = $_POST['cpphone'];
+			// 	$new_cp_email     = $_POST['cpemail'];
+			// 	$new_cp_url       = $_POST['cpurl'];
+			// 	$new_cp_region    = $_POST['cpregion'];
+			// 	$new_cp_facebook  = $_POST['cpfacebook'];
+			// 	$new_cp_linkedin  = $_POST['cplinkedin'];
+			// 	$new_cp_twitter   = $_POST['cptwitter'];
+			// 	$new_cp_youtube   = $_POST['cpyoutube'];
+			// 	$new_cp_trading_cap   = intval($_POST['cptrading_cap']);
+			// 	$new_cp_business_status = $_POST['cpbusiness_status'];
+			// 	$new_cp_about     = str_replace('\"','',$_POST['cpabout']); 
+			// 	$new_cp_cpcomtype	  = $_POST['cpcomtype'];
+			// 	$new_cp_respond   	  = floatval($_POST['cprespond']);
+			// 	$new_cp_slogan    = $_POST['cpslogan'];
+			// 	$new_cp_vision    = $_POST['cpvision'];
 				
-			}
-
-					
+			// }
 			
             
 			$old_product_no   = $_POST['cpoldname'];
-			if(empty($new_cp_name) || empty($new_cp_asname) || empty($new_cp_region) || empty($new_cp_about) || empty($new_cp_founded) || empty($new_cp_founder) || empty($new_cp_ceo) || empty($new_cp_url) || empty($new_cp_phone) || empty($new_cp_email) || empty($new_cp_cpcomtype) || empty($new_cp_image)){
-				echo '<span style="color: red !important;">* Please Fill Required Feilds</span><br>';	
+
+			if(empty($new_cp_image)){
+			echo '<span style="color: red !important;">Image is empty! Please fill all required fields *</span><br>';	
+			}elseif (empty($new_cp_name)) {
+				echo '<span style="color: red !important;">Manufacturer Name is empty! Please fill all required fields *</span><br>';
+			}elseif (empty($new_cp_asname)) {
+				echo '<span style="color: red !important;">Do Business As is empty! Please fill all required fields *</span><br>';
+			}elseif (empty($new_cp_region)) {
+				echo '<span style="color: red !important;">Region is empty! Please fill all required fields *</span><br>';
+			}elseif (empty($new_cp_about)) {
+				echo '<span style="color: red !important;">About is empty! Please fill all required fields *</span><br>';
+			}elseif (empty($new_cp_founded)) {
+				echo '<span style="color: red !important;">Founded Year is empty! Please fill all required fields *</span><br>';
+			}elseif (empty($new_cp_founder)) {
+				echo '<span style="color: red !important;">Founder is empty! Please fill all required fields *</span><br>';
+			}elseif (empty($new_cp_ceo)) {
+				echo '<span style="color: red !important;">CEO is empty! Please fill all required fields *</span><br>';
+			}elseif (empty($new_cp_url)) {
+				echo '<span style="color: red !important;">URL is empty! Please fill all required fields *</span><br>';
+			}elseif (empty($new_cp_phone)) {
+				echo '<span style="color: red !important;">Phone is empty! Please fill all required fields *</span><br>';
+			}elseif (empty($new_cp_email)) {
+				echo '<span style="color: red !important;">Email is empty! Please fill all required fields *</span><br>';
+			}elseif (empty($new_cp_comtype)) {
+				echo '<span style="color: red !important;">Component Type is empty! Please fill all required fields *</span><br>';
 			}else{
 			$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."', parent_company='".$new_cp_parentname."', as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."' WHERE company_id=".$cp_id;
-			$cp_result_update = $conn->query($cp_sql_update);
 			}
-			
+			$cp_result_update = $conn->query($cp_sql_update);
 			if ($cp_result_update){
 					
 				echo '<span style="color:red;">Update Success! </span><br>';
@@ -723,10 +745,7 @@
 			$update_cp_me           = $row_detail['mounting_eq'];
 		}
 	}
-	
-	         
 
-	
 
     if ($cp_result->num_rows > 0) {
    
@@ -792,17 +811,17 @@
 			/*Backend Basic Info Section Start */
 			echo'<br><br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Basic Info</h2>';
 
-			echo '<br><label for="cpname"><span style="color: red !important;">*</span> Manufacturer Name: </label>';
+			echo '<br><label for="cpname"> Manufacturer Name<span style="color: red !important;">*</span>: </label>';
     		echo '<input type="text" id="cpname" name="cpname" required value="'. $row["name"].'"> <br><br>';
 			
-    		echo '<br><label for="cpasname"><span style="color: red !important;">*</span> Do Business As: </label>';
+    		echo '<br><label for="cpasname"> Do Business As<span style="color: red !important;">*</span>: </label>';
             echo '<input type="text" id="cpasname" name="cpasname" required value="'. $row["as_name"].'"><br><br>';
 
-			echo '<br><label for="cpname"><span style="color: red !important;">*</span> Parent Manufacturer Name: </label>';
+			echo '<br><label for="cpname"> Parent Manufacturer Name<span style="color: red !important;">*</span>: </label>';
 			echo '<input type="text" id="cpparentname" name="cpparentname"  value="'. $row["parent_company"].'"> <br><br>';
 			
 			
-			echo '<tr><td><br><label for="cpregion"><span style="color: red !important;">*</span> Region: </label></td>';
+			echo '<tr><td><br><label for="cpregion"> Region<span style="color: red !important;">*</span>: </label></td>';
 			echo '<td><input type="text" id="cpregion" name="cpregion" required value="'. $row["region"].'"></td></tr>';
 			
 			echo '<br><br><label for="cpslogan">Slogan: </label></td>';
@@ -812,7 +831,7 @@
             echo '<label for="cpvision">Vision/Mission Statement: </label></td>';
             echo '<textarea id="cpvision" name="cpvision" rows="4" cols=80">'.$row["vision"].'</textarea><br><br>';
 
-			echo '<label for="cpabout"><h2><span style="color: red !important;">*</span> About: </h2></label>';
+			echo '<label for="cpabout"><h2> About<span style="color: red !important;">*</span>: </h2></label>';
 			$content   = $row["about"];
 			$editor_id = 'cpabout';
 			$settings  = array( 'media_buttons' => true);
@@ -823,20 +842,20 @@
 			/*Backend Basic Info Section End */
 			/* Backend Company Info Section Start */
 			echo'<br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Company Info</h2>';
-			echo '<label for="cpfounded"><span style="color: red !important;">*</span> Founded: </label></td>';
-			echo '<input title="YYYY" type="text" id="cpfounded" name="cpfounded" required value="'. $row["founded"].'"><br><br>';
+			echo '<label for="cpfounded"> Founded<span style="color: red !important;">*</span>: </label></td>';
+			echo '<input title="YYYY" type="text" id="cpfounded" name="cpfounded" maxlength="4" required value="'. $row["founded"].'"  onchange="checkIsValid(this.value);"><br><br>';
 
-			echo '<label for="cpfounder"><span style="color: red !important;">*</span> Founder(s): </label></td>';
+			echo '<label for="cpfounder"> Founder(s)<span style="color: red !important;">*</span>: </label></td>';
 			echo '<input type="text" id="cpfounder" name="cpfounder" required value="'. $row["founder"].'"><br><br>';
 			
-			echo '<label for="cpceo"><span style="color: red !important;">*</span> CEO: </label></td>';
+			echo '<label for="cpceo"> CEO<span style="color: red !important;">*</span>: </label></td>';
 			echo '<input type="text" id="cpceo" name="cpceo" required value="'. $row["ceo"].'"><br><br>';
 
 			echo '<table>';
-			echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input type="text" id="cpstaff_no" name="cpstaff_no" value="'. $update_cp_staffno.'"></td></tr>';
+			echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input title="Company Employee Number" type="text" id="cpstaff_no" name="cpstaff_no" value="'. $update_cp_staffno.'" onkeypress="return isNumberKey(event)"></td></tr>';
 
 			if ($update_cp_businesstype == 1) {
-				echo '<tr><td><br><label for="cpbusiness_type"><span style="color: red !important;">*</span> Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type" required><option value="1" selected>Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
+				echo '<tr><td><br><label for="cpbusiness_type"> Business Type<span style="color: red !important;">*</span>: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type" required><option value="1" selected>Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
 			}
 			elseif ($update_cp_businesstype == 2) {
 				echo '<tr><td><br><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type" required><option value="1">Distributor</option><option value="2" selected>Manufacturer</option></select></td></tr>';
@@ -867,14 +886,14 @@
             echo '<tr><td><br><br><label for="cpaddress">Address: </label></td>';
             echo '<td><input type="text" id="cpaddress" name="cpaddress" value="'. $row["address"].'"></td></tr>';
 			
-			echo '<tr><td><br><br><label for="cpurl"><span style="color: red !important;">*</span> Url: </label></td>';
-			echo '<td><input type="text" id="cpurl" name="cpurl" required value="'. $row["url"].'"></td></tr>';
+			echo '<tr><td><br><br><label for="cpurl"> Url<span style="color: red !important;">*</span>: </label></td>';
+			echo '<td><input type="text" id="cpurl" name="cpurl" required value="'. $row["url"].'" onchange="validateURL(this.value);"></td></tr>';
 			
-            echo '<tr><td><br><br><label for="cpphone"><span style="color: red !important;">*</span> Phone: </label></td>';
+            echo '<tr><td><br><br><label for="cpphone"> Phone<span style="color: red !important;">*</span>: </label></td>';
             echo '<td><input type="text" id="cpphone" name="cpphone" required value="'. $row["phone"].'"></td></tr>';
 			
-			echo '<tr><td><br><br><label for="cpemail"><span style="color: red !important;">*</span> Email: </label></td>';
-            echo '<td><input type="text" id="cpemail" name="cpemail" required value="'. $row["email"].'"></td></tr>';
+			echo '<tr><td><br><br><label for="cpemail"> Email<span style="color: red !important;">*</span>: </label></td>';
+            echo '<td><input type="text" id="cpemail" name="cpemail" required value="'. $row["email"].'" onchange="validateEmail(this.value);"></td></tr>';
             
 			/*Backend Contact Info Section End  */
 
@@ -891,17 +910,17 @@
 			echo '<tr><td><label for="cpname">Manufacturing: </label></td>';
             echo '<td><input type="text" id="cpmanuf" name="cpmanuf" value="'. $row["manuf"].'"> </td></tr>';
             
-			echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="text" id="cptrading_cap" name="cptrading_cap" value="'. $row["trading_capacity"].'">&nbsp;Watts</td></tr>';
+			echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="number" id="cptrading_cap" name="cptrading_cap" value="'. $row["trading_capacity"].'">&nbsp;Watts</td></tr>';
 
 
-			echo '<tr><td><label for="corespond">Average Respond Time: </label></td><td><input type="text" id="cprespond" name="cprespond" value="'. $row["respond"].'">&nbsp;Hours</td></tr>';
+			echo '<tr><td><label for="corespond">Average Respond Time: </label></td><td><input type="number" id="cprespond" name="cprespond" value="'. $row["respond"].'">&nbsp;Hours</td></tr>';
             echo '</table>';	
             
 			/** Manufacturer Profile update_Table2 */
 			echo '<table>';
 			
 			//var_dump($update_cp_businesstype);
-			echo '<tr><td><label for="cpcrystalline"><span style="color: red !important;">*</span> Crystalline: </label></td><td><input type="text" id="cpcrystalline" name="cpcrystalline" required value="'. $update_cp_crystalline.'"></td></tr>';
+			echo '<tr><td><label for="cpcrystalline">Crystalline<span style="color: red !important;">*</span>: </label></td><td><input type="text" id="cpcrystalline" name="cpcrystalline" required value="'. $update_cp_crystalline.'"></td></tr>';
 			echo '<tr><td><label for="cpcproduction">Crystalline Production: </label></td><td><input type="text" id="cpcproduction" name="cpcproduction" value="'. $update_cp_cproduction.'"></td></tr>';
 			echo '<tr><td><label for="cpcprl">Crystalline Power Range (Low): </label></td><td><input type="text" id="cpcprl" name="cpcprl" value="'. $update_cp_cprl.'"></td></tr>';
 			echo '<tr><td><label for="cpcprh">Crystalline Power Range (High): </label></td><td><input type="text" id="cpcprh" name="cpcprh" value="'. $update_cp_cprh.'"></td></tr>';
@@ -921,7 +940,7 @@
             
             /** Manufacturer Profile update_Table3 */
 			echo '<table>';
-			echo '<tr><td><label for="cpcomtype"><span style="color: red !important;">*</span> Component Type: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" required value="'. $update_cp_comptype.'"></td></tr>';
+			echo '<tr><td><label for="cpcomtype">Component Type<span style="color: red !important;">*</span>: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" required value="'. $update_cp_comptype.'"></td></tr>';
 			echo '<tr><td><label for="cpme">Mounting Equipment: </label></td><td><input type="text" id="cpme" name="cpme" value="'. $update_cp_me.'"></td></tr>';
 			echo '</table>';
             
@@ -929,10 +948,48 @@
 			/** Add More btn */
 			
 		
+			
+
+			/*Milestones Section */
+			echo '<br><br>Milestones&nbsp;&nbsp;&nbsp;<button type="button" onclick="addmilestones()">Add More</button><br><br>';
+				
+				
+			echo '<script>
+					function addmilestones() {var s=document.getElementsByClassName("accordionm").length+1;document.getElementById("milestonedemo").innerHTML =document.getElementById("milestonedemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordionm">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpmilestonesyear\'+String(s)+\'">Year: </label><textarea id="cpmilestonesyear\'+String(s)+\'" name="cpmilestonesyear\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpmilestonesname\'+String(s)+\'">Name: </label>'.
+					'<textarea id="cpmilestonesname\'+String(s)+\'" name="cpmilestonesname\'+String(s)+\'"></textarea><br>'.'<label for="cpmilestonescontent\'+String(s)+\'">Content: </label>'.'<textarea id="cpmilestonescontent\'+String(s)+\'" name="cpmilestonescontent\'+String(s)+\'"></textarea><br>'.
+					'<br><br><button type="button" onclick="deletemilestones(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
+					document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
+					
+				</script>';
+
+			echo '<script>function deletemilestones(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
+			wp_enqueue_script( 'jQuery' );
+			
+			
+			$cp_sql_milestones    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".$cp_id;
+			$cp_result_milestones = $conn->query($cp_sql_milestones);
+			echo '<style>.accordionm {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordionm:hover {background-color: #ccc;}.accordionm:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
+			
+			echo '<span id="milestonedemo">';
+					if ($cp_result_milestones->num_rows > 0) {
+				
+						while($row_milestones = $cp_result_milestones->fetch_assoc()) {
+							echo '<button id="'.$row_milestones["milestone_id"].'" type="button" class="accordionm">'.$row_milestones["milestone_year"].'</button>
+							
+							<div id="plus'.$row_milestones["milestone_id"].'" class="panel"><label for="cpmilestonesyear'.$row_milestones["milestone_id"].'">Year: </label><input type="text" id="cpmilestonesyear'.$row_milestones["milestone_year"].'" name="cpmilestonesyear'.$row_milestones["milestone_id"].'" rows="1" cols="80" value="'.$row_milestones["milestone_year"].'">'.'<br><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cpmilestonescontent'.$row_milestones["milestone_content"].'" name="cpmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
+						}	
+					}
+					else {echo '0 Milestones<br><br>';}
+			
+			echo '</span>';
+		  	echo '<script>var acc = 
+				document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}</script>';
+			/*Milestones Section */
 			$cp_sql_solarprocat = "SELECT * FROM ".$tablename_project_cat;
     		$cp_result_solarprocat = $conn->query($cp_sql_solarprocat);	
 			
 			//var_dump($cp_sql_solarprocat);
+
 
     		$prod_cat=[];
     		if ($cp_result_solarprocat->num_rows > 0) {
@@ -995,7 +1052,7 @@
   							  echo '</select>
 
 
-							  <br><label for="cpsolarprojectsno'.$project_count.'" >Model Number: </label><input id="cpsolarprojectsno'.$project_count.'" name="cpsolarprojectsno'.$project_count.'" rows="1" cols="80" value="'.$row_solarprojects["model_no"].'">'.'<br><br><button type="button" onclick="deletesolarprojects('.$project_count.')">Delete</button><br><br></div>';
+							  <br><label for="cpsolarprojectsno'.$project_count.'">Model Number: </label><input id="cpsolarprojectsno'.$project_count.'" name="cpsolarprojectsno'.$project_count.'" rows="1" cols="80" value="'.$row_solarprojects["model_no"].'">'.'<br><br><button type="button" onclick="deletesolarprojects('.$project_count.')">Delete</button><br><br></div>';
 							$project_count = $project_count + 1;
 						}	
 					}
@@ -1119,41 +1176,7 @@ echo '<script>function openmorenews2(){event.preventDefault();var z = document.g
 
 echo '<br>';
 /*News Section */			
-		/*Milestones Section */
-		echo '<br><br>Milestones&nbsp;&nbsp;&nbsp;<button type="button" onclick="addmilestones()">Add More</button><br><br>';
-			
-			
-			echo '<script>
-					function addmilestones() {var s=document.getElementsByClassName("accordionm").length+1;document.getElementById("milestonedemo").innerHTML =document.getElementById("milestonedemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordionm">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpmilestonesyear\'+String(s)+\'">Year: </label><textarea id="cpmilestonesyear\'+String(s)+\'" name="cpmilestonesyear\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpmilestonesname\'+String(s)+\'">Name: </label>'.
-					'<textarea id="cpmilestonesname\'+String(s)+\'" name="cpmilestonesname\'+String(s)+\'"></textarea><br>'.'<label for="cpmilestonescontent\'+String(s)+\'">Content: </label>'.'<textarea id="cpmilestonescontent\'+String(s)+\'" name="cpmilestonescontent\'+String(s)+\'"></textarea><br>'.
-					'<br><br><button type="button" onclick="deletemilestones(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
-					document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
-					
-				 </script>';
-
-			echo '<script>function deletemilestones(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
-			wp_enqueue_script( 'jQuery' );
-			
-			
-			$cp_sql_milestones    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".$cp_id;
-    		$cp_result_milestones = $conn->query($cp_sql_milestones);
-			echo '<style>.accordionm {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordionm:hover {background-color: #ccc;}.accordionm:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
-			
-			echo '<span id="milestonedemo">';
-					if ($cp_result_milestones->num_rows > 0) {
-				
-						while($row_milestones = $cp_result_milestones->fetch_assoc()) {
-							echo '<button id="'.$row_milestones["milestone_id"].'" type="button" class="accordionm">'.$row_milestones["milestone_year"].'</button>
-							
-							<div id="plus'.$row_milestones["milestone_id"].'" class="panel"><label for="cpmilestonesyear'.$row_milestones["milestone_id"].'">Year: </label><input type="text" id="cpmilestonesyear'.$row_milestones["milestone_year"].'" name="cpmilestonesyear'.$row_milestones["milestone_id"].'" rows="1" cols="80" value="'.$row_milestones["milestone_year"].'">'.'<br><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cpmilestonescontent'.$row_milestones["milestone_content"].'" name="cpmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
-						}	
-					}
-					else {echo '0 Milestones<br><br>';}
-			
-			echo '</span>';
-  			echo '<script>var acc = 
-					document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}</script>';
-		/*Milestones Section */
+		
 			
 			
 			
@@ -1175,7 +1198,7 @@ echo '<br>';
 			
 				if (is_null($row["company_image"])){
 						
-					echo '<input type="text" class="process_custom_images example-jpg-file-new" id="example-jpg-file-new" name="example-jpg-file-new" required value=""><button class="set_custom_logo button" style="vertical-align: middle;">Select Manufacturer Logo</button>';
+					echo '<input type="text" class="process_custom_images example-jpg-file-new" id="example-jpg-file-new" name="example-jpg-file-new" value=""><button class="set_custom_logo button" style="vertical-align: middle;">Select Manufacturer Logo</button>';
 			
 					echo "<script>jQuery(document).ready(function() {
 									var $ = jQuery;
@@ -1198,7 +1221,7 @@ echo '<br>';
 				}else{
 						
 					echo '<input type="text" class="process_custom_images example-jpg-file" id="example-jpg-file" name="example-jpg-file" value=""><button class="set_custom_logo button" style="vertical-align: middle;">Update Manufacturer Logo</button>';
-					echo '<br><br>('.'<label for="cimage">Current Image: </label>'.'  <input type="text" id="cimage" required name="cimage" value="'.$row["company_image"].'" size="" readonly> ) <br><br><img src="'.$row["company_image"].'"> <br>';
+					echo '<br><br>('.'<label for="cimage">Current Image: </label>'.'  <input type="text" id="cimage" name="cimage" value="'.$row["company_image"].'" size="" readonly> ) <br><br><img src="'.$row["company_image"].'"> <br>';
 		
 					echo "<script>jQuery(document).ready(function() {
 									var $ = jQuery;
@@ -1221,11 +1244,50 @@ echo '<br>';
 					}
 
 			echo '<label for="cplastedit">Last Edit Date: </label>';
-			echo '<input type="text" id="cplastedit" name="cplastedit" value="'. $row["last_edit"].'"><br><br>';
+			echo '<input type="text" id="cplastedit" name="cplastedit" value="'. $row["last_edit"].'"><br><br>';?>
 			
+			<!-- Validation for Founded Year -->
+			<script>
+			function checkIsValid(_data){
+				if ((_data.length != 4) || (!_data.match(/\d{4}/))){
+					alert("This is not a valid year");
+				}
+				
+			}
+			// Validation for Founded Year End
+ 
+			// Validation for email
+			function validateEmail(_data){
+				if(!_data.match(/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/)){
+					alert("You have entered an invalid email address!");
+				}
+			}
+			//Validation for Email End
+
+			//Validation for URL
+
+			function validateURL(_data){
+			if(!_data.match(/^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/)){
+					alert("You have entered an invalid URL!");
+				}
+			}
+			//Validation for URL End
+
+			// Validation for number only
+            function isNumberKey(evt)
+            {
+                var charCode = (evt.which) ? evt.which : event.keyCode
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
+
+                return true;
+            }
+            // Validation for number only end
+			</script>
 
 			
 			
+			<?php
 			// Get Menufacturer Owner
 			$args1 = array(
 				'role' => 'mfp_owner',
