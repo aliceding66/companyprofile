@@ -175,15 +175,25 @@
             $new_cp_comptype          = $_POST['cpcomtype'];
             $new_cp_me                = $_POST['cpme'];
 
-            if($new_cp_owner != -1){
-                $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond, company_owner) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.",".$new_cp_owner.")";
+            
+            if(empty($new_cp_image) || empty($new_cp_name) || empty($new_cp_asname) || empty($new_cp_region) || empty($new_cp_about) || empty($new_cp_founded) || empty($new_cp_founder) || empty($new_cp_ceo) || empty($new_cp_phone) || empty($new_cp_email) || empty($new_cp_url) || empty($new_cp_comptype))
+            {
+                echo '<span style="color: red !important;">* Please Fill Required Feilds</span><br>';
             }else{
-                $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.")";
+                if($new_cp_owner != -1){
+                    $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond, company_owner) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.",".$new_cp_owner.")";
+                }else{
+                    $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond, company_owner) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.")";
+                }
             }
             $cp_result_insert      = $conn->query($cp_sql_insert);
+
+            if(empty($new_cp_crystalline)){
+                echo '<span style="color: red !important;">* Please Fill Required Feilds</span><br>';
+            }else{
             $cp_sql_insert_details = "INSERT INTO ".$tablename_details." (company_id, staff_no, business_type, crystalline, cprl, cprh, high_eff, hecprl, hecprh,com_type,mounting_eq) VALUES (".$new_cp_id.",".$new_cp_staffno.",".$new_cp_businesstype.",'".$new_cp_crystalline."','".$new_cp_cprl."','".$new_cp_cprh."','".$new_cp_high_eff."','".$new_cp_hecprl."','".$new_cp_hecprh."','".$new_cp_comtype."','".$new_cp_cpme."')";
             $cp_result_insert      = $conn->query($cp_sql_insert_details);
-            
+            }
 
              
             if ($new_cp_name == ""){
@@ -387,12 +397,14 @@
                                                             
                                                     </style>';
 
-            if ( is_user_logged_in() ) {
+            // if ( is_user_logged_in() ) {
             $edit_url= get_site_url()."/wp-admin/admin.php?page=cpcustomsubpage&company_id=".$new_cp_id;
             $add_url = get_site_url()."/wp-admin/admin.php?page=cpcreatepage";
             $admin_url = get_site_url()."/wp-admin";
+            $cpcreatecontent = $cpcreatecontent."<?php if ( is_user_logged_in() ) { ?>";
             $cpcreatecontent = $cpcreatecontent."<div id='mfp-topbar'><ul><li><a href='".$edit_url."'>Edit this page</a> |</li><li><a href='".$add_url."'>Add a new profile</a> |</li><li><a href='".$admin_url."'>WP Dashboard</a></li></ul></div>";
-            }
+            $cpcreatecontent = $cpcreatecontent."<?php } ?>";
+            // }
 
            
             /*Milestone Section Start */
@@ -440,6 +452,9 @@
 
             $cpcreatecontent = $cpcreatecontent.'<section class="d-70">';
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><h1>'.$final_company_name.' | Product Reviews</h1>';
+            if($new_cp_slogan !== ''){
+                $cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Slogan:</label><span style="padding-left:7px">'.$new_cp_slogan.'</span><br>';
+            }
             $cpcreatecontent = $cpcreatecontent."Factory Location: ".$new_cp_region."      ";
             $cpcreatecontent = $cpcreatecontent.' | <a href="#userreviews">'.strval($y-1).' Reviews</a> | <a href="#archivenews">'.strval($yy-1)." News</a><br></div>";
             //$cpcreatecontent = $cpcreatecontent.'<hr style="width:50%;text-align:left;margin-left:0">'; 
@@ -450,7 +465,12 @@
                 $cpcreatecontent = $cpcreatecontent.'</div>';
             }  
             $cpcreatecontent = $cpcreatecontent.'<hr style="width:50%;text-align:left;margin-left:0">';   
-            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><h2>About '.$final_company_name.": </h2>".$new_cp_about."</div><br>";
+            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><h2>About '.$final_company_name.": </h2>";
+			if($new_cp_vision !== ''){
+				$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Vision:</label><span style="padding-left:7px">'.$new_cp_vision.'</span><br>';
+			}
+			$cpcreatecontent = $cpcreatecontent.$new_cp_about.'<br>';
+			$cpcreatecontent = $cpcreatecontent.'</div><br>';
             $cpcreatecontent = "<br>".$cpcreatecontent.$x_write."<br>";
             $cpcreatecontent = $cpcreatecontent.$xx_write."<br>";
             $cpcreatecontent = $cpcreatecontent.$company_milestone.'<br>';
@@ -470,12 +490,6 @@
 				$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Founded:</label><span style="padding-left:7px">'.$new_cp_founded.'</span><br>';
 				$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Founder:</label><span style="padding-left:7px">'.$new_cp_founder.'</span><br>';	
 				$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">CEO:</label><span style="padding-left:7px">'.$new_cp_ceo.'</span><br>';	
-				if($new_cp_slogan !== ''){
-				$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Slogan:</label><span style="padding-left:7px">'.$new_cp_slogan.'</span><br>';
-				}
-				if($new_cp_vision !== ''){
-				$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Vision:</label><span style="padding-left:7px">'.$new_cp_vision.'</span><br>';
-				}
 				$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Manufacturer Size:</label><span style="padding-left:7px">'.$new_cp_staffno.'</span><br>';
 				if($$new_cp_businesstype === 1){		
 					$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Business Type:</label><span style="padding-left:7px">Distributor</span><br>';
@@ -548,19 +562,21 @@
     
     echo '<form action="" method="POST" onsubmit="setFormSubmitting()" enctype="multipart/form-data" enctype="multipart/form-data">';
     echo '<input id="createcpid" name="createcpid" type="hidden" value="1">';
+    /*Backend basic Info Section Start */
+    echo'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Basic Info</h2>';
     echo '<table>';
-    echo '<tr><td><label for="cpname">Manufacturer Name: </label></td>';
+    echo '<tr><td><label for="cpname"><span style="color: red !important;">*</span>Manufacturer Name: </label></td>';
     echo '<td><input type="text" id="cpname" name="cpname" required></td></tr>';
-    echo '<tr><td><label for="cpasname">Do Business As: </label></td>';
-    echo '<td><input type="text" id="cpasname" name="cpasname"><br><br></td></tr>';
-    echo '<tr><td><label for="cpname">Parent Manufacturer Name: </label></td>';
-    echo '<td><input type="text" id="cpparentname" name="cpparentname"> <br><br></td></tr>';
+    echo '<tr><td><label for="cpasname"><span style="color: red !important;">*</span>Do Business As: </label></td>';
+    echo '<td><input type="text" id="cpasname" name="cpasname" required><br><br></td></tr>';
+    echo '<tr><td><label for="cpname"><span style="color: red !important;">*</span>Parent Manufacturer Name: </label></td>';
+    echo '<td><input type="text" id="cpparentname" name="cpparentname" required> <br><br></td></tr>';
     add_action ('admin_enqueue_scripts', function() {
         if(is_admin())
             wp_enqueue_media(); 
         });
     
-    echo '<input type="text" class="process_custom_images example-jpg-file" id="example-jpg-file" name="example-jpg-file" value=""><button class="set_custom_logo button" style="vertical-align: middle;">Select Manufacturer Logo</button>';
+    echo '<span style="color: red !important;">*</span><input type="text" class="process_custom_images example-jpg-file" id="example-jpg-file" name="example-jpg-file" required value=""><button class="set_custom_logo button" style="vertical-align: middle;">Select Manufacturer Logo</button>';
     
     echo "<script>jQuery(document).ready(function() {
                     var $ = jQuery;
@@ -581,17 +597,77 @@
                     });
          </script>";
 
+    echo '<tr><td><label for="cpregion"><span style="color: red !important;">*</span>Region: </label></td>';
+    echo '<td><input type="text" id="cpregion" name="cpregion" required></td></tr>';
 
-    echo '<tr><td><label for="cpfounded">Founded: </label></td>';
-    echo '<td><input type="text" id="cpfounded" name="cpfounded"></td></tr>';
+    echo '<tr><td><label for="cpslogan">Slogan: </label></td>';
+    echo '<td><textarea id="cpslogan" name="cpslogan" rows="1" cols="80">'.'</textarea></td></tr>';
 
-    echo '<tr><td><label for="cpfounder">Founder(s): </label></td>';
-    echo '<td><input type="text" id="cpfounder" name="cpfounder"></td></tr>';
-
-    echo '<tr><td><label for="cpceo">CEO: </label></td>';
-    echo '<td><input type="text" id="cpceo" name="cpceo"></td></tr>';
+    echo '<tr><td><label for="cpvision">Vision/Mission Statement: </label></td>';
+    echo '<td><textarea id="cpvision" name="cpvision" rows="4" cols=80">'.'</textarea></td></tr>';
+    
+    echo '<tr><td><label for="cpabout"><span style="color: red !important;">*</span>About: </label></td>';
 
     
+    $content   = '';
+    $editor_id = 'cpabout';
+    $settings  = array( 'media_buttons' => true);
+
+    echo '<td>';
+    wp_editor( $content, $editor_id, $settings );
+    echo '</td></tr>';
+    echo '</tr></table>';
+    /*Backend basic Info Section End */
+
+    /*Backend Company Info Section Start */
+    echo'<br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Company Info</h2>';
+    echo '<table>';
+    echo '<tr><td><label for="cpfounded"><span style="color: red !important;">*</span>Founded: </label></td>';
+    echo '<td><input type="text" id="cpfounded" name="cpfounded" required></td></tr>';
+
+    echo '<tr><td><label for="cpfounder"><span style="color: red !important;">*</span>Founder(s): </label></td>';
+    echo '<td><input type="text" id="cpfounder" name="cpfounder" required></td></tr>';
+
+    echo '<tr><td><label for="cpceo"><span style="color: red !important;">*</span>CEO: </label></td>';
+    echo '<td><input type="text" id="cpceo" name="cpceo" required></td></tr>';
+
+    echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input type="text" id="cpstaff_no" name="cpstaff_no"></td></tr>';
+    echo '<tr><td><label for="cpbusiness_type">Business Type<span style="color: red !important;">*</span>: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type" required><option value="1">Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
+    echo '</table>';
+    /*Backend Company Info Section end */
+
+    /*Backend Contact Info Section Start */
+    echo'<br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>';
+    echo'<table>';
+    echo '<tr><td><label for="cpfacebook">Facebook: </label></td>';
+    echo '<td><input type="text" id="cpfacebook" placeholder="https://www.facebook.com" name="cpfacebook"></td></tr>';
+
+    echo '<tr><td><label for="cplinkedin">Linkedin: </label></td>';
+    echo '<td><input type="text" id="cplinkedin" placeholder="https://www.linkedin.com" name="cplinkedin"></td></tr>';
+
+    echo '<tr><td><label for="cptwitter">Twitter: </label></td>';
+    echo '<td><input type="text" id="cptwitter" placeholder="https://twitter.com" name="cptwitter"></td></tr>';
+
+    echo '<tr><td><label for="cpyoutube">YouTube: </label></td>';
+    echo '<td><input type="text" id="cpyoutube"  placeholder="https://www.youtube.com" name="cpyoutube"></td></tr>';
+
+    echo '<tr><td><label for="cpaddress">Manufacturer Address: </label></td>';
+    echo '<td><input type="text" id="cpaddress" name="cpaddress"></td></tr>';
+
+    echo '<tr><td><label for="cpphone"><span style="color: red !important;">*</span>Phone: </label></td>';
+    echo '<td><input type="text" id="cpphone" name="cpphone" required></td></tr>';
+
+    echo '<tr><td><label for="cpemail"><span style="color: red !important;">*</span>Email: </label></td>';
+    echo '<td><input type="text" id="cpemail" name="cpemail" required></td></tr>';
+
+    echo '<tr><td><label for="cpurl"><span style="color: red !important;">*</span>Url: </label></td>';
+    echo '<td><input type="text" id="cpurl" name="cpurl" required></td></tr>';
+    echo '</table>';
+     /*Backend Company Info Section End */
+
+    /*Backend Others Info Section End */
+    echo'<br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Others</h2>';
+    echo'<table>';
     echo '<tr><td><label for="business_role">Company Owner: </label></td>';
    
     echo '<td>';
@@ -605,81 +681,24 @@
             'class'   => 'company_owner'
     ));
     echo '</td></tr>';
- 
 
-    echo '<tr><td><label for="cpslogan">Slogan: </label></td>';
-    echo '<td><textarea id="cpslogan" name="cpslogan" rows="1" cols="80">'.'</textarea></td></tr>';
 
-    echo '<tr><td><label for="cpvision">Vision/Mission Statement: </label></td>';
-    echo '<td><textarea id="cpvision" name="cpvision" rows="4" cols=80">'.'</textarea></td></tr>';
-
- 
     /** Manufacturer Profile Table1 */
-    echo '<tr><td><label for="cpaddress">Manufacturer Address: </label></td>';
-    echo '<td><input type="text" id="cpaddress" name="cpaddress"></td></tr>';
-
-    echo '<tr><td><label for="cpphone">Phone: </label></td>';
-    echo '<td><input type="text" id="cpphone" name="cpphone"></td></tr>';
-
-    echo '<tr><td><label for="cpemail">Email: </label></td>';
-    echo '<td><input type="text" id="cpemail" name="cpemail"></td></tr>';
-
-    echo '<tr><td><label for="cpurl">Url: </label></td>';
-    echo '<td><input type="text" id="cpurl" name="cpurl"></td></tr>';
-
-    echo '<tr><td><label for="cpregion">Region: </label></td>';
-    echo '<td><input type="text" id="cpregion" name="cpregion"></td></tr>';
-    
-    echo '<tr><td><label for="cpfacebook">Facebook: </label></td>';
-    echo '<td><input type="text" id="cpfacebook" placeholder="https://www.facebook.com" name="cpfacebook"></td></tr>';
-
-    echo '<tr><td><label for="cplinkedin">Linkedin: </label></td>';
-    echo '<td><input type="text" id="cplinkedin" placeholder="https://www.linkedin.com" name="cplinkedin"></td></tr>';
-
-    echo '<tr><td><label for="cptwitter">Twitter: </label></td>';
-    echo '<td><input type="text" id="cptwitter" placeholder="https://twitter.com" name="cptwitter"></td></tr>';
-
-    echo '<tr><td><label for="cpyoutube">YouTube: </label></td>';
-    echo '<td><input type="text" id="cpyoutube"  placeholder="https://www.youtube.com" name="cpyoutube"></td></tr>';
-
     echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="text" id="cptrading_cap" name="cptrading_cap">&nbsp;Watts</td></tr>';
-
-
     echo '<tr><td><label for="corespond">Average Respond Time: </label></td><td><input type="text" id="cprespond" name="cprespond">&nbsp;Hours</td></tr>';
-
-    echo '<tr><td><label for="cpabout">About: </label></td>';
-
-    
-    $content   = '';
-    $editor_id = 'cpabout';
-    $settings  = array( 'media_buttons' => true);
-
-    echo '<td>';
-    wp_editor( $content, $editor_id, $settings );
-    echo '</td></tr>';
-
-    echo '</tr></table>';
-
-    echo '<br><br>';
-
-
+    echo '</tr>';
     /** Manufacturer Profile Table2 */
-    echo '<table>';
-    echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input type="text" id="cpstaff_no" name="cpstaff_no"></td></tr>';
-    echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1">Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
-    echo '<tr><td><label for="cpcrystalline">Crystalline: </label></td><td><input type="text" id="cpcrystalline" name="cpcrystalline"></td></tr>';
+    echo '<tr><td><label for="cpcrystalline"><span style="color: red !important;">*</span>Crystalline: </label></td><td><input type="text" id="cpcrystalline" name="cpcrystalline" required></td></tr>';
     echo '<tr><td><label for="cpcprl">Crystalline Power Range (Low): </label></td><td><input type="text" id="cpcprl" name="cpcprl"></td></tr>';
     echo '<tr><td><label for="cpcprh">Crystalline Power Range (High): </label></td><td><input type="text" id="cpcprh" name="cpcprh"></td></tr>';
     echo '<tr><td><label for="cphigh_eff">High Efficiency Crystalline: </label></td><td><input type="text" id="cphigh_eff" name="cphigh_eff"></td></tr>';
     echo '<tr><td><label for="cphecprl">High Efficiency Crystalline Power Range (Low): </label></td><td><input type="text" id="cphecprl" name="cphecprl"></td></tr>';
     echo '<tr><td><label for="cphecprh">High Efficiency Crystalline Power Range (High): </label></td><td><input type="text" id="cphecprh" name="cphecprh"></td></tr>';
-    echo '</table>';
 
      /** Manufacturer Profile update_Table3 */
-    echo '<table>';
-    echo '<tr><td><label for="cpcomtype">Component Type: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" ></td></tr>';
+    echo '<tr><td><label for="cpcomtype"><span style="color: red !important;">*</span>Component Type: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" required></td></tr>';
     echo '<tr><td><label for="cpme">Mounting Equipment: </label></td><td><input type="text" id="cpme" name="cpme" ></td></tr>';
-    echo '</table>';
+    echo'</table>';
 
 
     

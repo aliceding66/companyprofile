@@ -190,6 +190,7 @@
 				$new_cp_comptype   		  = $_POST['cpcomtype'];
 				$new_cp_me                = $_POST['cpme'];
 				
+				
 				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET business_type=".$new_businesstype.", staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."', com_type='".$new_cp_comptype."', mounting_eq='".$new_cp_me."' WHERE company_id=".$cp_id;
 				$cp_result_details_update = $conn->query($cp_sql_details_update);
 				
@@ -248,16 +249,21 @@
 				
 			}
 
-			
+					
 			
             
 			$old_product_no   = $_POST['cpoldname'];
+			if(empty($new_cp_name) || empty($new_cp_asname) || empty($new_cp_region) || empty($new_cp_about) || empty($new_cp_founded) || empty($new_cp_founder) || empty($new_cp_ceo) || empty($new_cp_url) || empty($new_cp_phone) || empty($new_cp_email) || empty($new_cp_cpcomtype) || empty($new_cp_image)){
+				echo '<span style="color: red !important;">* Please Fill Required Feilds</span><br>';	
+			}else{
 			$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."', parent_company='".$new_cp_parentname."', as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."' WHERE company_id=".$cp_id;
 			$cp_result_update = $conn->query($cp_sql_update);
-				
+			}
+			
 			if ($cp_result_update){
 					
 				echo '<span style="color:red;">Update Success! </span><br>';
+
 				$updatecontent = "<?php require_once('".$_SERVER['DOCUMENT_ROOT']."/wp-load.php'); get_header();?>";
 
 				$updatecontent = $updatecontent.'<style>.rating {
@@ -571,7 +577,10 @@
 
 			    // Comapany Name & Product Review	
 				$updatecontent = $updatecontent.'<section class="d-70">';
-				$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$final_company_name.' | Product Reviews</h1>';				
+				$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$final_company_name.' | Product Reviews</h1>';
+				if($new_cp_slogan !== ''){
+					$updatecontent = $updatecontent.'<label style="color:#000 !important;">Slogan:</label><span style="padding-left:7px">'.$new_cp_slogan.'</span><br>';
+				}				
 				$updatecontent = $updatecontent."Factory Location: ".$new_cp_region."      ";
 				$updatecontent = $updatecontent.' | <a href="#userreviews">'.strval($x-1).' Reviews</a> | <a href="#archivenews">'.strval($xx-1)." News</a><br></div>";					
 				$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
@@ -585,8 +594,12 @@
 				$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
 				$updatecontent = $updatecontent.$_POST['mycustomeditor'];
 				// About Company
-				$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$final_company_name.": </h2>".$final_company_name."</div><br>";
-						
+				$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$final_company_name.": </h2>";
+				if($new_cp_vision !== ''){
+					$updatecontent = $updatecontent.'<label style="color:#000 !important;">Vision:</label><span style="padding-left:7px">'.$new_cp_vision.'</span><br>';
+				}
+				$updatecontent = $updatecontent.$new_cp_about.'<br>';
+				$updatecontent = $updatecontent.'</div><br>';
 				$updatecontent = '<br>'.$updatecontent.$x_write.'<br>';
 				$updatecontent = $updatecontent.$xx_write."<br>";
 				$updatecontent = $updatecontent.'<div class="whiteblock" id="company_mile"><h2>Milestones for '.$final_company_name.': </h2>';
@@ -604,12 +617,8 @@
 				$updatecontent = $updatecontent.'<label style="color:#000 !important;">Founded:</label><span style="padding-left:7px">'.$new_cp_founded.'</span><br>';
 				$updatecontent = $updatecontent.'<label style="color:#000 !important;">Founder:</label><span style="padding-left:7px">'.$new_cp_founder.'</span><br>';	
 				$updatecontent = $updatecontent.'<label style="color:#000 !important;">CEO:</label><span style="padding-left:7px">'.$new_cp_ceo.'</span><br>';	
-				if($new_cp_slogan !== ''){
-				$updatecontent = $updatecontent.'<label style="color:#000 !important;">Slogan:</label><span style="padding-left:7px">'.$new_cp_slogan.'</span><br>';
-				}
-				if($new_cp_vision !== ''){
-				$updatecontent = $updatecontent.'<label style="color:#000 !important;">Vision:</label><span style="padding-left:7px">'.$new_cp_vision.'</span><br>';
-				}
+				
+				
 				$updatecontent = $updatecontent.'<label style="color:#000 !important;">Manufacturer Size:</label><span style="padding-left:7px">'.$new_cp_staffno.'</span><br>';
 				if($new_businesstype === 1){		
 					$updatecontent = $updatecontent.'<label style="color:#000 !important;">Business Type:</label><span style="padding-left:7px">Distributor</span><br>';
@@ -619,7 +628,8 @@
 				$updatecontent = $updatecontent."</div>";
 				$updatecontent = $updatecontent."</div><br>";
 				/*Comapny Info End */
-				
+
+				/*Contact Info Start */
 				$updatecontent = $updatecontent.'<div class="whiteblock">';
 				$updatecontent = $updatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div>';
 				if($new_cp_facebook != 'Unknown'){
@@ -779,99 +789,119 @@
 			echo '<input type="hidden" id="cpoldname" name="cpoldname" value="'. $row["name"].'">';
 			
 			
+			/*Backend Basic Info Section Start */
+			echo'<br><br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Basic Info</h2>';
+
+			echo '<br><label for="cpname"><span style="color: red !important;">*</span> Manufacturer Name: </label>';
+    		echo '<input type="text" id="cpname" name="cpname" required value="'. $row["name"].'"> <br><br>';
+			
+    		echo '<br><label for="cpasname"><span style="color: red !important;">*</span> Do Business As: </label>';
+            echo '<input type="text" id="cpasname" name="cpasname" required value="'. $row["as_name"].'"><br><br>';
+
+			echo '<br><label for="cpname"><span style="color: red !important;">*</span> Parent Manufacturer Name: </label>';
+			echo '<input type="text" id="cpparentname" name="cpparentname"  value="'. $row["parent_company"].'"> <br><br>';
 			
 			
-
-			echo '<br><br><label for="cpname">Manufacturer Name: </label>';
-    		echo '<input type="text" id="cpname" name="cpname" value="'. $row["name"].'"> <br><br>';
-
-    		echo '<label for="cpasname">Do Business As: </label>';
-            echo '<input type="text" id="cpasname" name="cpasname" value="'. $row["as_name"].'"><br><br>';
-
-			echo '<label for="cpname">Parent Manufacturer Name: </label>';
-    		echo '<input type="text" id="cpparentname" name="cpparentname" value="'. $row["parent_company"].'"> <br><br>';
+			echo '<tr><td><br><label for="cpregion"><span style="color: red !important;">*</span> Region: </label></td>';
+			echo '<td><input type="text" id="cpregion" name="cpregion" required value="'. $row["region"].'"></td></tr>';
 			
-
-			echo '<label for="cpfounded">Founded: </label></td>';
-            echo '<input type="text" id="cpfounded" name="cpfounded" value="'. $row["founded"].'"><br><br>';
-
-            echo '<label for="cpfounder">Founder(s): </label></td>';
-            echo '<input type="text" id="cpfounder" name="cpfounder" value="'. $row["founder"].'"><br><br>';
-
-            echo '<label for="cpceo">CEO: </label></td>';
-			echo '<input type="text" id="cpceo" name="cpceo" value="'. $row["ceo"].'"><br><br>';
+			echo '<br><br><label for="cpslogan">Slogan: </label></td>';
+			echo '<textarea id="cpslogan" name="cpslogan" rows="1" cols="80">'.$row["slogan"].'</textarea><br><br>';
 			
-
-            echo '<label for="cpslogan">Slogan: </label></td>';
-            echo '<textarea id="cpslogan" name="cpslogan" rows="1" cols="80">'.$row["slogan"].'</textarea><br><br>';
-
+						
             echo '<label for="cpvision">Vision/Mission Statement: </label></td>';
             echo '<textarea id="cpvision" name="cpvision" rows="4" cols=80">'.$row["vision"].'</textarea><br><br>';
 
-
-            /** Manufacturer Profile update_Table1 */
-			echo '<table>';
-			echo '<tr><td><label for="cpname">Manufacturing: </label></td>';
-            echo '<td><input type="text" id="cpmanuf" name="cpmanuf" value="'. $row["manuf"].'"> </td></tr>';
-            
-            echo '<tr><td><label for="cpaddress">Address: </label></td>';
-            echo '<td><input type="text" id="cpaddress" name="cpaddress" value="'. $row["address"].'"></td></tr>';
-            
-            echo '<tr><td><label for="cpphone">Phone: </label></td>';
-            echo '<td><input type="text" id="cpphone" name="cpphone" value="'. $row["phone"].'"></td></tr>';
-			
-			echo '<tr><td><label for="cpemail">Email: </label></td>';
-            echo '<td><input type="text" id="cpemail" name="cpemail" value="'. $row["email"].'"></td></tr>';
-            
-			echo '<tr><td><label for="cpurl">Url: </label></td>';
-            echo '<td><input type="text" id="cpurl" name="cpurl" value="'. $row["url"].'"></td></tr>';
-            
-			echo '<tr><td><label for="cpregion">Region: </label></td>';
-            echo '<td><input type="text" id="cpregion" name="cpregion" value="'. $row["region"].'"></td></tr>';
-            
-			echo '<tr><td><label for="cpfacebook">Facebook: </label></td>';
-            echo '<td><input type="text" id="cpfacebook" name="cpfacebook" placeholder="https://www.facebook.com" value="'. $row["facebook"].'"></td></tr>';
-            
-			echo '<tr><td><label for="cplinkedin">Linkedin: </label></td>';
-            echo '<td><input type="text" id="cplinkedin" name="cplinkedin" placeholder="https://www.linkedin.com" value="'. $row["linkedin"].'"></td></tr>';
-            
-			echo '<tr><td><label for="cptwitter">Twitter: </label></td>';
-			echo '<td><input type="text" id="cptwitter" name="cptwitter" placeholder="https://twitter.com"  value="'. $row["twitter"].'"></td></tr>';
-			
-			echo '<tr><td><label for="cpyoutube">YouTube: </label></td>';
-			echo '<td><input type="text" id="cpyoutube" name="cpyoutube" placeholder="https://www.youtube.com"  value="'. $row["youtube"].'"></td></tr>';
-
-			echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="text" id="cptrading_cap" name="cptrading_cap" value="'. $row["trading_capacity"].'">&nbsp;Watts</td></tr>';
-
-
-			echo '<tr><td><label for="corespond">Average Respond Time: </label></td><td><input type="text" id="cprespond" name="cprespond" value="'. $row["respond"].'">&nbsp;Hours</td></tr>';
-            echo '</table>';
-			echo '<label for="cpabout"><h2>About: </h2></label>';
+			echo '<label for="cpabout"><h2><span style="color: red !important;">*</span> About: </h2></label>';
 			$content   = $row["about"];
 			$editor_id = 'cpabout';
 			$settings  = array( 'media_buttons' => true);
  
 			wp_editor( $content, $editor_id, $settings );
 			
-            echo '<br><br>';	
+			echo '<br><br>';
+			/*Backend Basic Info Section End */
+			/* Backend Company Info Section Start */
+			echo'<br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Company Info</h2>';
+			echo '<label for="cpfounded"><span style="color: red !important;">*</span> Founded: </label></td>';
+			echo '<input title="YYYY" type="text" id="cpfounded" name="cpfounded" required value="'. $row["founded"].'"><br><br>';
+
+			echo '<label for="cpfounder"><span style="color: red !important;">*</span> Founder(s): </label></td>';
+			echo '<input type="text" id="cpfounder" name="cpfounder" required value="'. $row["founder"].'"><br><br>';
+			
+			echo '<label for="cpceo"><span style="color: red !important;">*</span> CEO: </label></td>';
+			echo '<input type="text" id="cpceo" name="cpceo" required value="'. $row["ceo"].'"><br><br>';
+
+			echo '<table>';
+			echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input type="text" id="cpstaff_no" name="cpstaff_no" value="'. $update_cp_staffno.'"></td></tr>';
+
+			if ($update_cp_businesstype == 1) {
+				echo '<tr><td><br><label for="cpbusiness_type"><span style="color: red !important;">*</span> Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type" required><option value="1" selected>Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
+			}
+			elseif ($update_cp_businesstype == 2) {
+				echo '<tr><td><br><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type" required><option value="1">Distributor</option><option value="2" selected>Manufacturer</option></select></td></tr>';
+			}
+			else {
+				echo '<tr><td><br><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type" required><option value="1">Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
+			}
+			echo '</table>';
+
+			/* Backend Company Info Section End */
+
+			/*Backend Contact Info Section Start  */
+			echo'<br><br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>';
+
+			echo '<tr><td><br><label for="cpfacebook">Facebook: </label></td>';
+            echo '<td><input type="text" id="cpfacebook" name="cpfacebook" placeholder="https://www.facebook.com" value="'. $row["facebook"].'"></td></tr>';
+
+			echo '<tr><td><br><br><label for="cplinkedin">Linkedin: </label></td>';
+            echo '<td><input type="text" id="cplinkedin" name="cplinkedin" placeholder="https://www.linkedin.com" value="'. $row["linkedin"].'"></td></tr>';
+            
+			echo '<tr><td><br><br><label for="cptwitter">Twitter: </label></td>';
+			echo '<td><input type="text" id="cptwitter" name="cptwitter" placeholder="https://twitter.com"  value="'. $row["twitter"].'"></td></tr>';
+			
+			echo '<tr><td><br><br><label for="cpyoutube">YouTube: </label></td>';
+			echo '<td><input type="text" id="cpyoutube" name="cpyoutube" placeholder="https://www.youtube.com"  value="'. $row["youtube"].'"></td></tr>';
+
+			
+            echo '<tr><td><br><br><label for="cpaddress">Address: </label></td>';
+            echo '<td><input type="text" id="cpaddress" name="cpaddress" value="'. $row["address"].'"></td></tr>';
+			
+			echo '<tr><td><br><br><label for="cpurl"><span style="color: red !important;">*</span> Url: </label></td>';
+			echo '<td><input type="text" id="cpurl" name="cpurl" required value="'. $row["url"].'"></td></tr>';
+			
+            echo '<tr><td><br><br><label for="cpphone"><span style="color: red !important;">*</span> Phone: </label></td>';
+            echo '<td><input type="text" id="cpphone" name="cpphone" required value="'. $row["phone"].'"></td></tr>';
+			
+			echo '<tr><td><br><br><label for="cpemail"><span style="color: red !important;">*</span> Email: </label></td>';
+            echo '<td><input type="text" id="cpemail" name="cpemail" required value="'. $row["email"].'"></td></tr>';
+            
+			/*Backend Contact Info Section End  */
+
+			
+
+
+			/*Backend Other's Section Start */
+			echo'<br><br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Others</h2>';
+
+
+			
+            /** Manufacturer Profile update_Table1 */
+			echo '<table>';
+			echo '<tr><td><label for="cpname">Manufacturing: </label></td>';
+            echo '<td><input type="text" id="cpmanuf" name="cpmanuf" value="'. $row["manuf"].'"> </td></tr>';
+            
+			echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="text" id="cptrading_cap" name="cptrading_cap" value="'. $row["trading_capacity"].'">&nbsp;Watts</td></tr>';
+
+
+			echo '<tr><td><label for="corespond">Average Respond Time: </label></td><td><input type="text" id="cprespond" name="cprespond" value="'. $row["respond"].'">&nbsp;Hours</td></tr>';
+            echo '</table>';	
             
 			/** Manufacturer Profile update_Table2 */
 			echo '<table>';
-			echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input type="text" id="cpstaff_no" name="cpstaff_no" value="'. $update_cp_staffno.'"></td></tr>';
 			
 			//var_dump($update_cp_businesstype);
-            
-			if ($update_cp_businesstype == 1) {
-				echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1" selected>Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
-			}
-			elseif ($update_cp_businesstype == 2) {
-				echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1">Distributor</option><option value="2" selected>Manufacturer</option></select></td></tr>';
-			}
-			else {
-				echo '<tr><td><label for="cpbusiness_type">Business Type: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type"><option value="1">Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
-			}
-			
-			echo '<tr><td><label for="cpcrystalline">Crystalline: </label></td><td><input type="text" id="cpcrystalline" name="cpcrystalline" value="'. $update_cp_crystalline.'"></td></tr>';
+			echo '<tr><td><label for="cpcrystalline"><span style="color: red !important;">*</span> Crystalline: </label></td><td><input type="text" id="cpcrystalline" name="cpcrystalline" required value="'. $update_cp_crystalline.'"></td></tr>';
 			echo '<tr><td><label for="cpcproduction">Crystalline Production: </label></td><td><input type="text" id="cpcproduction" name="cpcproduction" value="'. $update_cp_cproduction.'"></td></tr>';
 			echo '<tr><td><label for="cpcprl">Crystalline Power Range (Low): </label></td><td><input type="text" id="cpcprl" name="cpcprl" value="'. $update_cp_cprl.'"></td></tr>';
 			echo '<tr><td><label for="cpcprh">Crystalline Power Range (High): </label></td><td><input type="text" id="cpcprh" name="cpcprh" value="'. $update_cp_cprh.'"></td></tr>';
@@ -891,45 +921,13 @@
             
             /** Manufacturer Profile update_Table3 */
 			echo '<table>';
-			echo '<tr><td><label for="cpcomtype">Component Type: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" value="'. $update_cp_comptype.'"></td></tr>';
+			echo '<tr><td><label for="cpcomtype"><span style="color: red !important;">*</span> Component Type: </label></td><td><input type="text" id="cpcomtype" name="cpcomtype" required value="'. $update_cp_comptype.'"></td></tr>';
 			echo '<tr><td><label for="cpme">Mounting Equipment: </label></td><td><input type="text" id="cpme" name="cpme" value="'. $update_cp_me.'"></td></tr>';
 			echo '</table>';
             
             
 			/** Add More btn */
-			echo '<br><br>Milestones&nbsp;&nbsp;&nbsp;<button type="button" onclick="addmilestones()">Add More</button><br><br>';
 			
-			
-			echo '<script>
-					function addmilestones() {var s=document.getElementsByClassName("accordionm").length+1;document.getElementById("milestonedemo").innerHTML =document.getElementById("milestonedemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordionm">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpmilestonesyear\'+String(s)+\'">Year: </label><textarea id="cpmilestonesyear\'+String(s)+\'" name="cpmilestonesyear\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpmilestonesname\'+String(s)+\'">Name: </label>'.
-					'<textarea id="cpmilestonesname\'+String(s)+\'" name="cpmilestonesname\'+String(s)+\'"></textarea><br>'.'<label for="cpmilestonescontent\'+String(s)+\'">Content: </label>'.'<textarea id="cpmilestonescontent\'+String(s)+\'" name="cpmilestonescontent\'+String(s)+\'"></textarea><br>'.
-					'<br><br><button type="button" onclick="deletemilestones(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
-					document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
-					
-				 </script>';
-
-			echo '<script>function deletemilestones(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
-			wp_enqueue_script( 'jQuery' );
-			
-			
-			$cp_sql_milestones    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".$cp_id;
-    		$cp_result_milestones = $conn->query($cp_sql_milestones);
-			echo '<style>.accordionm {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordionm:hover {background-color: #ccc;}.accordionm:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
-			
-			echo '<span id="milestonedemo">';
-					if ($cp_result_milestones->num_rows > 0) {
-				
-						while($row_milestones = $cp_result_milestones->fetch_assoc()) {
-							echo '<button id="'.$row_milestones["milestone_id"].'" type="button" class="accordionm">'.$row_milestones["milestone_year"].'</button>
-							
-							<div id="plus'.$row_milestones["milestone_id"].'" class="panel"><label for="cpmilestonesyear'.$row_milestones["milestone_id"].'">Year: </label><input type="text" id="cpmilestonesyear'.$row_milestones["milestone_year"].'" name="cpmilestonesyear'.$row_milestones["milestone_id"].'" rows="1" cols="80" value="'.$row_milestones["milestone_year"].'">'.'<br><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cpmilestonescontent'.$row_milestones["milestone_content"].'" name="cpmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
-						}	
-					}
-					else {echo '0 Milestones<br><br>';}
-			
-			echo '</span>';
-  			echo '<script>var acc = 
-					document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}</script>';
 		
 			$cp_sql_solarprocat = "SELECT * FROM ".$tablename_project_cat;
     		$cp_result_solarprocat = $conn->query($cp_sql_solarprocat);	
@@ -959,8 +957,8 @@
   				echo '<option value="'.array_search($v, $prod_cat).'">'.$v.'</option>';
 			}
     		
-  					echo '</select><br><label for="cpsolarprojectsno\'+String(s)+\'">Model Number: </label>'.
-					'<input id="cpsolarprojectsno\'+String(s)+\'" name="cpsolarprojectsno\'+String(s)+\'"><br>'.
+					echo '</select><br><label for="cpsolarprojectsno\'+String(s)+\'">Model Number: </label>'.
+					'<input title="We are currently building a library of all solar brand models. When it is done, your Model Number can be linked with individual product model page. Stay tuned. " id="cpsolarprojectsno\'+String(s)+\'" name="cpsolarprojectsno\'+String(s)+\'"><br>'.
 					'<br><br><button type="button" onclick="deletesolarprojects(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
 					document.getElementsByClassName("accordions");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
 					
@@ -997,7 +995,7 @@
   							  echo '</select>
 
 
-							  <br><label for="cpsolarprojectsno'.$project_count.'">Model Number: </label><input id="cpsolarprojectsno'.$project_count.'" name="cpsolarprojectsno'.$project_count.'" rows="1" cols="80" value="'.$row_solarprojects["model_no"].'">'.'<br><br><button type="button" onclick="deletesolarprojects('.$project_count.')">Delete</button><br><br></div>';
+							  <br><label for="cpsolarprojectsno'.$project_count.'" >Model Number: </label><input id="cpsolarprojectsno'.$project_count.'" name="cpsolarprojectsno'.$project_count.'" rows="1" cols="80" value="'.$row_solarprojects["model_no"].'">'.'<br><br><button type="button" onclick="deletesolarprojects('.$project_count.')">Delete</button><br><br></div>';
 							$project_count = $project_count + 1;
 						}	
 					}
@@ -1010,120 +1008,162 @@
 
 
             /** Add More btn */
-			echo '<br><br>Reviews&nbsp;&nbsp;&nbsp;<button type="button" onclick="addreviews()">Add More</button><br><br>';
+			/* Reviews Section */
+echo '<br><br>Reviews&nbsp;&nbsp;&nbsp;<button type="button" onclick="addreviews()">Add More</button><br><br>';
+			
+			
+echo '<script>
+        function addreviews() {var s=document.getElementsByClassName("accordion").length+1;document.getElementById("reviewdemo").innerHTML =document.getElementById("reviewdemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordion">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpreviewname\'+String(s)+\'">Name: </label><textarea id="cpreviewname\'+String(s)+\'" name="cpreviewname\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpreviewcontent\'+String(s)+\'">Content: </label>'.
+        '<textarea id="cpreviewcontent\'+String(s)+\'" name="cpreviewcontent\'+String(s)+\'" rows="4" cols="50"></textarea>'.
+        '<br><br><button type="button" onclick="deletereviews(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
+        document.getElementsByClassName("accordion");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
+        
+     </script>';
+
+echo '<script>function deletereviews(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
+wp_enqueue_script( 'jQuery' );
+
+
+$cp_sql_reviews    = "SELECT * FROM ".$tablename_review." WHERE company_id=".$cp_id;
+$cp_result_reviews = $conn->query($cp_sql_reviews);
+echo '<style>.accordion {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordion:hover {background-color: #ccc;}.accordion:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
+
+echo '<span id="reviewdemo">';
+        if ($cp_result_reviews->num_rows > 0) {
+    
+            while($row_reviews = $cp_result_reviews->fetch_assoc()) {
+                echo '<button id="'.$row_reviews["review_id"].'" type="button" class="accordion">'.$row_reviews["review_name"].'</button>
+                <div id="plus'.$row_reviews["review_id"].'" class="panel"><label for="cpreviewname'.$row_reviews["review_id"].'">Name: </label><textarea id="cpreviewname'.$row_reviews["review_id"].'" name="cpreviewname'.$row_reviews["review_id"].'" rows="1" cols="50">'.$row_reviews["review_name"].'</textarea><br><label for="cpreviewcontent'.$row_reviews["review_id"].'">Content: </label><textarea id="cpreviewcontent'.$row_reviews["review_id"].'" name="cpreviewcontent'.$row_reviews["review_id"].'" rows="4" cols="50">'.$row_reviews["review_content"].'</textarea><br><br><button type="button" onclick="deletereviews('.$row_reviews["review_id"].')">Delete</button><br><br></div>';
+            }	
+        }
+        else {echo '0 Reviews<br><br>';}
+
+echo '</span>';
+
+echo '<script>var acco = document.getElementsByClassName("accordion");var j;for (j = 0; j < acco.length; j++) {acco[j].addEventListener("click", function() {this.classList.toggle("active");var panelo = this.nextElementSibling;if (panelo.style.maxHeight) {panelo.style.maxHeight = null;} else {panelo.style.maxHeight = panelo.scrollHeight + "px";} });}</script>';
+
+/* Reviews Section */
+/*News section */
+
+$cp_sql_news    = "SELECT * FROM ".$tablename_news." WHERE company_id=".$cp_id;
+$cp_result_news = $conn->query($cp_sql_news);
+$i = 0;
+if ($cp_result_news->num_rows > 0) {
+
+    while($row_news = $cp_result_news->fetch_assoc()) {
+        $i = $i + 1;
+        echo '<h3>News '.strval($i).'</h3>';
+        echo '<label for="cpnewsname'.strval($i).'">Name: </label><textarea id="cpnewsname'.strval($i).'" name="cpnewsname'.strval($i).'" rows="1" cols="50">'.$row_news["title"].'</textarea><br><br>';
+        $content   = $row_news["content"];
+        $editor_id = 'cpnewscontent';
+        $settings  = array( 'media_buttons' => true);
+
+        wp_editor( $content, $editor_id.strval($i), $settings );
+    }
+    
+}
+
+
+while ($i < 1) {
+    $i = $i + 1;
+    echo '<h3>News '.strval($i).'</h3>';
+    echo '<label for="cpnewsname'.strval($i).'">Name: </label><textarea id="cpnewsname'.strval($i).'" name="cpnewsname'.strval($i).'" rows="1" cols="50"></textarea><br><br>';
+    $content   = '';
+    $editor_id = 'cpnewscontent';
+    $settings  = array( 'media_buttons' => true);
+    wp_editor( $content, $editor_id.strval($i), $settings );
+}
+
+while ($i < 8) {
+    $i = $i + 1;
+    echo '<div class="hidenews" style="display:none;">';
+    echo '<h3>News '.strval($i).'</h3>';
+    echo '<label for="cpnewsname'.strval($i).'">Name: </label><textarea id="cpnewsname'.strval($i).'" name="cpnewsname'.strval($i).'" rows="1" cols="50"></textarea><br><br>';
+    $content   = '';
+    $editor_id = 'cpnewscontent';
+    $settings  = array( 'media_buttons' => true);
+    wp_editor( $content, $editor_id.strval($i), $settings );
+    echo '</div>';
+}
+
+while ($i < 30) {
+    $i = $i + 1;
+    echo '<div class="hidenews2" style="display:none;">';
+    echo '<h3>News '.strval($i).'</h3>';
+    echo '<label for="cpnewsname'.strval($i).'">Name: </label><textarea id="cpnewsname'.strval($i).'" name="cpnewsname'.strval($i).'" rows="1" cols="50"></textarea><br><br>';
+    $content   = '';
+    $editor_id = 'cpnewscontent';
+    $settings  = array( 'media_buttons' => true);
+    wp_editor( $content, $editor_id.strval($i), $settings );
+    echo '</div>';
+}
+
+/** Add More News1 btn */
+echo '<div><button id="btn_addnews" onclick="openmorenews();">Add More News</button></div>';
+
+ /** Add More News2 btn */
+echo '<div><button id="btn_addnews_2" onclick="openmorenews2();" style="display:none;">Add More News</button></div>';
+
+
+echo '<script>function openmorenews(){event.preventDefault();var y = document.getElementsByClassName("hidenews"); var i;document.getElementById("btn_addnews").style.display = "none";document.getElementById("btn_addnews_2").style.display = "block";
+                for (i = 0; i < y.length; i++) {
+                    y[i].style.display = "block";
+                }}
+      </script>';
+      
+echo '<script>function openmorenews2(){event.preventDefault();var z = document.getElementsByClassName("hidenews2"); var j;document.getElementById("btn_addnews_2").style.display = "none";
+                for (j = 0; j < z.length; j++) {
+                    z[j].style.display = "block";
+                }}
+      </script>';
+
+echo '<br>';
+/*News Section */			
+		/*Milestones Section */
+		echo '<br><br>Milestones&nbsp;&nbsp;&nbsp;<button type="button" onclick="addmilestones()">Add More</button><br><br>';
 			
 			
 			echo '<script>
-					function addreviews() {var s=document.getElementsByClassName("accordion").length+1;document.getElementById("reviewdemo").innerHTML =document.getElementById("reviewdemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordion">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpreviewname\'+String(s)+\'">Name: </label><textarea id="cpreviewname\'+String(s)+\'" name="cpreviewname\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpreviewcontent\'+String(s)+\'">Content: </label>'.
-					'<textarea id="cpreviewcontent\'+String(s)+\'" name="cpreviewcontent\'+String(s)+\'" rows="4" cols="50"></textarea>'.
-					'<br><br><button type="button" onclick="deletereviews(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
-					document.getElementsByClassName("accordion");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
+					function addmilestones() {var s=document.getElementsByClassName("accordionm").length+1;document.getElementById("milestonedemo").innerHTML =document.getElementById("milestonedemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordionm">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpmilestonesyear\'+String(s)+\'">Year: </label><textarea id="cpmilestonesyear\'+String(s)+\'" name="cpmilestonesyear\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpmilestonesname\'+String(s)+\'">Name: </label>'.
+					'<textarea id="cpmilestonesname\'+String(s)+\'" name="cpmilestonesname\'+String(s)+\'"></textarea><br>'.'<label for="cpmilestonescontent\'+String(s)+\'">Content: </label>'.'<textarea id="cpmilestonescontent\'+String(s)+\'" name="cpmilestonescontent\'+String(s)+\'"></textarea><br>'.
+					'<br><br><button type="button" onclick="deletemilestones(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
+					document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
 					
 				 </script>';
 
-			echo '<script>function deletereviews(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
+			echo '<script>function deletemilestones(a) {var myobj = document.getElementById(String(a));myobj.remove();var myobjplus = document.getElementById("plus"+String(a));myobjplus.remove();}</script>';
 			wp_enqueue_script( 'jQuery' );
 			
 			
-			$cp_sql_reviews    = "SELECT * FROM ".$tablename_review." WHERE company_id=".$cp_id;
-    		$cp_result_reviews = $conn->query($cp_sql_reviews);
-			echo '<style>.accordion {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordion:hover {background-color: #ccc;}.accordion:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
+			$cp_sql_milestones    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".$cp_id;
+    		$cp_result_milestones = $conn->query($cp_sql_milestones);
+			echo '<style>.accordionm {background-color: lightblue;color: #444;cursor: pointer;padding: 18px;width: 100%;border: none;text-align: left;outline: none;font-size: 15px;transition: 0.4s;}.active, .accordionm:hover {background-color: #ccc;}.accordionm:after {content: "\002B";color: #777;font-weight: bold;float: right;margin-left: 5px;}.active:after {content: "\2212";}.panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}</style>';
 			
-			echo '<span id="reviewdemo">';
-					if ($cp_result_reviews->num_rows > 0) {
+			echo '<span id="milestonedemo">';
+					if ($cp_result_milestones->num_rows > 0) {
 				
-						while($row_reviews = $cp_result_reviews->fetch_assoc()) {
-							echo '<button id="'.$row_reviews["review_id"].'" type="button" class="accordion">'.$row_reviews["review_name"].'</button>
-							<div id="plus'.$row_reviews["review_id"].'" class="panel"><label for="cpreviewname'.$row_reviews["review_id"].'">Name: </label><textarea id="cpreviewname'.$row_reviews["review_id"].'" name="cpreviewname'.$row_reviews["review_id"].'" rows="1" cols="50">'.$row_reviews["review_name"].'</textarea><br><label for="cpreviewcontent'.$row_reviews["review_id"].'">Content: </label><textarea id="cpreviewcontent'.$row_reviews["review_id"].'" name="cpreviewcontent'.$row_reviews["review_id"].'" rows="4" cols="50">'.$row_reviews["review_content"].'</textarea><br><br><button type="button" onclick="deletereviews('.$row_reviews["review_id"].')">Delete</button><br><br></div>';
+						while($row_milestones = $cp_result_milestones->fetch_assoc()) {
+							echo '<button id="'.$row_milestones["milestone_id"].'" type="button" class="accordionm">'.$row_milestones["milestone_year"].'</button>
+							
+							<div id="plus'.$row_milestones["milestone_id"].'" class="panel"><label for="cpmilestonesyear'.$row_milestones["milestone_id"].'">Year: </label><input type="text" id="cpmilestonesyear'.$row_milestones["milestone_year"].'" name="cpmilestonesyear'.$row_milestones["milestone_id"].'" rows="1" cols="80" value="'.$row_milestones["milestone_year"].'">'.'<br><label for="cpmilestonesname'.$row_milestones["milestone_id"].'">Name: </label><textarea id="cpmilestonesname'.$row_milestones["milestone_name"].'" name="cpmilestonesname'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_name"].'</textarea><br>'.'<label for="cpmilestonescontent'.$row_milestones["milestone_id"].'">Content: </label><textarea id="cpmilestonescontent'.$row_milestones["milestone_content"].'" name="cpmilestonescontent'.$row_milestones["milestone_id"].'" rows="1" cols="80">'.$row_milestones["milestone_content"].'</textarea><br>'.'<br><br><button type="button" onclick="deletemilestones('.$row_milestones["milestone_id"].')">Delete</button><br><br></div>';
 						}	
 					}
-					else {echo '0 Reviews<br><br>';}
+					else {echo '0 Milestones<br><br>';}
 			
 			echo '</span>';
-
-			echo '<script>var acco = document.getElementsByClassName("accordion");var j;for (j = 0; j < acco.length; j++) {acco[j].addEventListener("click", function() {this.classList.toggle("active");var panelo = this.nextElementSibling;if (panelo.style.maxHeight) {panelo.style.maxHeight = null;} else {panelo.style.maxHeight = panelo.scrollHeight + "px";} });}</script>';
-
-
-
-			$cp_sql_news    = "SELECT * FROM ".$tablename_news." WHERE company_id=".$cp_id;
-    		$cp_result_news = $conn->query($cp_sql_news);
-			$i = 0;
-			if ($cp_result_news->num_rows > 0) {
-    	
-        		while($row_news = $cp_result_news->fetch_assoc()) {
-					$i = $i + 1;
-					echo '<h3>News '.strval($i).'</h3>';
-					echo '<label for="cpnewsname'.strval($i).'">Name: </label><textarea id="cpnewsname'.strval($i).'" name="cpnewsname'.strval($i).'" rows="1" cols="50">'.$row_news["title"].'</textarea><br><br>';
-					$content   = $row_news["content"];
-					$editor_id = 'cpnewscontent';
-					$settings  = array( 'media_buttons' => true);
-
-					wp_editor( $content, $editor_id.strval($i), $settings );
-				}
-				
-			}
+  			echo '<script>var acc = 
+					document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}</script>';
+		/*Milestones Section */
 			
 			
-			while ($i < 1) {
-				$i = $i + 1;
-				echo '<h3>News '.strval($i).'</h3>';
-				echo '<label for="cpnewsname'.strval($i).'">Name: </label><textarea id="cpnewsname'.strval($i).'" name="cpnewsname'.strval($i).'" rows="1" cols="50"></textarea><br><br>';
-				$content   = '';
-				$editor_id = 'cpnewscontent';
-				$settings  = array( 'media_buttons' => true);
-				wp_editor( $content, $editor_id.strval($i), $settings );
-			}
-			
-			while ($i < 8) {
-				$i = $i + 1;
-				echo '<div class="hidenews" style="display:none;">';
-				echo '<h3>News '.strval($i).'</h3>';
-				echo '<label for="cpnewsname'.strval($i).'">Name: </label><textarea id="cpnewsname'.strval($i).'" name="cpnewsname'.strval($i).'" rows="1" cols="50"></textarea><br><br>';
-				$content   = '';
-				$editor_id = 'cpnewscontent';
-				$settings  = array( 'media_buttons' => true);
-				wp_editor( $content, $editor_id.strval($i), $settings );
-				echo '</div>';
-			}
-			
-			while ($i < 30) {
-				$i = $i + 1;
-				echo '<div class="hidenews2" style="display:none;">';
-				echo '<h3>News '.strval($i).'</h3>';
-				echo '<label for="cpnewsname'.strval($i).'">Name: </label><textarea id="cpnewsname'.strval($i).'" name="cpnewsname'.strval($i).'" rows="1" cols="50"></textarea><br><br>';
-				$content   = '';
-				$editor_id = 'cpnewscontent';
-				$settings  = array( 'media_buttons' => true);
-				wp_editor( $content, $editor_id.strval($i), $settings );
-				echo '</div>';
-			}
-            
-            /** Add More News1 btn */
-            echo '<div><button id="btn_addnews" onclick="openmorenews();">Add More News</button></div>';
-
-             /** Add More News2 btn */
-			echo '<div><button id="btn_addnews_2" onclick="openmorenews2();" style="display:none;">Add More News</button></div>';
 			
 			
-			echo '<script>function openmorenews(){event.preventDefault();var y = document.getElementsByClassName("hidenews"); var i;document.getElementById("btn_addnews").style.display = "none";document.getElementById("btn_addnews_2").style.display = "block";
-							for (i = 0; i < y.length; i++) {
-								y[i].style.display = "block";
-							}}
-                  </script>';
-                  
-			echo '<script>function openmorenews2(){event.preventDefault();var z = document.getElementsByClassName("hidenews2"); var j;document.getElementById("btn_addnews_2").style.display = "none";
-							for (j = 0; j < z.length; j++) {
-								z[j].style.display = "block";
-							}}
-				  </script>';
 			
-            echo '<br>';
-            
-          	
 			$row["name"] = str_replace(",","",$row["name"]);
 			$row["name"] = str_replace(".","",$row["name"]);
 			$row["name"] = str_replace(' ', '-', $row["name"]);
 			echo '</div>';
+
 
 			echo '<div class="mfp-edit-right">';
 			echo '<div class="mfp-update-box">';
@@ -1135,7 +1175,7 @@
 			
 				if (is_null($row["company_image"])){
 						
-					echo '<input type="text" class="process_custom_images example-jpg-file-new" id="example-jpg-file-new" name="example-jpg-file-new" value=""><button class="set_custom_logo button" style="vertical-align: middle;">Select Manufacturer Logo</button>';
+					echo '<input type="text" class="process_custom_images example-jpg-file-new" id="example-jpg-file-new" name="example-jpg-file-new" required value=""><button class="set_custom_logo button" style="vertical-align: middle;">Select Manufacturer Logo</button>';
 			
 					echo "<script>jQuery(document).ready(function() {
 									var $ = jQuery;
@@ -1158,7 +1198,7 @@
 				}else{
 						
 					echo '<input type="text" class="process_custom_images example-jpg-file" id="example-jpg-file" name="example-jpg-file" value=""><button class="set_custom_logo button" style="vertical-align: middle;">Update Manufacturer Logo</button>';
-					echo '<br><br>('.'<label for="cimage">Current Image: </label>'.'  <input type="text" id="cimage" name="cimage" value="'.$row["company_image"].'" size="" readonly> ) <br><br><img src="'.$row["company_image"].'"> <br>';
+					echo '<br><br>('.'<label for="cimage">Current Image: </label>'.'  <input type="text" id="cimage" required name="cimage" value="'.$row["company_image"].'" size="" readonly> ) <br><br><img src="'.$row["company_image"].'"> <br>';
 		
 					echo "<script>jQuery(document).ready(function() {
 									var $ = jQuery;
