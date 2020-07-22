@@ -16,7 +16,7 @@
 	$tablename_details = "company_profile";
 	$tablename_reviews = "company_profile_reviews";
 	$tablename_news    = "company_profile_news";
-	
+	$tablename_milestones    = "company_profile_milestones";
     $cp_id = $_GET['company_id'];
 		
 	//fetch company data
@@ -33,12 +33,13 @@ while (true) {
 		while($cp_row = $result->fetch_assoc()) {	
 				
 			$new_cp_id               = $cp_row['company_id'];
-		    $new_cp_name             = $cp_row['name'];
-		    $new_cp_asname      	 = $cp_row['as_name'];
-		    $new_cp_parent      	 = $cp_row['parent_company'];
-		    $new_cp_founded      	 = $cp_row['founded'];
-			$new_cp_founder     	 = $cp_row['founder'];
-			$new_cp_ceo     		 = $cp_row['ceo'];
+			$new_cp_name             = $cp_row['name'];
+			$new_cp_asname           = $cp_row['as_name'];
+			$new_cp_vision 			 = $cp_row['vision'];
+			$new_cp_slogan 			 = $cp_row['slogan'];
+			$new_cp_founded			 = $cp_row['founded'];
+			$new_cp_founder			 = $cp_row['founder'];
+			$new_cp_ceo				 = $cp_row['ceo'];
 			$new_cp_address          = $cp_row['address'];
 			$new_cp_phone            = $cp_row['phone'];
 			$new_cp_image            = $cp_row['company_image'];
@@ -51,11 +52,17 @@ while (true) {
 			$new_cp_youtube          = $cp_row['youtube']; 
 			$new_cp_about            = $cp_row['about'];
 			$new_cp_business_status  = $cp_row['status'];
-			$new_cp_trading_cap   	 = $cp_row['trading_capacity'];
-			$new_cp_respond   	 	 = $cp_row['respond'];
-			$new_cp_slogan    		 = $cp_row['slogan'];
-			$new_cp_vision    		 = $cp_row['vision'];
+			
 
+			$currentUserRole = wp_get_current_user();
+			if ( in_array( 'mfp_owner', (array) $currentUserRole->roles ) ) {
+				$currentUserId = get_current_user_id();
+				$comapnyOwnerId = $cp_row['company_owner'];
+				if ($currentUserId != $comapnyOwnerId) {
+					echo 'You are not authorised to access this page';
+					exit();
+				}
+			}   
 			//var_dump($new_cp_name);
 			//var_dump($new_cp_address);
 			//var_dump($new_cp_phone);
@@ -70,7 +77,6 @@ while (true) {
 				if ($result_detail->num_rows > 0) {	
 					while ($cp_row_detail= $result_detail->fetch_assoc()){
 						$new_cp_staffno     = $cp_row_detail['cpstaff_no'];
-						$new_cp_businesstype = intval($row_detail['business_type']);
 						$new_cp_crystalline = $cp_row_detail['cpcrystalline'];
 						$new_cp_cprl        = $cp_row_detail['cpcprl'];
 						$new_cp_cprh        = $cp_row_detail['cpcprh'];
@@ -78,7 +84,7 @@ while (true) {
 						$new_cp_hecprl      = $cp_row_detail['cphecprl'];
 						$new_cp_hecprh      = $cp_row_detail['cphecprh'];
 					    $new_cp_comtype     = $cp_row_detail['cpcomtype'];
-						
+						$new_businesstype   = $cp_row_details['business_type'];
 					}
 				} 
 				
@@ -143,7 +149,7 @@ while (true) {
 			$xx_write = $xx_write.'</div></div>';
 			
 			
-			$x_write = '<div class="whiteblock" id="userreviews"><h2 style="margin-bottom:0px !important;">Reviews for '.$new_cp_name.": </h2>";
+			$x_write = '<div class="whiteblock" id="userreviews"><h2>Reviews for '.$new_cp_name.": </h2>";
 			//Fetch News
 			$sql_reviews = "SELECT * FROM ".$tablename_reviews." WHERE company_id=".intval($new_cp_id);
 			$result_reviews = $conn->query($sql_reviews);
@@ -229,13 +235,6 @@ while (true) {
   color: #000;
   text-shadow: 0 0 5px #09f;
 }
-
-.relatedprofiles a{
-	font-size: 14px !important;
-}
-
-.page-breadcrumbs{display:none !important;}
-
 #mfp-topbar {
 	position: fixed;
 	top: 0;
@@ -258,6 +257,74 @@ while (true) {
 	font-size: 14px;
 }
 
+.history-tl-container{
+	font-family: "Roboto",sans-serif;
+	width:100%;
+	margin:auto;
+	display:block;
+	position:relative;
+	}
+	.history-tl-container ul.tl{
+		margin:0px 0 !important;
+		padding:0;
+		display:inline-block;
+
+	}
+	
+	
+	.history-tl-container ul.tl li{
+		list-style: none;
+		margin:auto;
+		margin-left:80px;
+		min-height:50px;
+		/*background: rgba(255,255,0,0.1);*/
+		border-left:1px dashed #86D6FF !important;
+		padding:0 0 1px 30px;
+		position:relative;
+	}
+	.history-tl-container .item-title > p{
+		font-size:18px;
+		margin: 0 !important;
+		font-family: Work Sans, Arial, sans-serif;
+	}
+	.history-tl-container ul.tl li:last-child{ border-left:0;}
+	.history-tl-container ul.tl li::before{
+		position: absolute;
+		left: -11px;
+		top: -5px;
+		content: " ";
+		border: 8px solid rgba(255, 255, 255, 0.74);
+		border-radius: 500%;
+		background: #258CC7;
+		height: 20px;
+		width: 20px;
+		transition: all 500ms ease-in-out;
+
+	}
+	.history-tl-container ul.tl li:hover::before{
+		border-color:  #258CC7;
+		transition: all 1000ms ease-in-out;
+	}
+
+	.history-tl-container ul.tl li .item-detail{
+		color:rgba(0,0,0,0.5);
+		font-size:14px;
+	}
+	.history-tl-container ul.tl li .timestamp{
+		color: #8D8D8D;
+		position: absolute;
+	width:100px;
+		left:-135px;
+		top:-7px;
+		text-align: right;
+		font-size: 17px;
+		font-family: Work Sans, Arial, sans-serif;
+	}				
+	.history-tl-container ul.tl li .item-title{
+		color: #8D8D8D;
+		position: inherit;
+		top: -9px;
+	}
 </style>';
 			$updatecontent = $updatecontent."<style>a{color: #4DB7FE !important;}.site-content{padding-top:30px !important;}.whiteblock{box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background: #fff;border-radius: 10px;z-index:-1;margin-right: 20px;padding: 15px 30px;border: 1px solid #e5e7f2;}body {background: #f6f6f6 !important;}.content {width: 80%;padding: 20px;padding: 0 60px 0 0;}.question {position: relative;background: lightgrey;padding: 10px 10px 10px 50px;display: block;width:100%;cursor: pointer;}.answers {padding: 0px 15px;margin: 5px 0;max-height: 0;overflow: hidden;z-index: 0;position: relative;opacity: 0;-webkit-transition: .7s ease;-moz-transition: .7s ease;-o-transition: .7s ease;transition: .7s ease;}.questions:checked ~ .answers{max-height: 500px;opacity: 1;padding: 15px;}.plus {position: absolute;margin-left: 10px;z-index: 5;font-size: 2em;line-height: 100%;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;-webkit-transition: .3s ease;-moz-transition: .3s ease;-o-transition: .3s ease;transition: .3s ease;}.questions:checked ~ .plus {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);transform:rotate(45deg);}.questions {display: none;}#rightmenu {position: fixed;right: 0;top: 5%;width: 12em;margin-top: -2.5em;}.d-70{width:70%;float:left;}.d-30{width:30%;float:right;}@media only screen and (max-width: 767px) {.d-70{width:100%;}.d-30{width:100%;}.nomargins{margin-top:0px !important;margin-bottom:0px !important;}</style>";
 			
@@ -308,22 +375,83 @@ while (true) {
 			if ($new_cp_business_status == ""){
 					$new_cp_business_status = "Unknown";
 			}
+			if ($new_cp_staffno == 0){
+				$new_cp_staffno = "Unknown";
+			}
+			if($new_cp_founder == ""){
+				$new_cp_founder = "Unknown";
+			}
+			if($new_cp_ceo == ""){
+				$new_cp_ceo = "Unknown";
+			}
+			if ($new_cp_founded == ""){
+				$new_cp_founded = "Unknown";
+			}				
 					
+			/*Milestone Section Start */
+			$cp_sql_milestones    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".intval($new_cp_id);
+			$cp_result_milestones = $conn->query($cp_sql_milestones);
+			if ($cp_result_milestones->num_rows > 0) {				
+				while($row_milestones = $cp_result_milestones->fetch_assoc()) {
+			    	$company_year = $row_milestones['milestone_year'];
+			        	$company_name = $row_milestones['milestone_name'];
+				    	$company_content = $row_milestones['milestone_content'];
+				    	$company_milestone = $company_milestone.'<div class="history-tl-container">
+							<ul class="tl">
+								<li class="tl-item" ng-repeat="item in retailer_history">
+									<div class="timestamp">'.$company_year.'<br></div>
+									<div class="item-title"><p>'.$company_name.'</p></div>
+									<div class="item-detail"><p>'.$company_content.'</p></div>
+								</li>
+							</ul>
+							</div>';
+					  /* Fetch Milestone End */
+				  }
+			}else{	
+				$company_milestone ='<div class="history-tl-container">
+						<ul class="tl">
+							<li class="tl-item tl-else" ng-repeat="item in retailer_history">
+								<div class="timestamp">'.$new_cp_founded.'<br></div>
+								<div class="item-title"><p>'.$new_cp_asname.'. '.$new_cp_founded.'</p></div>
+								<div class="item-detail"><p></p></div>
+							</li>											
+						</ul>
+					</div>';				 
+			}
+			  
+			/*Milestone Section End*/ 
+
+			
 			$updatecontent = $updatecontent.'<section class="d-70">';
-			$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$new_cp_name.' | Product Reviews</h1>';
+			// Comapany Name & Product Review
+			$updatecontent = $updatecontent.'<div class="whiteblock"><h1>'.$new_cp_asname.' | Product Reviews</h1>';
+			if($new_cp_slogan !== ''){
+				$updatecontent = $updatecontent.'<label style="color:#000 !important;">Slogan:</label><span style="padding-left:7px">'.$new_cp_slogan.'</span><br>';
+			}
 			$updatecontent = $updatecontent."Factory Location: ".$new_cp_region."      ";
 			$updatecontent = $updatecontent.' | <a href="#userreviews">'.$result_reviews->num_rows.' Reviews</a> | <a href="#archivenews">'.$result_news->num_rows.' News</a><br></div>';
 			$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
+			// Comapany Name & Product Review End
 			if ($new_cp_business_status == "Closed permanently"){
 				$updatecontent = $updatecontent."<div class='whiteblock' style='background-color: #f2dede; border: 4px solid #fff; padding: 0px 30px 12px 30px !important;'><h4 style='color: #a94442; line-height: 0.1; font-size: 14px;'><i class='fa fa-exclamation-circle' style='font-size:16px;color:red'></i> Removed Listing</h4>";
 				$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">This business listing has been removed. Many factors might be considered: </span><ul style="color: #a94442; font-size: 12px;"><li> The company do not manufacture or sell solar materials any more.</li><li> The company is permanently closed.</li></ul>';
-				$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@shop.solarfeeds.com</b></span>';
+				$updatecontent = $updatecontent.'<span style="color: #a94442; font-size: 12px;">Sometimes a company is removed by mistake. If you are the owner of this company and you think SolarFeeds has made a mistake, please contact the Directory Manager at: content@solarfeeds.com</b></span>';
 				$updatecontent = $updatecontent.'</div>';
-			} 			
+			}	
 			$updatecontent = $updatecontent.'<hr style="width:50%;text-align:left;margin-left:0;margin-top:0px;border-top:0px;">';
-			$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$new_cp_name.": </h2>".$new_cp_about."</div><br>";
+			$updatecontent = $updatecontent.$_POST['mycustomeditor'];
+			// About Company
+			$updatecontent = $updatecontent.'<div class="whiteblock"><h2>About '.$new_cp_asname.': </h2>';
+			if($new_cp_vision !== ''){
+				$updatecontent = $updatecontent.'<label style="color:#000 !important;">Vision:</label><span style="padding-left:7px">'.$new_cp_vision.'</span><br>';
+			}
+			$updatecontent = '<br>'.$updatecontent.$new_cp_about.'<br>';
+			$updatecontent = $updatecontent.'</div><br>';
 			$updatecontent = '<br>'.$updatecontent.$x_write.'<br>';
 			$updatecontent = $updatecontent.$xx_write."<br>";
+			$updatecontent = $updatecontent.'<div class="whiteblock" id="company_mile"><h2>Milestones for '.$new_cp_asname.': </h2>';
+			$updatecontent = $updatecontent.$company_milestone;
+			$updatecontent = $updatecontent."</div>";
 					
 					/* $updatecontent = $updatecontent.'<div class="whiteblock">
 					<h2>Add Reviews</h2>
@@ -376,9 +504,28 @@ while (true) {
 					
 			$updatecontent = $updatecontent.'<aside class="d-30">';
 
-			$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="https://shop.solarfeeds.com/list-your-business/ "><img src="https://shop.solarfeeds.com/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
+			$updatecontent = $updatecontent.'<div class="whiteblock" style="padding: 0;"><a href="https://solarfeeds.com/list-your-business/ "><img src="https://shop.solarfeeds.com/wp-content/uploads/2019/08/Add-a-heading.png"></a></div><br>';
+			
+			/*Comapany Info*/				
+			$updatecontent = $updatecontent.'<div class="whiteblock">';
+			$updatecontent = $updatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Company Info</h2>'.'<div>';
+			$updatecontent = $updatecontent.'<label style="color:#000 !important;">Founded:</label><span style="padding-left:7px">'.$new_cp_founded.'</span><br>';
+			$updatecontent = $updatecontent.'<label style="color:#000 !important;">Founder:</label><span style="padding-left:7px">'.$new_cp_founder.'</span><br>';	
+			$updatecontent = $updatecontent.'<label style="color:#000 !important;">CEO:</label><span style="padding-left:7px">'.$new_cp_ceo.'</span><br>';	
+			
+			
+			$updatecontent = $updatecontent.'<label style="color:#000 !important;">Manufacturer Size:</label><span style="padding-left:7px">'.$new_cp_staffno.'</span><br>';
+			if($new_businesstype === 1){		
+				$updatecontent = $updatecontent.'<label style="color:#000 !important;">Business Type:</label><span style="padding-left:7px">Distributor</span><br>';
+			}elseif ($new_businesstype === 2) {
+				$updatecontent = $updatecontent.'<label style="color:#000 !important;">Business Type:</label><span style="padding-left:7px">Manufacturer</span><br>';
+			}				
+			$updatecontent = $updatecontent."</div>";
+			$updatecontent = $updatecontent."</div><br>";
+			/*Comapny Info End */
+			
+			//Contact Info
 			$updatecontent = $updatecontent.'<div class="whiteblock"><img src="'.$new_cp_image.'">';
-					
 			//$updatecontent = $updatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div>'.'<div><a href="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a> '.$new_cp_facebook.'</div>'.'<div><a href="'.$new_cp_linkedin.'"><i class="fa fa-linkedin" aria-hidden="true"></i></a> '.$new_cp_linkedin.'</div>'.'<div><a href="'.$new_cp_twitter.'"><i class="fa fa-twitter" aria-hidden="true"></i></a> '.$new_cp_twitter.'</div></div><br>';
 			//$updatecontent = $updatecontent.'<div class="whiteblock"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Company Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
 			//$updatecontent = $updatecontent."</div>";
@@ -398,11 +545,11 @@ while (true) {
 			$updatecontent = $updatecontent."</div>";
 			$updatecontent = $updatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
 			$updatecontent = $updatecontent."</div>";
-			
-			$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://shop.solarfeeds.com/claim-your-mnfctr-page/">Claim Now!</a> <br><br></div><br>';
+			// Contact Info End
+			$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://solarfeeds.com/claim-your-mnfctr-page/">Claim Now!</a> <br><br></div><br>';
 			
 			if(count($related_profiles)> 0){
-			$updatecontent = $updatecontent.'<div class="whiteblock relatedprofiles"><h2> Related Profiles</h2>';
+			$updatecontent = $updatecontent.'<div class="whiteblock"><h2> Related Profiles</h2>';
 				foreach($related_profiles as $related){
 					$id    = $related["ID"];
 					$c_url = str_replace(",","",$related["name"]);

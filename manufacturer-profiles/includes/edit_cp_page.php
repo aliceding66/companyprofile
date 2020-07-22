@@ -131,7 +131,7 @@
 			$x = 1;
 			$is_review = 0;
 			/* Reviews For Company */
-			$x_write   = '<div class="whiteblock" id="userreviews"><h2 style="margin-bottom:0px !important;">Reviews for '.$final_company_name.": </h2>";
+			$x_write   = '<div class="whiteblock" id="userreviews"><h2>Reviews for '.$final_company_name.": </h2>";
 			/* Reviews for company end */
 			
 			while(isset($_POST['cpreviewname'.$x])) {
@@ -652,7 +652,8 @@
 				/*Comapny Info End */
 
 				/*Contact Info Start */
-				$updatecontent = $updatecontent.'<div class="whiteblock">';
+				$updatecontent = $updatecontent.'<div class="whiteblock"><img src="'.$new_cp_image.'">';
+				// $updatecontent = $updatecontent.'<div class="whiteblock">';
 				$updatecontent = $updatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div>';
 				if($new_cp_facebook != 'Unknown'){
 					$updatecontent = $updatecontent.'<span ><a target = "_blank" href="'.$new_cp_facebook.'" title="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a></span>';
@@ -674,7 +675,7 @@
 				$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="'.get_site_url().'/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
 				
 				if(count($related_profiles)> 0){
-				$updatecontent = $updatecontent.'<div class="whiteblock relatedprofiles"><br><h2> Related Profiles</h2>';
+				$updatecontent = $updatecontent.'<div class="whiteblock relatedprofiles"><h2> Related Profiles</h2>';
 					foreach($related_profiles as $related){
 					$c_url = str_replace(",","",$related["name"]);
 					$c_url = str_replace(".","",$c_url);

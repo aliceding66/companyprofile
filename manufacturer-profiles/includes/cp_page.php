@@ -101,7 +101,7 @@
 
             $y = 1;
             $is_review = 0;
-            $x_write   = '<div class="whiteblock" id="userreviews"><h2 style="margin-bottom:0px !important;">Reviews for '.$final_company_name.": </h2>";
+            $x_write   = '<div class="whiteblock" id="userreviews"><h2>Reviews for '.$final_company_name.": </h2>";
             while(isset($_POST['cpreviewname'.$y])) {
                 $cp_sql_reviews_create    = "INSERT INTO ".$tablename_reviews." (company_id, review_id, review_name, review_content) VALUES (".$new_cp_id.", ".$y.", '".$_POST['cpreviewname'.$y]."', '".$_POST['cpreviewcontent'.$y]."');";
                 $cp_result_reviews_create = $conn->query($cp_sql_reviews_create);
@@ -520,9 +520,9 @@
 				$cpcreatecontent = $cpcreatecontent."</div>";
 				$cpcreatecontent = $cpcreatecontent."</div><br>";
                 /*Comapny Info End */
-                
-            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock">';
-            $cpcreatecontent = $cpcreatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div>';
+                $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><img src="'.$new_cp_image.'">';
+                //$cpcreatecontent = $cpcreatecontent.'<div class="whiteblock">';
+                $cpcreatecontent = $cpcreatecontent.'<h2 style="margin-top:10px !important;margin-bottom:10px !important">Contact Info</h2>'.'<div>';
                 if($new_cp_facebook != 'Unknown'){
                     $cpcreatecontent = $cpcreatecontent.'<span ><a target = "_blank" href="'.$new_cp_facebook.'" title="'.$new_cp_facebook.'"><i class="fa fa-facebook-square" aria-hidden="true"></i></a></span>';
                 }

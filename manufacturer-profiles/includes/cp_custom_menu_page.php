@@ -131,7 +131,7 @@
                     $user = wp_get_current_user();
                     if ( in_array( 'mfp_owner', (array) $user->roles ) ) {
                         $currentUserId = get_current_user_id();
-                        $comapnyOwnerId = $cp_row['company_owner'];
+                        $comapnyOwnerId = $cp_row['company_owner'];                        
                         if ($comapnyOwnerId == $currentUserId) {
                             echo "<tr>";
                             echo "<td>" . $cp_row["name"]."</td>";
