@@ -724,7 +724,7 @@
 
     
     /** Add More btn */
-    echo '<br><br>Milestones&nbsp;&nbsp;&nbsp;<button type="button" onclick="addmilestones()">Add More</button><br><br>';
+    echo '<br><br><h2 style="display:inline !important;">Milestones</h2>&nbsp;&nbsp;&nbsp;<button type="button" onclick="addmilestones()">Add More</button><br><br>';
             
             
     echo '<script>
@@ -766,7 +766,7 @@
             //var_dump($prod_cat);
 
             /** Add More btn */
-    echo '<br><br>Solar projects that we supplied:&nbsp;&nbsp;&nbsp;<button type="button" onclick="addsolarprojects()">Add More</button><br><br>';
+    echo '<br><br><h2 style="display:inline !important;">Solar projects that we supplied:</h2>&nbsp;&nbsp;&nbsp;<button type="button" onclick="addsolarprojects()">Add More</button><br><br>';
             
             
     echo '<script>
