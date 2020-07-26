@@ -78,9 +78,14 @@ add_action( 'admin_init', 'add_theme_caps');
  */
 function enqueue_scripts($hook) { 
     if(isset($_GET["page"])) {
-        if($_GET["page"] == "cpcustomsubpage" || $_GET["page"] == "cpcreatepage") {
-    wp_enqueue_script( 'my_custom_script', plugin_dir_url( __FILE__ ) . 'js/custom_js.js', array('jquery') );
+        if($_GET["page"] == "cpcustomsubpage") {
+            wp_enqueue_script( 'multi_select_script', plugin_dir_url( __FILE__ ) . 'js/jquery.multi-select.min.js', array('jquery') );
+            wp_enqueue_style( 'multi_select_css', plugin_dir_url( __FILE__ ) . 'css/multiselect-styles.css');
         }
+        if($_GET["page"] == "cpcustomsubpage" || $_GET["page"] == "cpcreatepage") {
+            wp_enqueue_script( 'my_custom_script', plugin_dir_url( __FILE__ ) . 'js/custom_js.js', array('jquery') );
+        }
+       
     }
 }
 add_action('admin_enqueue_scripts', 'enqueue_scripts');

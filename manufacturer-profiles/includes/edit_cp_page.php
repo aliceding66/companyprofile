@@ -1,5 +1,7 @@
 <?php
-    // Create connection
+	// Create connection
+
+
     $conn  = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
 	$tablename         = "company_profile_short";
@@ -15,6 +17,8 @@
 	if($_POST && isset($_POST['updatecpid'])){
 		if (isset($_GET['company_id'])){	
 			
+			
+		
 			$cp_sql_news    = "SELECT * FROM ".$tablename_news." WHERE company_id = ".$cp_id;
 			$cp_result_news = $conn->query($cp_sql_news);
 
@@ -189,7 +193,11 @@
 				$new_cp_business_status   = $_POST['cpbusiness_status'];
 				$new_cp_comtype   		  = $_POST['cpcomtype'];
 				$new_cp_me                = $_POST['cpme'];
-				
+				if(count($_POST['cpmanuf']) > 0) {
+					$new_cp_manuf			  = implode (",", $_POST['cpmanuf']);
+				} else {
+					$new_cp_manuf			  = "Unknown";
+				}
 				
 				$cp_sql_details_update    = "UPDATE ".$tablename_details." SET business_type=".$new_businesstype.", staff_no=".$new_cp_staffno.",crystalline='".$new_cp_crystalline."',cprl=".$new_cp_cprl.",cprh='".$new_cp_cprh."', high_eff='".$new_cp_high_eff."',hecprl='".$new_cp_hecprl."', hecprh='".$new_cp_hecprh."', com_type='".$new_cp_comtype."', mounting_eq='".$new_cp_me."' WHERE company_id=".$cp_id;
 				$cp_result_details_update = $conn->query($cp_sql_details_update);
@@ -279,7 +287,7 @@
 			}elseif (empty($new_cp_comtype)) {
 				echo '<span style="color: red !important;">Component Type is empty! Please fill all required fields *</span><br>';
 			}else{
-			$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."', parent_company='".$new_cp_parentname."', as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."' WHERE company_id=".$cp_id;
+				$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."', parent_company='".$new_cp_parentname."', as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."',manuf='".$new_cp_manuf."' WHERE company_id=".$cp_id;
 			}
 			$cp_result_update = $conn->query($cp_sql_update);
 			if ($cp_result_update){
@@ -761,7 +769,7 @@
 				exit();
 			}
 		}           
-       
+       // print_r($row);
 
 			echo '<style>
 			.mfp-editbox {
@@ -782,7 +790,7 @@
 				box-shadow: hsl(0, 0%, 80%) 0 0 16px;
 				padding: 20px;
 				margin-right: 15px;
-				position:fixed;
+				
 				
 			}
 			#btn_delete{
@@ -906,10 +914,38 @@
 
 
 			
-            /** Manufacturer Profile update_Table1 */
+			/** Manufacturer Profile update_Table1 */
+			$manufacturing_list = array(
+				'Solar Panels',
+				'Inverter',
+				'Charge Controllers',
+				'Storage System',
+				'Convertor',
+				'Mounting System',
+				'Tracker'
+			);
+
 			echo '<table>';
 			echo '<tr><td><label for="cpname">Manufacturing: </label></td>';
-            echo '<td><input type="text" id="cpmanuf" name="cpmanuf" value="'. $row["manuf"].'"> </td></tr>';
+			echo '<td>';
+			
+			$manufArray = explode(',',$row["manuf"]);
+
+			echo '<select id="cpmanuf" name="cpmanuf[]" multiple>';
+			foreach($manufacturing_list as $manuf_list){
+				
+				//$selected = (in_array($manuf_list, $manufArray) ? "selected" : "";
+				if(in_array($manuf_list, $manufArray)){
+					$selected = "selected";
+				} else {
+					$selected = "";
+				}
+				echo '<option '.$selected.'  value="'.$manuf_list.'">'.$manuf_list.'</option>';
+			}
+			echo '</select>';
+		
+
+			echo '</td></tr>';
             
 			echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="number" id="cptrading_cap" name="cptrading_cap" value="'. $row["trading_capacity"].'">&nbsp;Watts</td></tr>';
 
@@ -1284,6 +1320,9 @@ echo '<br>';
                 return true;
             }
             // Validation for number only end
+			jQuery( document ).ready(function() {
+				jQuery("#cpmanuf").multiSelect(); 
+			});
 			</script>
 
 			
