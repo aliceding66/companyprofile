@@ -113,18 +113,18 @@ ini_set("default_charset", "UTF-8");
 <?php 
 if ((isset($cat)) && ($cat!="")){
 	if ((isset($cou)) && ($cou!="")){
-		?> <h1>[<?php echo $cat_updated; ?>] Manufacturers in [<?php echo $cou; ?>]</h1> <?php
+		?> <h1>Top <?php echo $cat_updated; ?> Manufacturers in <?php echo $cou; ?></h1> <?php
 	}
 	else{
-		?> <h1>[<?php echo $cat_updated; ?>] Manufacturers</h1> <?php
+		?> <h1>Top <?php echo $cat_updated; ?> Manufacturers</h1> <?php
 	}
 }
 else{
 	if ((isset($cou)) && ($cou!="")){
-		?> <h1>Manufacturers in [<?php echo $cou; ?>]</h1> <?php
+		?> <h1>Top Manufacturers in <?php echo $cou; ?></h1> <?php
 	}
 	else{
-		?> <h1>Manufacturers</h1> <?php
+		?> <h1>Top Manufacturers</h1> <?php
 	}
 	
 }
