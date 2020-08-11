@@ -393,13 +393,14 @@ while (true) {
 			$cp_result_milestones = $conn->query($cp_sql_milestones);
 			if ($cp_result_milestones->num_rows > 0) {				
 				while($row_milestones = $cp_result_milestones->fetch_assoc()) {
-			    	$company_year = $row_milestones['milestone_year'];
+					$company_year = $row_milestones['milestone_year'];
+					$compnay_month = $row_milestones["milestone_month"];
 			        	$company_name = $row_milestones['milestone_name'];
 				    	$company_content = $row_milestones['milestone_content'];
 				    	$company_milestone = $company_milestone.'<div class="history-tl-container">
 							<ul class="tl">
 								<li class="tl-item" ng-repeat="item in retailer_history">
-									<div class="timestamp">'.$company_year.'<br></div>
+									<div class="timestamp"><span>'.$compnay_month.'-</span>'.$company_year.'<br></div>
 									<div class="item-title"><p>'.$company_name.'</p></div>
 									<div class="item-detail"><p>'.$company_content.'</p></div>
 								</li>

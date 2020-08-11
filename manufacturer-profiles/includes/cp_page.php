@@ -11,7 +11,7 @@
     $tablename_projects    = "company_profile_projects";
     $tablename_project_cat   = "company_profile_project_category";
     $new_cp_owner             = intval($_POST['company_owner']);
-
+   
     // Condition for Company name
 		if(empty($_POST['cpasname'])){
 			$final_company_name = $_POST['cpname'];
@@ -82,7 +82,7 @@
             $is_milestones  = 0;
 
             while(isset($_POST['cpmilestonesname'.$xxx]) && ($_POST['cpmilestonesname'.$xxx] != '') && ($_POST['cpmilestonesyear'.$xxx] != '')) {
-                $cp_sql_milestones_update       = "INSERT INTO ".$tablename_milestones." (company_id, milestone_id, milestone_year,milestone_name, milestone_content    ) VALUES (".$new_cp_id.", ".$xxx.",".$_POST['cpmilestonesyear'.$xxx].", '".$_POST['cpmilestonesname'.$xxx]."', '".$_POST['cpmilestonescontent'.$xxx]."');";
+                $cp_sql_milestones_update       = "INSERT INTO ".$tablename_milestones." (company_id, milestone_id, milestone_year,milestone_month,milestone_name, milestone_content    ) VALUES (".$new_cp_id.", ".$xxx.",".$_POST['cpmilestonesyear'.$xxx].",".$_POST['cpmilestonesmonth'.$xxx].", '".$_POST['cpmilestonesname'.$xxx]."', '".$_POST['cpmilestonescontent'.$xxx]."');";
                 $cp_result_milestones_update = $conn->query($cp_sql_milestones_update);
                 
                 $xxx_write  = $xxx_write.'<div>';
@@ -399,6 +399,7 @@
                                                             .history-tl-container ul.tl li .item-detail{
                                                                 color:rgba(0,0,0,0.5);
                                                                 font-size:14px;
+                                                                
                                                             }
                                                             .history-tl-container ul.tl li .timestamp{
                                                                 color: #8D8D8D;
@@ -414,6 +415,7 @@
                                                                 color: #8D8D8D;
                                                                 position: inherit;
                                                                 top: -9px;
+                                                                
                                                             }											
                                                             
                                                     </style>';
@@ -432,42 +434,34 @@
 				$cp_sql_milestone    = "SELECT * FROM ".$tablename_milestones." WHERE company_id=".$cp_id;
 				$cp_result_milestones = $conn->query($cp_sql_milestone);
 				if ($cp_result_milestones->num_rows > 0) {				
-				  while($row_milestones = $cp_result_milestones->fetch_assoc()) {
-                    $company_year = $row_milestones["milestone_year"];
-                    $company_name = $row_milestones["milestone_name"];
-                    $company_content = $row_milestones["milestone_content"];
-                    /* Fetch Milestone Start */
-					  $company_milestone = '<div class="whiteblock" id="company_mile"><h2>Milestones for '.$final_company_name.': </h2>
-					  
-					  <div class="history-tl-container">
-						  <ul class="tl">
-							  <li class="tl-item" ng-repeat="item in retailer_history">
-								  <div class="timestamp">'.$company_year.'<br>
-								  </div>
-								  <div class="item-title"><p>'.$company_name.'</p></div>
-								  <div class="item-detail"><p>'.$company_content.'</p></div>
-							  </li>											
-						  </ul>
-						  </div>
-					  </div>';
-					/* Fetch Milestone End */
-				  }	
-			  }
-			  else{
-				  $company_milestone = '<div class="whiteblock" id="company_mile"><h2>Milestones for '.$final_company_name.':</h2>
-				  <div class="history-tl-container">
-						  <ul class="tl">
-							  <li class="tl-item tl-else" ng-repeat="item in retailer_history">
-								  <div class="timestamp">'.$new_cp_founded.'<br>
-								  </div>
-								  <div class="item-title"><p>'.$final_company_name.'. '.$new_cp_founded.'</p></div>
-								  <div class="item-detail"><p></p></div>
-							  </li>											
-						  </ul>
-						  </div>
-					  </div>';
-			  }
-			  
+                    while($row_milestones = $cp_result_milestones->fetch_assoc()) {
+                        $company_year = $row_milestones["milestone_year"];
+                        $compnay_month = $row_milestones["milestone_month"];
+                        $company_name = $row_milestones["milestone_name"];
+                        $company_content = $row_milestones["milestone_content"];
+                        $company_milestone = $company_milestone.'<div class="history-tl-container">
+                                  <ul class="tl">
+                                      <li class="tl-item" ng-repeat="item in retailer_history">
+                                          <div class="timestamp"><span>'.$compnay_month.'-</span>'.$company_year.'<br></div>
+                                          <div class="item-title"><p>'.$company_name.'</p></div>
+                                          <div class="item-detail"><p>'.$company_content.'</p></div>
+                                      </li>
+                                  </ul>
+                                  </div>';
+                        /* Fetch Milestone End */
+                    }	
+			    }
+			    else{	
+                    $company_milestone ='<div class="history-tl-container">
+                            <ul class="tl">
+                                <li class="tl-item tl-else" ng-repeat="item in retailer_history">
+                                    <div class="timestamp">'.$new_cp_founded.'<br></div>
+                                    <div class="item-title"><p>'.$final_company_name.'. '.$new_cp_founded.'</p></div>
+                                    <div class="item-detail"><p></p></div>
+                                </li>											
+                             </ul>
+                        </div>';				 
+                }			  
 			  /*Milestone Section End*/ 
 
 
@@ -494,7 +488,9 @@
 			$cpcreatecontent = $cpcreatecontent.'</div><br>';
             $cpcreatecontent = "<br>".$cpcreatecontent.$x_write."<br>";
             $cpcreatecontent = $cpcreatecontent.$xx_write."<br>";
-            $cpcreatecontent = $cpcreatecontent.$company_milestone.'<br>';
+            $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock" id="company_mile"><h2>Milestones for '.$final_company_name.': </h2>';
+            $cpcreatecontent = $cpcreatecontent.$company_milestone;
+            $cpcreatecontent = $cpcreatecontent."</div>";
             $cpcreatecontent = $cpcreatecontent."</section>";
     
              
@@ -644,7 +640,7 @@
     echo'<br><h2 style="margin-top:10px !important;margin-bottom:10px !important">Company Info</h2>';
     echo '<table>';
     echo '<tr><td><label for="cpfounded">Founded<span style="color: red !important;">*</span>: </label></td>';
-    echo '<td><input type="text" id="cpfounded" name="cpfounded" maxlength="4" required onchange="checkIsValid(this.value);"></td></tr>';
+    echo '<td><input type="text" id="cpfounded" name="cpfounded" maxlength="4" required onchange="checkIsValid(this.value);"><br><i style="padding: 0 !important;margin: 0;font-size:11px;">Founded Year</i></td></tr>';
 
     echo '<tr><td><label for="cpfounder">Founder(s)<span style="color: red !important;">*</span>: </label></td>';
     echo '<td><input type="text" id="cpfounder" name="cpfounder" required></td></tr>';
@@ -652,7 +648,7 @@
     echo '<tr><td><label for="cpceo">CEO<span style="color: red !important;">*</span>: </label></td>';
     echo '<td><input type="text" id="cpceo" name="cpceo" required></td></tr>';
 
-    echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input title="Company Employee Number" type="text" id="cpstaff_no" name="cpstaff_no" onkeypress="return isNumberKey(event)"></td></tr>';
+    echo '<tr><td><label for="cpstaff_no">Manufacturer Size: </label></td><td><input title="Company Employee Number" type="text" id="cpstaff_no" name="cpstaff_no" onkeypress="return isNumberKey(event)"><br><i style="padding: 0 !important;margin: 0;font-size:11px;">Company Employee Number</i></td></tr>';
     echo '<tr><td><label for="cpbusiness_type">Business Type<span style="color: red !important;">*</span>: </label></td><td><select id="cpbusiness_type" name="cpbusiness_type" required><option value="1">Distributor</option><option value="2">Manufacturer</option></select></td></tr>';
     echo '</table>';
     /*Backend Company Info Section end */
@@ -728,8 +724,10 @@
             
             
     echo '<script>
-                    function addmilestones() {var s=document.getElementsByClassName("accordionm").length+1;document.getElementById("milestonedemo").innerHTML =document.getElementById("milestonedemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordionm">New</button><div id="plus\'+String(s)+\'" class="panel"><label for="cpmilestonesyear\'+String(s)+\'">Year: </label><textarea id="cpmilestonesyear\'+String(s)+\'" name="cpmilestonesyear\'+String(s)+\'" rows="1" cols="50"></textarea><br><label for="cpmilestonesname\'+String(s)+\'">Name: </label>'.
-                    '<textarea id="cpmilestonesname\'+String(s)+\'" name="cpmilestonesname\'+String(s)+\'"></textarea><br>'.'<label for="cpmilestonescontent\'+String(s)+\'">Content: </label>'.'<textarea id="cpmilestonescontent\'+String(s)+\'" name="cpmilestonescontent\'+String(s)+\'"></textarea><br>'.
+                    function addmilestones() {var s=document.getElementsByClassName("accordionm").length+1;document.getElementById("milestonedemo").innerHTML =document.getElementById("milestonedemo").innerHTML+\'<button id="\'+String(s)+\'" type="button" class="accordionm">New</button><div id="plus\'+String(s)+\'" class="panel"><br><label for="cpmilestonesyear\'+String(s)+\'">Year: </label><textarea id="cpmilestonesyear\'+String(s)+\'" name="cpmilestonesyear\'+String(s)+\'" rows="1" cols="50"></textarea><br>'.
+                    '<br><label for="cpmilestonesmonth\'+String(s)+\'">Month: </label>'.'<select id="cpmilestonesmonth\'+String(s)+\'" name="cpmilestonesmonth\'+String(s)+\'"><option disabled>--Select Month--</option><option value="1">January</option><option value="2">Febuary</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>'.
+                    '<br><br><label for="cpmilestonesname\'+String(s)+\'">Name: </label>'.
+                    '<textarea id="cpmilestonesname\'+String(s)+\'" name="cpmilestonesname\'+String(s)+\'"></textarea><br>'.'<br><label for="cpmilestonescontent\'+String(s)+\'">Content: </label>'.'<textarea id="cpmilestonescontent\'+String(s)+\'" name="cpmilestonescontent\'+String(s)+\'"></textarea><br>'.
                     '<br><br><button type="button" onclick="deletemilestones(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
                     document.getElementsByClassName("accordionm");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
                     
@@ -779,7 +777,7 @@
     }
             
     echo '</select><br><label for="cpsolarprojectsno\'+String(s)+\'">Model Number: </label>'.
-                    '<textarea id="cpsolarprojectsno\'+String(s)+\'" name="cpsolarprojectsno\'+String(s)+\'"></textarea><br>'.
+                    '<textarea id="cpsolarprojectsno\'+String(s)+\'" name="cpsolarprojectsno\'+String(s)+\'"></textarea><br><i style="padding: 0 !important;margin: 0;font-size:11px;display:block;margin-left:95px;">We are currently building a library of all solar brand models. When it is done, your Model Number can be linked with individual product model page. Stay tuned.</i><br>'.
                     '<br><br><button type="button" onclick="deletesolarprojects(\'+String(s)+\')">Delete</button><br><br></div>\';var acc = 
                     document.getElementsByClassName("accordions");var i;for (i = 0; i < acc.length; i++) {acc[i].addEventListener("click", function() {this.classList.toggle("active");var panel = this.nextElementSibling;if (panel.style.maxHeight) {panel.style.maxHeight = null;} else {panel.style.maxHeight = panel.scrollHeight + "px";} });}}
                     

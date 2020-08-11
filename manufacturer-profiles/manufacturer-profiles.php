@@ -76,7 +76,7 @@ add_action( 'admin_init', 'add_theme_caps');
  * 
  *  @since  1.0.0
  */
-function enqueue_scripts($hook) { 
+function cp_enqueue_scripts($hook) { 
     if(isset($_GET["page"])) {
         if($_GET["page"] == "cpcustomsubpage") {
             wp_enqueue_script( 'multi_select_script', plugin_dir_url( __FILE__ ) . 'js/jquery.multi-select.min.js', array('jquery') );
@@ -88,7 +88,7 @@ function enqueue_scripts($hook) {
        
     }
 }
-add_action('admin_enqueue_scripts', 'enqueue_scripts');
+add_action('admin_enqueue_scripts', 'cp_enqueue_scripts');
 
 
 /**
@@ -100,7 +100,10 @@ add_action('admin_enqueue_scripts', 'enqueue_scripts');
 function wpdocs_register_cp_custom_menu_page(){
 	add_menu_page( __( 'Manufacturer Profile', 'mfp-plugin' ),'Manufacturer Profile','manage_manufacturer','cpcustompage','','dashicons-layout',6);
     add_submenu_page('cpcustompage', __( 'Manufacturer Profile List', 'mfp-plugin' ),'Manufacturer Profile List','manage_manufacturer','cpcustompage','cp_custom_menu_page'); 
-    add_submenu_page('cpcustompage', __( 'Manufacturer Profile - Create', 'mfp-plugin' ),'Manufacturer Profile - Create New','manage_manufacturer','cpcreatepage','create_cp_page');
+    $user = wp_get_current_user();
+    if ( in_array( 'mfp_owner', (array) $user->roles ) ) {
+    }else{
+    add_submenu_page('cpcustompage', __( 'Manufacturer Profile - Create', 'mfp-plugin' ),'Manufacturer Profile - Create New','manage_manufacturer','cpcreatepage','create_cp_page');}
     add_submenu_page('cpcustompage',__( '', 'mfp-plugin' ),'','manage_manufacturer','cpcustomsubpage','update_cp_page');
    // remove_submenu_page('cpcustompage','cpcustomsubpage');
 }
@@ -132,8 +135,10 @@ function cp_custom_menu_page(){
     
     echo '<input type="submit" value="Search">';
     echo '</form>';
-    
-    echo '<a class="button" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcreatepage">Create New Manufacturer Profile</a></div>';
+    $user = wp_get_current_user();
+    if ( in_array( 'mfp_owner', (array) $user->roles ) ) {
+    }else{
+    echo '<a class="button" href="https://shop.solarfeeds.com/wp-admin/admin.php?page=cpcreatepage">Create New Manufacturer Profile</a></div>';}
     echo '<br>';
 	require '../wp-load.php'; 
 	require_once MFP_PLUGIN_PATH . 'includes/cp_custom_menu_page.php';
@@ -164,7 +169,85 @@ function update_cp_page(){
    require_once MFP_PLUGIN_PATH . 'includes/functions.php';
    require_once MFP_PLUGIN_PATH . 'includes/edit_cp_page.php';
 }
+/**
+ *  Add Template for reviews - Page Template Dropdown
+ * 
+ *  @since  1.0.0
+ */
+function cp_add_page_template ($templates) {
+    $templates['cp-review-template.php'] = 'Review Page';
+        return $templates;
+}
+add_filter ('theme_page_templates', 'cp_add_page_template');
 
+/**
+ *  Template for reviews
+ * 
+ *  @since  1.0.0
+ */
+function cp_redirect_page_template ($template) {
+    //if ('cp-review-template.php' == basename ($template))
+    if( is_page_template('cp-review-template.php') )
+        $template = MFP_PLUGIN_PATH . '/templates/cp-review-template.php';
+        return $template;
+    }
+add_filter ('page_template', 'cp_redirect_page_template');
+/**
+ *  rewrite rule for clean url
+ * 
+ *  @since  1.0.0
+ */
+function custom_rewrite_basic() {
+    add_rewrite_rule('^review/submit/([^/]*)/?', 'index.php?pagename=review&_mf_id=$matches[1]', 'top');
+  }
+add_action('init', 'custom_rewrite_basic');
+/**
+ *  Query var fo mf ID
+ * 
+ *  @since  1.0.0
+ */
+function cp_register_query_vars( $vars ) {
+    $vars[] = '_mf_id';
+	return $vars;
+}
+add_filter( 'query_vars', 'cp_register_query_vars' );
+
+/**
+ *  rewrite rule for clean url
+ * 
+ *  @since  1.0.0
+ */
+add_filter( 'cp_convert_base', 'cp_convert_base',1,3 );
+function cp_convert_base($numberInput, $fromBaseInput, $toBaseInput)
+{
+    if ($fromBaseInput==$toBaseInput) return $numberInput;
+    $fromBase = str_split($fromBaseInput,1);
+    $toBase = str_split($toBaseInput,1);
+    $number = str_split($numberInput,1);
+    $fromLen=strlen($fromBaseInput);
+    $toLen=strlen($toBaseInput);
+    $numberLen=strlen($numberInput);
+    $retval='';
+    if ($toBaseInput == '0123456789')
+    {
+        $retval=0;
+        for ($i = 1;$i <= $numberLen; $i++)
+            $retval = bcadd($retval, bcmul(array_search($number[$i-1], $fromBase),bcpow($fromLen,$numberLen-$i)));
+        return $retval;
+    }
+    if ($fromBaseInput != '0123456789')
+        $base10=convBase($numberInput, $fromBaseInput, '0123456789');
+    else
+        $base10 = $numberInput;
+    if ($base10<strlen($toBaseInput))
+        return $toBase[$base10];
+    while($base10 != '0')
+    {
+        $retval = $toBase[bcmod($base10,$toLen)].$retval;
+        $base10 = bcdiv($base10,$toLen,0);
+    }
+    return $retval;
+}
 
 
 
