@@ -1,9 +1,9 @@
 <?php
-
-//ini_set('display_startup_errors', 1);
-//ini_set('display_errors', 1);
-//error_reporting(-1);
 /**
+ini_set('display_startup_errors', 1);
+ini_set('display_errors', 1);
+error_reporting(-1);
+
  * Template Name: Review Page
  * 
  */
@@ -14,6 +14,7 @@
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php wp_head(); ?>
+    <script src='https://www.google.com/recaptcha/api.js' async defer ></script>
     <!-- Font Awesome Icon Library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
@@ -27,8 +28,8 @@
     display: block;
     overflow: hidden;
     width: 768px;
-    margin: 0px auto;
-    padding-top:50px;
+    margin: 40px auto;
+    padding-top:50px 0;
 }
 .mfp-flex-box {
     display: flex;
@@ -82,6 +83,33 @@
 }
 .mfp-rating-message {
     font-weight: bold;
+}
+.mfp-error {
+    background: #c33;
+    color: #fff;
+    border-left: solid 5px #0581c7;
+}
+.mfp-error ul li {
+    padding: 7px 2px;
+    list-style: none;
+}
+.mfp-success {
+    background: #0581c7;
+    color: #fff;
+    padding: 8px;
+    text-align: center;
+    border-left: solid 10px #2b3;
+}
+button, .submit {
+    background: #0581c7;
+    color: #fff;
+    float: right;
+    border: none;
+    padding: 7px 20px;
+}
+.additional_cmnt {
+    -webkit-transition: 2s;
+    transition: 2s;
 }
 /* Ratings widget */
 .rate {
@@ -149,6 +177,7 @@ label:hover ~ input:checked ~ label  /*highlight previous selected stars */ { co
   padding: 20px;
   border: 1px solid #888;
   width: 480px;
+  min-height: 530px;
 }
 
 /* The Close Button */
@@ -197,24 +226,24 @@ input[type=text] {
                 $cp_update     = "UPDATE ".$table_review." SET verified = 1, verified_at ='".$timestamp."' WHERE id=".$_GET['id'];
                 $cp_result_update  = $conn->query($cp_update);
                 if($conn->affected_rows > 0){
-                    echo "Your review has been verified successfully!";
+                    echo "<p class='mfp-success'>Your review has been verified successfully!</p>";
                 } else {
                     //echo $conn->error;
-                    echo "Review verification failed! please try again";
+                    echo "<p class='mfp-error'>Review verification failed! please try again</p>";
                 }
             } else {
-                echo "Review verification failed! please try to submit a new review";
+                echo "<p class='mfp-error'>Review verification failed! please try to submit a new review</p>";
             }
 
             exit();
         } else {
-            echo "inavlid req";
+            echo "<p class='mfp-error'>inavlid request</p>";
             exit();
         }
     }
     $cpid = get_query_var('_mf_id');
     if(empty($cpid)){
-        echo "Invalid Request";
+        echo "<p class='mfp-error'>Invalid Request</p>";
         exit();
     } else {
             $dic = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -223,85 +252,122 @@ input[type=text] {
     }
 
     
-    $del = "DELETE FROM $table_reviewer WHERE id=4";
-   $conn->query($del);
-    $del = "DELETE FROM $table_review WHERE reviewer_id=4";
-   $conn->query($del);
-    
+  //  $del = "DELETE FROM $table_reviewer WHERE id=4";
+   //$conn->query($del);
+    //$del = "DELETE FROM $table_review WHERE reviewer_id=4";
+   //$conn->query($del);
+    $errMsg = array();
+    $msg ="";
     if(isset($_POST['save'])){
-       // print_r($_POST);
-        $email  = $_POST['remail'];
-        $name   = $_POST['rname'];
-        $c_name = $_POST['rcname'];
-        $phone  = $_POST['rphone'];
-        $ss      = $_POST['SS'];
-        $ots     = $_POST['OTS'];
-        $pq      = $_POST['PQ'];
-        $supplier_service_comment     = $_POST['supplier_service_comment'];
-        $one_time_comment             = $_POST['one_time_comment'];
-        $product_quality_comment      = $_POST['product_quality_comment'];
-        
-            //Save reviewer data
-          /*  $cp_sql_check     = "SELECT * FROM ".$table_reviewer." WHERE email = '".$email."'";
-            $cp_result_check  = $conn->query($cp_sql_check);
-
-            if ($cp_result_check->num_rows > 0) {
-                while($row = $cp_result_check->fetch_assoc()) {
-                    $reviewer_id = $row["id"];        
-                }
-            } else { */
-                $hash = md5( rand(0,1000) );
-                $cp_rvr_insertq   = "INSERT INTO ".$table_reviewer." (email,name,company_name,phone,_salt) VALUES ('".$email."', '".$name."', '".$c_name."', '".$phone."','".$hash."');";
-                $cp_rvr_insert = $conn->query($cp_rvr_insertq);
-                
-                $reviewer_id = $conn->insert_id;
-                if ($cp_rvr_insert === TRUE) {
-                   // echo "New record created successfully";
-                } else {
-                    echo "Error:" .$conn->error;
-                }
-            //}
-            //Save review data
-            if(!empty($reviewer_id)){
-                //check if already submitted
-                
-                $cp_sql_check     = "SELECT * FROM ".$table_review." WHERE reviewer_id = ".$reviewer_id." AND company_id =".$cpid;
-                $cp_result_check  = $conn->query($cp_sql_check);
-    
-                if ($cp_result_check->num_rows > 0) {
-                    echo "You have already submitted a review for this company";
-                }
-                else {
-                    
-                    $cp_rv_insertq   = "INSERT INTO ".$table_review." (company_id,reviewer_id,supplier_service_count, supplier_service_comment, one_time_shipment, one_time_comment, product_quality, product_quality_comment, verified) VALUES (1, $reviewer_id, $ss, '".$supplier_service_comment."', $ots, '".$one_time_comment."', $pq, '".$product_quality_comment."', 0);";
-                    $cp_rv_insert = $conn->query($cp_rv_insertq);
-                    $review_id = $conn->insert_id;
-                    
-                    if ($cp_rv_insert === TRUE) {
-                      //  echo "New record created successfully";
-                      $email_subject = "Verify Email";
-                      //Send Mail
-                      $headers[] = "Content-Type: text/html; charset=UTF-8";
-                      $headers[]= "From: Solarfeeds <infor@shop.solarfeeds.com>";
-                      
-                      ob_start();
-                      include("cp-verify-email.php");
-                      $message = ob_get_contents();
-                      ob_end_clean();
-                      if(wp_mail($email, $email_subject, $message, $headers)) {
-                          echo "Please Check your Email";
-                      } else {
-                          echo "Error";
-                      }
-                    } else {
-                       echo "Error:" .$conn->error;
+        if(isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response']))
+        {
+               
+                $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=6LeSLL8ZAAAAAMhmn3fSpaMrPOuDIYeRz3iZQFpG&response='.$_POST['g-recaptcha-response']);
+                $responseData = json_decode($verifyResponse);
+                if($responseData->success)
+                {
+                   // $succMsg = 'Your contact request have submitted successfully.';
+                   // print_r($_POST);
+                    $email  = $_POST['remail'];
+                    $name   = $_POST['rname'];
+                    $c_name = $_POST['rcname'];
+                    $phone  = $_POST['rphone'];
+                    $ss      = $_POST['SS'];
+                    $ots     = $_POST['OTS'];
+                    $pq      = $_POST['PQ'];
+                    if($email == "") {
+                        $errMsg[] = "Email is required";
+                    } elseif($name ==""){
+                        $errMsg[] = "Name is required";
+                    } elseif($c_name ==""){
+                        $errMsg[] = "Company Name is required";
+                    } elseif($phone ==""){
+                        $errMsg[] = "Phone Number is required";
+                    } elseif($ss ==""){
+                        $errMsg[] = "Pease rate Suplier Service";
+                    } elseif($ots ==""){
+                        $errMsg[] = "Pease rate On-Time Shipment";
+                    } elseif($pq ==""){
+                        $errMsg[] = "Pease rate Product Quality";
                     }
-                }
+                    else {
+                        $supplier_service_comment     = $_POST['supplier_service_comment'];
+                        $one_time_comment             = $_POST['one_time_comment'];
+                        $product_quality_comment      = $_POST['product_quality_comment'];
+                        $overall     = $_POST['overall_rating'];
+                    
+                        //Save reviewer data
+                        $cp_sql_check     = "SELECT * FROM ".$table_reviewer." WHERE email = '".$email."'";
+                        $cp_result_check  = $conn->query($cp_sql_check);
 
+                        if ($cp_result_check->num_rows > 0) {
+                            while($row = $cp_result_check->fetch_assoc()) {
+                                $reviewer_id = $row["id"];       
+                            }
+                            $hash = md5( rand(0,1000) );  
+                            $cp_update_reviwer     = "UPDATE ".$table_reviewer." SET _salt = '".$hash."' WHERE id=".$reviewer_id;
+                            $cp_res_reviwer  = $conn->query($cp_update_reviwer);
+
+                        } else { 
+                            $hash = md5( rand(0,1000) );
+                            $cp_rvr_insertq   = "INSERT INTO ".$table_reviewer." (email,name,company_name,phone,_salt) VALUES ('".$email."', '".$name."', '".$c_name."', '".$phone."','".$hash."');";
+                            $cp_rvr_insert = $conn->query($cp_rvr_insertq);
+                            
+                            if ($cp_rvr_insert === TRUE) {
+                                // "reiewer create";
+                                $reviewer_id = $conn->insert_id;
+                            } else {
+                                //echo "Error:" .$conn->error;
+                                $errMsg[] = "Error in review submission. Please try later.";
+                            }
+                        }
+                        //Save review data
+                        if(!empty($reviewer_id)){
+                            //check if already submitted
+                            
+                            $cp_sql_check     = "SELECT * FROM ".$table_review." WHERE reviewer_id = ".$reviewer_id." AND company_id =".$cpid;
+                            $cp_result_check  = $conn->query($cp_sql_check);
                 
-            }
-        
-    }
+                            if ($cp_result_check->num_rows > 0) {
+                               $errMsg[] = "You have already submitted a review for this company";
+                            }
+                            else {
+                                
+                                $cp_rv_insertq   = "INSERT INTO ".$table_review." (company_id,reviewer_id,supplier_service_count, supplier_service_comment, one_time_shipment, one_time_comment, product_quality, product_quality_comment, overall_rating, verified) VALUES ($cpid, $reviewer_id, $ss, '".$supplier_service_comment."', $ots, '".$one_time_comment."', $pq, '".$product_quality_comment."', $overall, 0);";
+                                $cp_rv_insert = $conn->query($cp_rv_insertq);
+                                
+                                if ($cp_rv_insert === TRUE) {
+                                    $review_id = $conn->insert_id;
+                                   
+                                    $email_subject = "Verify Email";
+                                    //Send Mail
+                                    $headers[] = "Content-Type: text/html; charset=UTF-8";
+                                    $headers[]= "From: Solarfeeds <infor@shop.solarfeeds.com>";
+                                    
+                                    ob_start();
+                                    include("cp-verify-email.php");
+                                    $message = ob_get_contents();
+                                    ob_end_clean();
+                                    if(wp_mail($email, $email_subject, $message, $headers)) {
+                                       $msg = "A verification mail has been sent to your email address. Please Check your inbox";
+                                    } else {
+                                        $errMsg[] = "Error in sending verification email. Please try again.";
+                                    }
+                                } else {
+                                       //echo "Error:" .$conn->error;
+                                       $errMsg[] = "Error in review submission. Please try later.";
+                                }
+                            }
+                            
+                        } //save review
+                    } 
+                } else { // captcha verification faild
+                    $errMsg[] = "Captcha verification failed, please try again.";
+                }
+        } else { //captcha missing
+            $errMsg[] = "Invalid request";
+        }
+    } //  form action
 ?>
 <body class="cleanpage">
 <?php
@@ -311,10 +377,25 @@ input[type=text] {
 ?>
 
 <div class="mfp-review-box">
+    <?php if(count($errMsg) > 0) { ?>
+        <div class="mfp-error">
+            <ul>
+                <?php foreach($errMsg as $error){
+                    echo "<li>".$error."</li>";
+                }
+                ?>
+            </ul>
+        </div>
+    <?php } 
+    if($msg != "") {
+        echo "<p class='mfp-success'>".$msg."</p>";
+    }
+    ?>
     <form action="" method="post" enctype="multitype/formdata">
     <div class="mfp-rating-overall">
         <div class="mfp-rating-count">
             <span id="mfp-rating-total">5.0</span>/<span class="mfp-outoff">5</span>
+            <input type="hidden" name="overall_rating" />
         </div>
         <div>
               <span class="mfp-rating-message" id="mfp-rating-message">Very Satisfied</span><br/>
@@ -432,7 +513,10 @@ input[type=text] {
 
         <label for="rphone">Phone</label>
         <input type="text" id="rphone" name="rphone" placeholder="Phone.." required="required">
-        <input type="submit" name="save" value="Submit">
+        <div class="g-recaptcha" data-sitekey="6LeSLL8ZAAAAAPgy0hupdigc64BdortOkMokizBv"></div>
+        <input type="submit" class="submit" name="save" value="Submit">
+
+        
    
   </div>
 
@@ -490,6 +574,7 @@ input[type=text] {
                 finalMsg = "Poor";
             }
             document.querySelector('#mfp-rating-total').innerHTML=avg;
+            document.querySelector('input[name=overall_rating]').value =avg;
             document.querySelector('#mfp-rating-message').innerHTML=finalMsg;
            console.log({ratingsArr});
         })     
