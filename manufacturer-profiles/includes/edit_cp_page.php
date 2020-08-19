@@ -11,6 +11,8 @@
 	$tablename_milestones    = "company_profile_milestones";
 	$tablename_projects    = "company_profile_projects";
 	$tablename_project_cat   = "company_profile_project_category";
+
+	$tablename_externalreviews = "company_profile_review";
 	
 	$cp_id            = $_GET['company_id'];
 	$new_cp_owner     = intval($_POST['company_owner']);
@@ -816,6 +818,15 @@
     			border: none !important;
     			cursor: pointer;
 			}
+			.reviews_bx {
+				border:solid 2px #efefef;
+				width:100%;
+				display:flex;
+				padding:10px;
+			}
+			.review_bxl, .review_bxm, .review_bxr {
+				flex-basis: 33.33%;
+			}
 			
 			</style>
 			';
@@ -1117,7 +1128,7 @@
 
             /** Add More btn */
 			/* Reviews Section */
-echo '<br><br>Reviews&nbsp;&nbsp;&nbsp;<button type="button" onclick="addreviews()">Add More</button><br><br>';
+echo '<br><br><h2>Reviews</h2>&nbsp;&nbsp;&nbsp;<button type="button" onclick="addreviews()">Add More</button><br><br>';
 			
 			
 echo '<script>
@@ -1151,6 +1162,41 @@ echo '</span>';
 echo '<script>var acco = document.getElementsByClassName("accordion");var j;for (j = 0; j < acco.length; j++) {acco[j].addEventListener("click", function() {this.classList.toggle("active");var panelo = this.nextElementSibling;if (panelo.style.maxHeight) {panelo.style.maxHeight = null;} else {panelo.style.maxHeight = panelo.scrollHeight + "px";} });}</script>';
 
 /* Reviews Section */
+/*External reviews */
+$cp_sql_xreviews    = "SELECT company_profile_review.*, company_profile_reviewer.email FROM company_profile_review INNER JOIN company_profile_reviewer ON company_profile_review.reviewer_id = company_profile_reviewer.id  WHERE company_profile_review.verified=1 AND company_profile_review.company_id=".$cp_id;
+$cp_result_xreviews = $conn->query($cp_sql_xreviews);
+if ($cp_result_xreviews->num_rows > 0) {
+   
+   echo '<h2>External Reviews</h2>'; 
+   echo '<button id="expanel" type="button" class="accordion xaccordion">Show All</button>';
+   echo '<div id="expanel" class="panel">';	
+   while($row_xreviews = $cp_result_xreviews->fetch_assoc()) {
+			echo '<div class="reviews_bx">';
+				echo '<div class="review_bxl">';
+					echo '<label><b>Suplier Service: </b></label>'.$row_xreviews['supplier_service_count'].'</br>';
+					echo '<label><b>Comment: </b></label>'.substr($row_xreviews['supplier_service_comment'], 0, 20).'...</br>';
+					echo '<label><b>On-Time Shipment:</b> </label>'.$row_xreviews['one_time_shipment'].'</br>';
+					echo '<label><b>Comment: </b></label>'.substr($row_xreviews['one_time_comment'],0,20).'...</br>';
+					echo '<label><b>Product Quality:</b> </label>'.$row_xreviews['product_quality'].'</br>';
+					echo '<label><b>Comment:</b> </label>'.substr($row_xreviews['product_quality_comment'],0,20).'...</br>';
+				echo '</div>';
+				echo '<div class="review_bxm">';
+					echo '<label><b>Overall Rating:</b> </label>'.$row_xreviews['overall_rating'].'</br>';
+				echo '</div>';
+				echo '<div class="review_bxr">';
+					echo '<label><b>Submitted By: </b></label>'.$row_xreviews['email'].'</br>';
+					echo '<label><b>Submitted At:</b> </label>'.$row_xreviews['created_at'].'</br>';
+				echo '</div>';
+			echo '</div>';
+		
+	}	
+	echo '</div>';
+	
+}
+
+/*External reviews end */
+echo '<script>var acco = document.getElementsByClassName("xaccordion");var j;for (j = 0; j < acco.length; j++) {acco[j].addEventListener("click", function() {this.classList.toggle("active");var panelo = this.nextElementSibling;if (panelo.style.maxHeight) {panelo.style.maxHeight = null;} else {panelo.style.maxHeight = panelo.scrollHeight + "px";} });}</script>';
+
 /*News section */
 
 $cp_sql_news    = "SELECT * FROM ".$tablename_news." WHERE company_id=".$cp_id;
@@ -1373,6 +1419,7 @@ echo '<br>';
 		
 			$dic = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 			$converted = apply_filters('cp_convert_base', $cp_id+3248564, '0123456789', $dic); 
+			echo "Client Review Invitation link :<br> ";
 			$r_url = get_site_url().'/review/submit/'.$converted;
 			echo '&nbsp;<a href="'.$r_url.'" target=”_blank”>'.$r_url.'</a><br><br>';
 

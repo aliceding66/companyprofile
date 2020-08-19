@@ -33,7 +33,8 @@ error_reporting(-1);
 }
 .mfp-flex-box {
     display: flex;
-    flex-wrap: nowrap;
+    flex-flow: row;
+    flex-wrap: wrap;
     padding: 15px;
 }
 
@@ -42,22 +43,22 @@ error_reporting(-1);
     flex-wrap: nowrap;
 }
 .mfp-flex-col {
-    width: 40%;
+    flex:0 0 40%;
 }
 .mfp-col-40 {
-    width:40%;
+    flex:0 0 40%;
 }
 .mfp-col-60 {
-    width:60%;
+    flex:0 0 60%;
 }
 .mfp-col-100 {
-    width:100%;
+    flex:0 0 100%;
 }
 .mfp-col-30 {
-    width:30%;
+    flex:0 0 30%;
 }
 .mfp-col-10 {
-    width:10%;
+    flex:0 0 10%;
 }
 .mfp-border-light {
     border: solid 1px #efefef;
@@ -160,7 +161,7 @@ label:hover ~ input:checked ~ label  /*highlight previous selected stars */ { co
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
+  padding-top: 50px; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -177,7 +178,7 @@ label:hover ~ input:checked ~ label  /*highlight previous selected stars */ { co
   padding: 20px;
   border: 1px solid #888;
   width: 480px;
-  min-height: 530px;
+  min-height: 600px;
 }
 
 /* The Close Button */
@@ -202,6 +203,43 @@ input[type=text] {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+.additional_cmnt span {
+    font-size: 12px;
+    float: left;
+    font-style: italic;
+}
+#reviewSubmit {
+    margin-top: 20px;
+}
+
+@media only screen and (max-width: 768px) {
+    .mfp-review-box {
+        width: auto;
+        margin: 40px 20px;
+    }
+    .mfp-col-40, .mfp-col-60, .mfp-col-100, .mfp-col-30, .mfp-col-10 {
+        flex:0 0 100%;
+    }
+    .mfp-flex-col {
+        flex:0 0 100%;
+    }
+    .mfp-center {
+        text-align:left;
+    }
+    fieldset {
+        padding-left: 0;
+    }
+
+}
+
+
+
+@media only screen and (max-width: 480px) {
+    .mfp-modal-content {
+        width: 90%;
+    }
+
 }
 
 </style>
@@ -251,11 +289,12 @@ input[type=text] {
 			$cpid = intval($converted)-3248564;
     }
 
-    
-  //  $del = "DELETE FROM $table_reviewer WHERE id=4";
-   //$conn->query($del);
-    //$del = "DELETE FROM $table_review WHERE reviewer_id=4";
-   //$conn->query($del);
+    /*
+   $del = "DELETE FROM $table_reviewer WHERE id";
+   $conn->query($del);
+    $del = "DELETE FROM $table_review WHERE reviewer_id";
+   $conn->query($del);
+*/
     $errMsg = array();
     $msg ="";
     if(isset($_POST['save'])){
@@ -275,6 +314,10 @@ input[type=text] {
                     $ss      = $_POST['SS'];
                     $ots     = $_POST['OTS'];
                     $pq      = $_POST['PQ'];
+                    $supplier_service_comment     = $_POST['supplier_service_comment'];
+                    $one_time_comment             = $_POST['one_time_comment'];
+                    $product_quality_comment      = $_POST['product_quality_comment'];
+                    $overall     = $_POST['overall_rating'];
                     if($email == "") {
                         $errMsg[] = "Email is required";
                     } elseif($name ==""){
@@ -289,12 +332,15 @@ input[type=text] {
                         $errMsg[] = "Pease rate On-Time Shipment";
                     } elseif($pq ==""){
                         $errMsg[] = "Pease rate Product Quality";
+                    } elseif($supplier_service_comment ==""){
+                        $errMsg[] = "Additional Comment is required";
+                    } elseif($one_time_comment ==""){
+                        $errMsg[] = "Additional Comment is required";
+                    } elseif($product_quality_comment ==""){
+                        $errMsg[] = "Additional Comment is required";
                     }
                     else {
-                        $supplier_service_comment     = $_POST['supplier_service_comment'];
-                        $one_time_comment             = $_POST['one_time_comment'];
-                        $product_quality_comment      = $_POST['product_quality_comment'];
-                        $overall     = $_POST['overall_rating'];
+                       
                     
                         //Save reviewer data
                         $cp_sql_check     = "SELECT * FROM ".$table_reviewer." WHERE email = '".$email."'";
@@ -423,7 +469,8 @@ input[type=text] {
             </fieldset>
             <div class="additional_cmnt" style="display:none">
             <label for="supplier_service_comment">Additional Comment</label>
-            <textarea name="supplier_service_comment" > </textarea>
+            <textarea id ="supplier_service_comment" name="supplier_service_comment" onkeyup="showlength(this);"> </textarea>   
+            <span></span>         
             </div>
         </div>
         <div class="mfp-col-10">
@@ -455,7 +502,8 @@ input[type=text] {
             </fieldset>
             <div class="additional_cmnt" style="display:none">
             <label for="one_time_comment">Additional Comment</label>
-                <textarea name="one_time_comment" > </textarea>
+              <textarea name="one_time_comment" id="one_time_comment" onkeyup="showlength(this);"></textarea> 
+              <span></span>
             </div>
         </div>
         <div class="mfp-col-10">
@@ -465,7 +513,7 @@ input[type=text] {
             <span class="showMsg"></span>
         </div>
     </div>
-    <div class="mfp-flex-box">
+    <div class="mfp-flex-box mfp-border-light">
         <div class="mfp-col-40">
             <span>Product Quality</span>
         </div>
@@ -485,7 +533,8 @@ input[type=text] {
             </fieldset>
             <div class="additional_cmnt" style="display:none">
                 <label for="product_quality_comment">Additional Comment</label>
-                <textarea name="product_quality_comment" "> </textarea>
+                <textarea id = "product_quality_comment" name="product_quality_comment" onkeyup="showlength(this);"> </textarea>
+                <span></span>
             </div>
         </div>
         <div class="mfp-col-10">
@@ -500,8 +549,9 @@ input[type=text] {
 
   <!-- Modal content -->
   <div class="mfp-modal-content">
+  
     <span class="mfp-close">&times;</span>
-    
+    <div style="text-align:center;">We need the following information to verify your submission. Thank you.</div>
         <label for="remail">Email</label>
         <input type="text" id="remail" name="remail" placeholder="Your email.." required="required">
 
@@ -526,6 +576,7 @@ input[type=text] {
 
 
 <script>
+
     var ratingsArr={'SS':0,'PQ':0,'OTS':0};
     let getMain = document.querySelectorAll('.mfp-flex-box');
     let star = document.querySelectorAll('input[type=radio]');
@@ -576,7 +627,7 @@ input[type=text] {
             document.querySelector('#mfp-rating-total').innerHTML=avg;
             document.querySelector('input[name=overall_rating]').value =avg;
             document.querySelector('#mfp-rating-message').innerHTML=finalMsg;
-           console.log({ratingsArr});
+          // console.log({ratingsArr});
         })     
     }
     // Get the modal
@@ -603,18 +654,37 @@ input[type=text] {
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
     }
-    }
+    function showlength(textarea){
+        let wcount = textarea.value.match(/\S+/g);
+        wcount =  parseInt(wcount.length, 10);
+        if(wcount < 250){
+            textarea.nextElementSibling.innerHTML=250-wcount+" More words required";
+        } else  {
+            textarea.nextElementSibling.innerHTML="";
+        }
 
+            
+    };
     function validateForm() {
-        var row_0 = document.querySelectorAll('input[name=SS]');
-        var row_1 = document.querySelectorAll('input[name=OTS]');
-        var row_2 = document.querySelectorAll('input[name=PQ]');
-        var row0Valid = row1Valid = row2Valid = false;
+        let ssc_count = otc_count = pqc_count = 0;
+        let row_0 = document.querySelectorAll('input[name=SS]');
+        let row_1 = document.querySelectorAll('input[name=OTS]');
+        let row_2 = document.querySelectorAll('input[name=PQ]');
+        let ssc = document.getElementById("supplier_service_comment");
+        let otc = document.getElementById("one_time_comment");
+        let pqc = document.getElementById("product_quality_comment");
+        
 
-        var i = 0;
+
+        let redcount = 250;
+
+        let row0Valid = row1Valid = row2Valid = false;
+
+        let i = 0;
         while (!row0Valid && i < row_0.length) {
             if (row_0[i].checked) row0Valid = true;
             i++;        
@@ -629,12 +699,30 @@ input[type=text] {
             if (row_2[i].checked) row2Valid = true;
             i++;        
         }
+        //check comments
+         
 
         if (!row0Valid || !row1Valid || !row2Valid){
             alert("Must provide rating for all options!");
            
         } else {
-            return true;
+            if(ssc.value != "" && otc.value != "" && pqc.value != ""){
+                ssc_count = ssc.value.match(/\S+/g);
+                ssc_count = parseInt(ssc_count.length, 10);
+                otc_count = otc.value.match(/\S+/g);
+                otc_count = parseInt(otc_count.length, 10);
+                pqc_count = pqc.value.match(/\S+/g);
+                pqc_count = parseInt(pqc_count.length, 10);
+
+                if(ssc_count < redcount || otc < redcount || pqc_count < redcount) {
+                    alert("Atleast 250 words are required for each comment!");
+                    
+                } else {
+                    return true;
+                }
+            }  else {
+                alert("All additional comments are required!");
+            }
         }
         
     }
