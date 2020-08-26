@@ -52,7 +52,7 @@ while (true) {
 			$new_cp_youtube          = $cp_row['youtube']; 
 			$new_cp_about            = $cp_row['about'];
 			$new_cp_business_status  = $cp_row['status'];
-			
+			$new_cp_claimed			 = $cp_row['is_claimed'];
 
 			$currentUserRole = wp_get_current_user();
 			if ( in_array( 'mfp_owner', (array) $currentUserRole->roles ) ) {
@@ -126,8 +126,11 @@ while (true) {
 					}	
 				}
 			}
-							
 			
+		
+			
+
+
 			$xx_write = '<div class="whiteblock" id="archivenews"><h2>Archive News for '.$new_cp_name.': </h2><div class="content">';
 			//Fetch News
 			$sql_news = "SELECT * FROM ".$tablename_news." WHERE company_id=".intval($new_cp_id);
@@ -165,7 +168,61 @@ while (true) {
 					}
 				} 
 			$x_write=$x_write.'</div>';
-			
+				// Customer Reviews Section Start
+
+				$x_write   = $x_write.'</br><div class="whiteblock" id="customerreviews"><h2>Customer reviews for '.$new_cp_name.": </h2>";
+
+				$cp_sql_creviews    = "SELECT company_profile_review.*,company_profile_reviewer.name, company_profile_reviewer.email FROM company_profile_review INNER JOIN company_profile_reviewer ON company_profile_review.reviewer_id = company_profile_reviewer.id  WHERE company_profile_review.verified=1 AND company_profile_review.company_id='".$new_cp_id."' ORDER BY verified_at DESC ";
+				$cp_result_creviews = $conn->query($cp_sql_creviews);
+				if ($cp_result_creviews->num_rows > 0) {
+				$x_write = $x_write. '<div class="content"><div>';
+				$x_write  = $x_write.'<input type="checkbox" id="question-crv" class="questions"><div class="plus">+</div><label for="question-crv" class="question">View All</label>';
+				$x_write = $x_write. '<div class="answers custom-answer">';
+				while($row_creviews = $cp_result_creviews->fetch_assoc()) {
+					$x_write = $x_write. '<div class="reviews_bx">';
+					$rid = $row_creviews['id'];
+					
+					$x_write = $x_write. '<div class="review_bxmain">';
+					$x_write = $x_write. '<p style="margin-bottom:10px"><img width="22px" src="'.MFP_PLUGIN_URL.'imgs/profile-default.png" alt="profile"><label style="margin-left: 10px;">'.$row_creviews["name"].'</label></p>';
+					$x_write = $x_write. '<div class="review_bxrow">';
+					$ovl = round($row_creviews['overall_rating']);
+					//manul round
+					$ovl_class = "mfp-star-".str_replace(".", "", $ovl);
+					$x_write = $x_write. '<i style="margin-left:-5px" class="'.$ovl_class.' mfp-star-rating"> </i>'.$row_creviews['overall_rating'].'</br>';
+					$x_write = $x_write. '<span>Submitted on '.$row_creviews["created_at"].' | </span><a onclick="reviewToggle('.$rid.')"  class="review_bx_toggle"><span>View Full Review</span></a>';
+					$x_write = $x_write. '</div></div>';
+	
+					$x_write = $x_write. '<div class="review_bxfull" id="review_bxfull-'.$rid.'">';
+					$x_write = $x_write. '<div class="review_bxrow">';
+					$ssc = $row_creviews['supplier_service_count'];
+					$ssc_class = "mfp-star-".str_replace(".", "", $ssc); 
+					$x_write = $x_write. '<label><b>Suplier Service: </b></label><i class="'.$ssc_class.' mfp-star-rating"></i>'.$ssc.'</br>';
+					$x_write = $x_write. '<span>'.$row_creviews["supplier_service_comment"].'</span></br>';
+					$x_write = $x_write. '</div>';
+	
+					$x_write = $x_write. '<div class="review_bxrow">';
+					$ots = $row_creviews['one_time_shipment'];
+					$ots_class = "mfp-star-".str_replace(".", "", $ots);
+					$x_write = $x_write. '<label><b>On-Time Shipment:</b></label><i class="'.$ots_class.' mfp-star-rating"></i>'.$ots.'</br>';
+					$x_write = $x_write. '<span>'.$row_creviews["one_time_comment"].'</span></br>';
+					$x_write = $x_write. '</div>';
+	
+					$x_write = $x_write. '<div class="review_bxrow">';
+					$pq = $row_creviews['product_quality'];
+					$pq_class = "mfp-star-".str_replace(".", "", $pq);
+					$x_write = $x_write. '<label><b>Product Quality:</b></label><i class="'.$pq_class.' mfp-star-rating"> </i>'.$pq.'</br>';
+					$x_write = $x_write. '<span>'.$row_creviews["product_quality_comment"].'</span></br>';
+					$x_write = $x_write. '</div></div>';
+					
+					$x_write = $x_write. '</div>'; //.reviews_bx
+						
+					}	
+					$x_write = $x_write. '</div></div></div>';
+				}
+				$x_write = $x_write.'<script>function reviewToggle(eleid){  var d = document.getElementById("review_bxfull-"+eleid); d.style.height = (d.style.height == "auto") ? "0px" : "auto"; }</script>';
+				$x_write = $x_write.'</div>';
+	
+				// Cutomer Reviews Section End
 				
 			
 			$updatecontent = "<?php require_once('".$_SERVER['DOCUMENT_ROOT']."/wp-load.php'); get_header();?>";
@@ -242,6 +299,7 @@ while (true) {
 	left: 0;
 	background: #000;
 	height:30px;
+	z-index:9999;
 }
 #mfp-topbar ul {
 	list-style: none;
@@ -325,8 +383,63 @@ while (true) {
 		position: inherit;
 		top: -9px;
 	}
+	.mfp-star-rating {
+		background-image:url("'.MFP_PLUGIN_URL.'imgs/stars.png");
+		display: inline-block;
+		height: 20px;
+		background-repeat: no-repeat;
+		width: 122px;
+	}
+	.mfp-star-5 {
+		background-position:0;
+	}
+	.mfp-star-45 {
+		background-position:-127px;
+	}
+	.mfp-star-4 {
+		background-position:-256px;
+	}
+	.mfp-star-35 {
+		background-position:-383px;
+	}
+	.mfp-star-3 {
+		background-position:-521px;
+	}
+	.mfp-star-25 {
+		background-position:-660px;
+	}
+	.mfp-star-2 {
+		background-position:-798px;
+	}
+	.mfp-star-15 {
+		background-position:-925px;
+	}
+	.mfp-star-1 {
+		background-position:-1054px;
+	}
+	.mfp-star-05 {
+		background-position:-1183px;
+	}
+	.mfp-star-0 {
+		background-position:-1321px;
+	}
+	.review_bxrow {
+		margin-bottom:10px;
+	}
+	.review_bxfull {
+		height:0;
+		display:block;
+		overflow:hidden;
+	}
+	.review_bxrow span {
+		font-size: 12px;
+		line-height: 1.2;
+	}
+	.review_bxrow a {
+		cursor: pointer;
+	}
 </style>';
-			$updatecontent = $updatecontent."<style>a{color: #4DB7FE !important;}.site-content{padding-top:30px !important;}.whiteblock{box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background: #fff;border-radius: 10px;z-index:-1;margin-right: 20px;padding: 15px 30px;border: 1px solid #e5e7f2;}body {background: #f6f6f6 !important;}.content {width: 80%;padding: 20px;padding: 0 60px 0 0;}.question {position: relative;background: lightgrey;padding: 10px 10px 10px 50px;display: block;width:100%;cursor: pointer;}.answers {padding: 0px 15px;margin: 5px 0;max-height: 0;overflow: hidden;z-index: 0;position: relative;opacity: 0;-webkit-transition: .7s ease;-moz-transition: .7s ease;-o-transition: .7s ease;transition: .7s ease;}.questions:checked ~ .answers{max-height: 500px;opacity: 1;padding: 15px;}.plus {position: absolute;margin-left: 10px;z-index: 5;font-size: 2em;line-height: 100%;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;-webkit-transition: .3s ease;-moz-transition: .3s ease;-o-transition: .3s ease;transition: .3s ease;}.questions:checked ~ .plus {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);transform:rotate(45deg);}.questions {display: none;}#rightmenu {position: fixed;right: 0;top: 5%;width: 12em;margin-top: -2.5em;}.d-70{width:70%;float:left;}.d-30{width:30%;float:right;}@media only screen and (max-width: 767px) {.d-70{width:100%;}.d-30{width:100%;}.nomargins{margin-top:0px !important;margin-bottom:0px !important;}</style>";
+			$updatecontent = $updatecontent."<style>a{color: #4DB7FE !important;}.site-content{padding-top:30px !important;}.whiteblock{box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background: #fff;border-radius: 10px;z-index:-1;margin-right: 20px;padding: 15px 30px;border: 1px solid #e5e7f2;}body {background: #f6f6f6 !important;}.content {width: 80%;padding: 20px;padding: 0 60px 0 0;}.question {position: relative;background: lightgrey;padding: 10px 10px 10px 50px;display: block;width:100%;cursor: pointer;}.answers {padding: 0px 15px;margin: 5px 0;max-height: 0;overflow: hidden;z-index: 0;position: relative;opacity: 0;-webkit-transition: .7s ease;-moz-transition: .7s ease;-o-transition: .7s ease;transition: .7s ease;}.questions:checked ~ .answers{max-height: 500px;opacity: 1;padding: 15px;} .questions:checked ~ .custom-answer{ overflow-y: scroll;max-height:500px !important;} .plus {position: absolute;margin-left: 10px;z-index: 5;font-size: 2em;line-height: 100%;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;-webkit-transition: .3s ease;-moz-transition: .3s ease;-o-transition: .3s ease;transition: .3s ease;}.questions:checked ~ .plus {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);transform:rotate(45deg);}.questions {display: none;}#rightmenu {position: fixed;right: 0;top: 5%;width: 12em;margin-top: -2.5em;}.d-70{width:70%;float:left;}.d-30{width:30%;float:right;}@media only screen and (max-width: 767px) {.d-70{width:100%;}.d-30{width:100%;}.nomargins{margin-top:0px !important;margin-bottom:0px !important;}</style>";
 			
 			//top edit bar	
 			//if ( is_user_logged_in() ) {
@@ -393,14 +506,13 @@ while (true) {
 			$cp_result_milestones = $conn->query($cp_sql_milestones);
 			if ($cp_result_milestones->num_rows > 0) {				
 				while($row_milestones = $cp_result_milestones->fetch_assoc()) {
-					$company_year = $row_milestones['milestone_year'];
-					$compnay_month = $row_milestones["milestone_month"];
+			    	$company_year = $row_milestones['milestone_year'];
 			        	$company_name = $row_milestones['milestone_name'];
 				    	$company_content = $row_milestones['milestone_content'];
 				    	$company_milestone = $company_milestone.'<div class="history-tl-container">
 							<ul class="tl">
 								<li class="tl-item" ng-repeat="item in retailer_history">
-									<div class="timestamp"><span>'.$compnay_month.'-</span>'.$company_year.'<br></div>
+									<div class="timestamp">'.$company_year.'<br></div>
 									<div class="item-title"><p>'.$company_name.'</p></div>
 									<div class="item-detail"><p>'.$company_content.'</p></div>
 								</li>
@@ -547,6 +659,15 @@ while (true) {
 			$updatecontent = $updatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
 			$updatecontent = $updatecontent."</div>";
 			// Contact Info End
+
+			// Claimed Section Start
+			if($new_cp_claimed != 0){
+				$updatecontent = $updatecontent.'<div class="whiteblock"><i style="font-size: 20;color: green;" class="fas fa-check-circle"></i>&nbsp;<p style="font-size:20px;display:inline;" >Claimed</p></div><br>';
+			}else{
+				$updatecontent = $updatecontent.'<div class="whiteblock"><i style="font-size: 20;color: red;" class="fas fa-times-circle"></i>&nbsp;<p style="font-size:20px;display:inline;">Claimed</p></div><br>';
+			}
+			// Claimed Section End
+
 			$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="https://solarfeeds.com/claim-your-mnfctr-page/">Claim Now!</a> <br><br></div><br>';
 			
 			if(count($related_profiles)> 0){

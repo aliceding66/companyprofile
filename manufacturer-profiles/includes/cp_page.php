@@ -146,6 +146,7 @@
             $new_cp_founder           = $_POST['cpfounder'];
             $new_cp_ceo               = $_POST['cpceo'];
             $new_cp_owner             = intval($_POST['company_owner']);
+            $new_cp_claimed           = $_POST['cp_claimed'];
             $new_cp_address           = $_POST['cpaddress'];
             $new_cp_phone             = $_POST['cpphone'];
             $new_cp_email             = $_POST['cpemail'];
@@ -200,9 +201,9 @@
                 echo '<span style="color: red !important;">Email is empty! Please fill all required fields *</span><br>';
             }else{
                 if($new_cp_owner != -1){
-                    $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond, company_owner) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.",".$new_cp_owner.")";
+                    $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond, company_owner, is_claimed) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.",".$new_cp_owner.",".$new_cp_claimed.")";
                 }else{
-                    $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.")";
+                    $cp_sql_insert = "INSERT INTO ".$tablename." (company_id, name, as_name, founded, founder, ceo, address, phone, email, url, region, slogan, vision, facebook, linkedin, twitter, youtube, company_image, about, trading_capacity, respond , is_claimed) VALUES (".$new_cp_id.",'".$new_cp_name."','".$new_cp_asname."',".$new_cp_founded.",'".$new_cp_founder."','".$new_cp_ceo."','".$new_cp_address."','".$new_cp_phone."','".$new_cp_email."','".$new_cp_url."','".$new_cp_region."','".$new_cp_slogan."','".$new_cp_vision."','".$new_cp_facebook."','".$new_cp_linkedin."','".$new_cp_twitter."','".$new_cp_youtube."','".$new_cp_image."','".$new_cp_about."',".$new_cp_trading_cap.",".$new_cp_respond.", ".$new_cp_claimed.")";
                 }
             }
             $cp_result_insert = $conn->query($cp_sql_insert);
@@ -334,6 +335,7 @@
                                                             left: 0;
                                                             background: #000;
                                                             height:30px;
+                                                            z-index:9999;
                                                         }
                                                         #mfp-topbar ul {
                                                             list-style: none;
@@ -508,9 +510,9 @@
 				$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Founder:</label><span style="padding-left:7px">'.$new_cp_founder.'</span><br>';	
 				$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">CEO:</label><span style="padding-left:7px">'.$new_cp_ceo.'</span><br>';	
 				$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Manufacturer Size:</label><span style="padding-left:7px">'.$new_cp_staffno.'</span><br>';
-				if($$new_cp_businesstype === 1){		
+				if($new_cp_businesstype === 1){		
 					$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Business Type:</label><span style="padding-left:7px">Distributor</span><br>';
-				}elseif ($$new_cp_businesstype === 2) {
+				}elseif ($new_cp_businesstype === 2) {
 					$cpcreatecontent = $cpcreatecontent.'<label style="color:#000 !important;">Business Type:</label><span style="padding-left:7px">Manufacturer</span><br>';
 				}				
 				$cpcreatecontent = $cpcreatecontent."</div>";
@@ -698,7 +700,12 @@
             'class'   => 'company_owner'
     ));
     echo '</td></tr>';
+    
+    // Claimed Section Start
 
+    echo '<tr><td><label for="cp_claimed">Claimed: </label></td><td><select id="cp_claimed" name="cp_claimed"><option value="0">No</option><option value="1">Yes</option></select></td></tr>';
+
+    // Claimed Section End
 
     /** Manufacturer Profile Table1 */
     echo '<tr><td><label for="cptrading_cap">Trading Capacity: </label></td><td><input type="number" id="cptrading_cap" name="cptrading_cap">&nbsp;Watts</td></tr>';

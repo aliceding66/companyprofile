@@ -153,12 +153,63 @@
 			}
 
 			if ($is_news == 1) {
-				$x_write=$x_write.'</div>';
+				$x_write = $x_write.'</div>';
 			}else {
-				$x_write=$x_write.'</div>';
+				$x_write = $x_write.'</div>';
 			}	
+			/* Reviews For Company - Customer Reviews*/
+			$x_write   = $x_write.'</br><div class="whiteblock" id="customerreviews"><h2>Customer reviews for '.$final_company_name.": </h2>";
+			/* Reviews for company end */
 
+			$cp_sql_creviews    = "SELECT company_profile_review.*,company_profile_reviewer.name, company_profile_reviewer.email FROM company_profile_review INNER JOIN company_profile_reviewer ON company_profile_review.reviewer_id = company_profile_reviewer.id  WHERE company_profile_review.verified=1 AND company_profile_review.company_id='".$cp_id."' ORDER BY verified_at DESC ";
+			$cp_result_creviews = $conn->query($cp_sql_creviews);
+			if ($cp_result_creviews->num_rows > 0) {
+			$x_write = $x_write. '<div class="content"><div>';
+			$x_write  = $x_write.'<input type="checkbox" id="question-crv" class="questions"><div class="plus">+</div><label for="question-crv" class="question">View All</label>';
+			$x_write = $x_write. '<div class="answers custom-answer">';
+			while($row_creviews = $cp_result_creviews->fetch_assoc()) {
+				$x_write = $x_write. '<div class="reviews_bx">';
+				$rid = $row_creviews['id'];
+				
+				$x_write = $x_write. '<div class="review_bxmain">';
+				$x_write = $x_write. '<p style="margin-bottom:10px"><img width="22px" src="'.MFP_PLUGIN_URL.'imgs/profile-default.png" alt="profile"><label style="margin-left: 10px;">'.$row_creviews["name"].'</label></p>';
+				$x_write = $x_write. '<div class="review_bxrow">';
+				$ovl = round($row_creviews['overall_rating']);
+				//manul round
+				$ovl_class = "mfp-star-".str_replace(".", "", $ovl);
+				$x_write = $x_write. '<i style="margin-left:-5px" class="'.$ovl_class.' mfp-star-rating"> </i>'.$row_creviews['overall_rating'].'</br>';
+				$x_write = $x_write. '<span>Submitted on '.$row_creviews["created_at"].' | </span><a onclick="reviewToggle('.$rid.')"  class="review_bx_toggle"><span>View Full Review</span></a>';
+				$x_write = $x_write. '</div></div>';
 
+				$x_write = $x_write. '<div class="review_bxfull" id="review_bxfull-'.$rid.'">';
+				$x_write = $x_write. '<div class="review_bxrow">';
+				$ssc = $row_creviews['supplier_service_count'];
+				$ssc_class = "mfp-star-".str_replace(".", "", $ssc); 
+				$x_write = $x_write. '<label><b>Suplier Service: </b></label><i class="'.$ssc_class.' mfp-star-rating"></i>'.$ssc.'</br>';
+				$x_write = $x_write. '<span>'.$row_creviews["supplier_service_comment"].'</span></br>';
+				$x_write = $x_write. '</div>';
+
+				$x_write = $x_write. '<div class="review_bxrow">';
+				$ots = $row_creviews['one_time_shipment'];
+				$ots_class = "mfp-star-".str_replace(".", "", $ots);
+				$x_write = $x_write. '<label><b>On-Time Shipment:</b></label><i class="'.$ots_class.' mfp-star-rating"></i>'.$ots.'</br>';
+				$x_write = $x_write. '<span>'.$row_creviews["one_time_comment"].'</span></br>';
+				$x_write = $x_write. '</div>';
+
+				$x_write = $x_write. '<div class="review_bxrow">';
+				$pq = $row_creviews['product_quality'];
+				$pq_class = "mfp-star-".str_replace(".", "", $pq);
+				$x_write = $x_write. '<label><b>Product Quality:</b></label><i class="'.$pq_class.' mfp-star-rating"> </i>'.$pq.'</br>';
+				$x_write = $x_write. '<span>'.$row_creviews["product_quality_comment"].'</span></br>';
+				$x_write = $x_write. '</div></div>';
+				
+				$x_write = $x_write. '</div>'; //.reviews_bx
+					
+				}	
+				$x_write = $x_write. '</div></div></div>';
+			}
+			$x_write = $x_write.'<script>function reviewToggle(eleid){  var d = document.getElementById("review_bxfull-"+eleid); d.style.height = (d.style.height == "auto") ? "0px" : "auto"; }</script>';
+			$x_write = $x_write.'</div>';
 
 			$cp_sql_details_check     = "SELECT * FROM ".$tablename_details." WHERE company_id = ".$cp_id;
 			$cp_result_details_check  = $conn->query($cp_sql_details_check);
@@ -170,6 +221,7 @@
 				$new_cp_founder     	  = $_POST['cpfounder'];
 				$new_cp_ceo    	 		  = $_POST['cpceo'];
 				$new_cp_owner             = intval($_POST['company_owner']);
+				$new_cp_claimed           = $_POST['cp_claimed'];
 				$new_cp_address           = $_POST['cpaddress'];
 				$new_cp_phone             = $_POST['cpphone'];
 				$new_cp_image             = basename($_FILES["fileToUpload"]["name"]);
@@ -293,9 +345,9 @@
 				echo '<span style="color: red !important;">Component Type is empty! Please fill all required fields *</span><br>';
 			}else{
 				if($new_cp_owner != -1){
-					$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."', parent_company='".$new_cp_parentname."', as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."',manuf='".$new_cp_manuf."',company_owner='".$new_cp_owner."' WHERE company_id=".$cp_id;
+					$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."', parent_company='".$new_cp_parentname."', as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."',manuf='".$new_cp_manuf."',company_owner='".$new_cp_owner."', is_claimed='".$new_cp_claimed."', last_edit='".$timestamp = date('Y-m-d H:i:s')."' WHERE company_id=".$cp_id;
 				}else{
-					$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."', parent_company='".$new_cp_parentname."', as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."',manuf='".$new_cp_manuf."' WHERE company_id=".$cp_id;
+					$cp_sql_update    = "UPDATE ".$tablename." SET name='".$new_cp_name."', parent_company='".$new_cp_parentname."', as_name='".$new_cp_asname."', founded='".$new_cp_founded."', founder='".$new_cp_founder."', ceo='".$new_cp_ceo."', address='".$new_cp_address."',phone='".$new_cp_phone."',email='".$new_cp_email."', url='".$new_cp_url."', region='".$new_cp_region."', facebook='".$new_cp_facebook."', linkedin='".$new_cp_linkedin."', twitter='".$new_cp_twitter."',youtube='".$new_cp_youtube."', trading_capacity=".$new_cp_trading_cap.", respond=".$new_cp_respond.", slogan='".$new_cp_slogan."', vision='".$new_cp_vision."', company_image='".$file["url"]."', about='".$new_cp_about."',status='".$new_cp_business_status."',manuf='".$new_cp_manuf."', is_claimed='".$new_cp_claimed."', last_edit='".$timestamp = date('Y-m-d H:i:s')."' WHERE company_id=".$cp_id;
 				}
 			}
 			$cp_result_update = $conn->query($cp_sql_update);
@@ -305,7 +357,7 @@
 
 				$updatecontent = "<?php require_once('".$_SERVER['DOCUMENT_ROOT']."/wp-load.php'); get_header();?>";
 
-				$updatecontent = $updatecontent.'<style>.rating {
+				$updatecontent = $updatecontent.'<style>        .rating {
 																display: inline-block;
 																position: relative;
 																line-height: 50px;
@@ -370,6 +422,61 @@
 																color: #000;
 																text-shadow: 0 0 5px #09f;
 																}
+																.mfp-star-rating {
+																	background-image:url("'.MFP_PLUGIN_URL.'imgs/stars.png");
+																	display: inline-block;
+																	height: 20px;
+																	background-repeat: no-repeat;
+																	width: 122px;
+																}
+																.mfp-star-5 {
+																	background-position:0;
+																}
+																.mfp-star-45 {
+																	background-position:-127px;
+																}
+																.mfp-star-4 {
+																	background-position:-256px;
+																}
+																.mfp-star-35 {
+																	background-position:-383px;
+																}
+																.mfp-star-3 {
+																	background-position:-521px;
+																}
+																.mfp-star-25 {
+																	background-position:-660px;
+																}
+																.mfp-star-2 {
+																	background-position:-798px;
+																}
+																.mfp-star-15 {
+																	background-position:-925px;
+																}
+																.mfp-star-1 {
+																	background-position:-1054px;
+																}
+																.mfp-star-05 {
+																	background-position:-1183px;
+																}
+																.mfp-star-0 {
+																	background-position:-1321px;
+																}
+																.review_bxrow {
+																	margin-bottom:10px;
+																}
+																.review_bxfull {
+																	height:0;
+																	display:block;
+																	overflow:hidden;
+																}
+																.review_bxrow span {
+																	font-size: 12px;
+																	line-height: 1.2;
+																}
+																.review_bxrow a {
+																	cursor: pointer;
+																}
 																#mfp-topbar {
 																	position: fixed;
 																	top: 0;
@@ -377,6 +484,7 @@
 																	left: 0;
 																	background: #000;
 																	height:30px;
+																	z-index:9999;
 																}
 																#mfp-topbar ul {
 																	list-style: none;
@@ -470,7 +578,7 @@
 																
 																</style>';
 
-				$updatecontent = $updatecontent."<style>.page-breadcrumbs{display:none !important;}.relatedprofiles a{font-size: 14px !important;} a{color: #4DB7FE !important;}.site-content{padding-top:30px !important;}.whiteblock{box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background: #fff;border-radius: 10px;z-index:-1;margin-right: 20px;padding: 15px 30px;border: 1px solid #e5e7f2;}body {background: #f6f6f6 !important;}.content {width: 100%;padding: 20px;padding: 0 60px 0 0;}.question {position: relative;background: lightgrey;padding: 10px 10px 10px 50px;display: block;width:100%;cursor: pointer;}.answers {padding: 0px 15px;margin: 5px 0;max-height: 0;overflow: hidden;z-index: 0;position: relative;opacity: 0;-webkit-transition: .7s ease;-moz-transition: .7s ease;-o-transition: .7s ease;transition: .7s ease;}.questions:checked ~ .answers{max-height: max-content;opacity: 1;padding: 15px;}.plus {position: absolute;margin-left: 10px;z-index: 5;font-size: 2em;line-height: 100%;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;-webkit-transition: .3s ease;-moz-transition: .3s ease;-o-transition: .3s ease;transition: .3s ease;}.questions:checked ~ .plus {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);transform:rotate(45deg);}.questions {display: none;}#rightmenu {position: fixed;right: 0;top: 5%;width: 12em;margin-top: -2.5em;}.d-70{width:70%;float:left;}.d-30{width:30%;float:right;}@media only screen and (max-width: 767px) {.d-70{width:100%;}.d-30{width:100%;}.nomargins{margin-top:0px !important;margin-bottom:0px !important;}</style>";
+				$updatecontent = $updatecontent."<style>.page-breadcrumbs{display:none !important;}.relatedprofiles a{font-size: 14px !important;} a{color: #4DB7FE !important;}.site-content{padding-top:30px !important;}.whiteblock{box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background: #fff;border-radius: 10px;z-index:-1;margin-right: 20px;padding: 15px 30px;border: 1px solid #e5e7f2;}body {background: #f6f6f6 !important;}.content {width: 100%;padding: 20px;padding: 0 60px 0 0;}.question {position: relative;background: lightgrey;padding: 10px 10px 10px 50px;display: block;width:100%;cursor: pointer;}.answers {padding: 0px 15px;margin: 5px 0;max-height: 0;overflow: hidden;z-index: 0;position: relative;opacity: 0;-webkit-transition: .7s ease;-moz-transition: .7s ease;-o-transition: .7s ease;transition: .7s ease;}.questions:checked ~ .answers{max-height: max-content;opacity: 1;padding: 15px;} .questions:checked ~ .custom-answer{ overflow-y: scroll;max-height:500px !important;}.plus {position: absolute;margin-left: 10px;z-index: 5;font-size: 2em;line-height: 100%;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;-webkit-transition: .3s ease;-moz-transition: .3s ease;-o-transition: .3s ease;transition: .3s ease;}.questions:checked ~ .plus {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);transform:rotate(45deg);}.questions {display: none;}#rightmenu {position: fixed;right: 0;top: 5%;width: 12em;margin-top: -2.5em;}.d-70{width:70%;float:left;}.d-30{width:30%;float:right;}@media only screen and (max-width: 767px) {.d-70{width:100%;}.d-30{width:100%;}.nomargins{margin-top:0px !important;margin-bottom:0px !important;}</style>";
 				//top edit bar	
 				//if ( is_user_logged_in() ) {
 				$edit_url= get_site_url()."/wp-admin/admin.php?page=cpcustomsubpage&company_id=".$cp_id;
@@ -692,7 +800,13 @@
 				$updatecontent = $updatecontent."</div>";
 				$updatecontent = $updatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="http://'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
 				$updatecontent = $updatecontent."</div>";
-				
+				// Claimed Section Start
+				if($new_cp_claimed != 0){
+					$updatecontent = $updatecontent.'<div class="whiteblock"><i style="font-size: 20;color: green;" class="fas fa-check-circle"></i>&nbsp;<p style="font-size:20px;display:inline;" >Claimed</p></div><br>';
+				}else{
+					$updatecontent = $updatecontent.'<div class="whiteblock"><i style="font-size: 20;color: red;" class="fas fa-times-circle"></i>&nbsp;<p style="font-size:20px;display:inline;">Claimed</p></div><br>';
+				}
+				// Claimed Section End
 
 				$updatecontent = $updatecontent.'<div class="whiteblock"><br>Own or work here? <a href="'.get_site_url().'/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
 				
@@ -1340,9 +1454,10 @@ echo '<br>';
 							</script>";
 					}
 
-			echo '<label for="cplastedit">Last Edit Date: </label>';
-			echo '<input type="text" id="cplastedit" name="cplastedit" value="'. $row["last_edit"].'"><br><br>';?>
-			
+			echo '<br><label for="cplastedit">Last Edit Date: </label>';
+			// echo '<input type="text" id="cplastedit" name="cplastedit" value="'. $row["last_edit"].'"><br><br>';
+			echo $row["last_edit"];
+			echo '<br><br>'?>
 			<!-- Validation for Founded Year -->
 			<script>
 			function checkIsValid(_data){
@@ -1407,6 +1522,20 @@ echo '<br>';
 				wp_dropdown_users($args1).'<br><br>';
 			}
 			// Get Menufacturer Owner End
+
+			// Claimed Section Start
+			$user = wp_get_current_user();
+			if ( in_array( 'mfp_owner', (array) $user->roles ) ) {
+			}else{
+			echo '<br><br><tr><td><label for="cp_claimed">Claimed: </label></td><td>
+			<select id="cp_claimed" name="cp_claimed">' ;?>
+			<option value="0" <?php if($row["is_claimed"] == "0"){echo $select_attribute = 'selected'; } ?>>No</option>;
+			<option value="1" <?php if($row["is_claimed"] == "1"){echo $select_attribute = 'selected'; } ?>>Yes</option>;
+			<?php echo '</select></td></tr>';
+			};
+			// Claimed Section End
+
+
 
 		    echo "<br><br>Business status : "; 
 			echo '<select name="cpbusiness_status">'; ?>

@@ -20,6 +20,7 @@ if ( ! defined( 'WPINC' ) ) {
 *
 */
 define( 'MFP_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'MFP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**
 * Plugin activation
