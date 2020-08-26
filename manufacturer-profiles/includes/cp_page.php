@@ -118,6 +118,60 @@
                 $x_write = $x_write.'</div>';
             }
 
+            /* Reviews For Company - Customer Reviews*/
+			$x_write   = $x_write.'</br><div class="whiteblock" id="customerreviews"><h2>Customer reviews for '.$final_company_name.": </h2>";
+			/* Reviews for company end */
+
+			$cp_sql_creviews    = "SELECT company_profile_review.*,company_profile_reviewer.name, company_profile_reviewer.email FROM company_profile_review INNER JOIN company_profile_reviewer ON company_profile_review.reviewer_id = company_profile_reviewer.id  WHERE company_profile_review.verified=1 AND company_profile_review.company_id='".$cp_id."' ORDER BY verified_at DESC ";
+			$cp_result_creviews = $conn->query($cp_sql_creviews);
+			if ($cp_result_creviews->num_rows > 0) {
+			$x_write = $x_write. '<div class="content"><div>';
+			$x_write  = $x_write.'<input type="checkbox" id="question-crv" class="questions"><div class="plus">+</div><label for="question-crv" class="question">View All</label>';
+			$x_write = $x_write. '<div class="answers custom-answer">';
+			while($row_creviews = $cp_result_creviews->fetch_assoc()) {
+				$x_write = $x_write. '<div class="reviews_bx">';
+				$rid = $row_creviews['id'];
+				
+				$x_write = $x_write. '<div class="review_bxmain">';
+				$x_write = $x_write. '<p style="margin-bottom:10px"><img width="22px" src="'.MFP_PLUGIN_URL.'imgs/profile-default.png" alt="profile"><label style="margin-left: 10px;">'.$row_creviews["name"].'</label></p>';
+				$x_write = $x_write. '<div class="review_bxrow">';
+				$ovl = round($row_creviews['overall_rating']);
+				//manul round
+				$ovl_class = "mfp-star-".str_replace(".", "", $ovl);
+				$x_write = $x_write. '<i style="margin-left:-5px" class="'.$ovl_class.' mfp-star-rating"> </i>'.$row_creviews['overall_rating'].'</br>';
+				$x_write = $x_write. '<span>Submitted on '.$row_creviews["created_at"].' | </span><a onclick="reviewToggle('.$rid.')"  class="review_bx_toggle"><span>View Full Review</span></a>';
+				$x_write = $x_write. '</div></div>';
+
+				$x_write = $x_write. '<div class="review_bxfull" id="review_bxfull-'.$rid.'">';
+				$x_write = $x_write. '<div class="review_bxrow">';
+				$ssc = $row_creviews['supplier_service_count'];
+				$ssc_class = "mfp-star-".str_replace(".", "", $ssc); 
+				$x_write = $x_write. '<label><b>Suplier Service: </b></label><i class="'.$ssc_class.' mfp-star-rating"></i>'.$ssc.'</br>';
+				$x_write = $x_write. '<span>'.$row_creviews["supplier_service_comment"].'</span></br>';
+				$x_write = $x_write. '</div>';
+
+				$x_write = $x_write. '<div class="review_bxrow">';
+				$ots = $row_creviews['one_time_shipment'];
+				$ots_class = "mfp-star-".str_replace(".", "", $ots);
+				$x_write = $x_write. '<label><b>On-Time Shipment:</b></label><i class="'.$ots_class.' mfp-star-rating"></i>'.$ots.'</br>';
+				$x_write = $x_write. '<span>'.$row_creviews["one_time_comment"].'</span></br>';
+				$x_write = $x_write. '</div>';
+
+				$x_write = $x_write. '<div class="review_bxrow">';
+				$pq = $row_creviews['product_quality'];
+				$pq_class = "mfp-star-".str_replace(".", "", $pq);
+				$x_write = $x_write. '<label><b>Product Quality:</b></label><i class="'.$pq_class.' mfp-star-rating"> </i>'.$pq.'</br>';
+				$x_write = $x_write. '<span>'.$row_creviews["product_quality_comment"].'</span></br>';
+				$x_write = $x_write. '</div></div>';
+				
+				$x_write = $x_write. '</div>'; //.reviews_bx
+					
+				}	
+				$x_write = $x_write. '</div></div></div>';
+			}
+			$x_write = $x_write.'<script>function reviewToggle(eleid){  var d = document.getElementById("review_bxfull-"+eleid); d.style.height = (d.style.height == "auto") ? "0px" : "auto"; }</script>';
+			$x_write = $x_write.'</div>';
+
              $yy = 1;
              $is_news   = 0;
              $xx_write  = '<div class="whiteblock" id="archivenews"><h2>Archive News for '.$final_company_name.': </h2><div class="content">';
@@ -139,6 +193,7 @@
                 $xx_write = $xx_write."</div></div>";
             // }
            
+
             $new_cp_name              = $_POST['cpname'];
             $new_cp_asname            = $_POST['cpasname'];
             $new_cp_parentname        = $_POST['cpparentname'];
@@ -418,7 +473,62 @@
                                                                 position: inherit;
                                                                 top: -9px;
                                                                 
-                                                            }											
+                                                            }		
+                                                            .mfp-star-rating {
+                                                                background-image:url("'.MFP_PLUGIN_URL.'imgs/stars.png");
+                                                                display: inline-block;
+                                                                height: 20px;
+                                                                background-repeat: no-repeat;
+                                                                width: 122px;
+                                                            }
+                                                            .mfp-star-5 {
+                                                                background-position:0;
+                                                            }
+                                                            .mfp-star-45 {
+                                                                background-position:-127px;
+                                                            }
+                                                            .mfp-star-4 {
+                                                                background-position:-256px;
+                                                            }
+                                                            .mfp-star-35 {
+                                                                background-position:-383px;
+                                                            }
+                                                            .mfp-star-3 {
+                                                                background-position:-521px;
+                                                            }
+                                                            .mfp-star-25 {
+                                                                background-position:-660px;
+                                                            }
+                                                            .mfp-star-2 {
+                                                                background-position:-798px;
+                                                            }
+                                                            .mfp-star-15 {
+                                                                background-position:-925px;
+                                                            }
+                                                            .mfp-star-1 {
+                                                                background-position:-1054px;
+                                                            }
+                                                            .mfp-star-05 {
+                                                                background-position:-1183px;
+                                                            }
+                                                            .mfp-star-0 {
+                                                                background-position:-1321px;
+                                                            }
+                                                            .review_bxrow {
+                                                                margin-bottom:10px;
+                                                            }
+                                                            .review_bxfull {
+                                                                height:0;
+                                                                display:block;
+                                                                overflow:hidden;
+                                                            }
+                                                            .review_bxrow span {
+                                                                font-size: 12px;
+                                                                line-height: 1.2;
+                                                            }
+                                                            .review_bxrow a {
+                                                                cursor: pointer;
+                                                            }									
                                                             
                                                     </style>';
 
@@ -536,7 +646,13 @@
             $cpcreatecontent = $cpcreatecontent."</div>";
             $cpcreatecontent = $cpcreatecontent.'<div><a href="#"><i class="fa fa-building-o" aria-hidden="true"></i></a> '.$new_cp_address.'</div><div><a href="'.$new_cp_url.'"><i class="fa fa-globe" aria-hidden="true"></i></a> '.$new_cp_url.'</div><div><a href="tel:'.$new_cp_phone.'"><i class="fa fa-phone" aria-hidden="true"></i></a> '.$new_cp_phone.'</div>'.'<div><a href="mailto:'.$new_cp_email.'"><i class="fa fa-envelope"></i></a> '.$new_cp_email.'</div> </div><br>'.'<div class="whiteblock" style="display:none;"><h2 style="margin-top:10px !important;margin-bottom:10px !important">Product Information</h2><ul><li><a href="#">Manufacturer Size: </a><br>'.$new_cp_staffno.'</li>'.'<li><a href="#">Crystalline</a><br>'.$new_cp_crystalline.'<br>Power Range (Wp): '.$new_cp_cprl.'-'.$new_cp_cprh.'</li>'.'<li><a href="#">High Efficiency Crystalline</a><br>'.$new_cp_high_eff.'<br>Power Range (Wp): '.$new_cp_hecprl.'-'.$new_cp_hecprh.'</li>'.'</ul>';
             $cpcreatecontent = $cpcreatecontent."</div>";
-                
+			// Claimed Section Start
+			if($new_cp_claimed != 0){
+				$cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><i style="font-size: 20;color: green;" class="fas fa-check-circle"></i>&nbsp;<p style="font-size:20px;display:inline;" >Claimed</p></div><br>';
+			}else{
+				$cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><i style="font-size: 20;color: red;" class="fas fa-times-circle"></i>&nbsp;<p style="font-size:20px;display:inline;">Not Claimed</p></div><br>';
+			}
+			// Claimed Section End
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><br>Own or work here? <a href="'.get_site_url().'/claim-your-mnfctr-page/" target="_blank">Claim Now!</a> <br><br></div><br>';
             if(count($related_profiles)> 0){
             $cpcreatecontent = $cpcreatecontent.'<div class="whiteblock"><h2 style=" line-height: 0.1;"> Related Profiles</h2>';

@@ -804,7 +804,7 @@
 				if($new_cp_claimed != 0){
 					$updatecontent = $updatecontent.'<div class="whiteblock"><i style="font-size: 20;color: green;" class="fas fa-check-circle"></i>&nbsp;<p style="font-size:20px;display:inline;" >Claimed</p></div><br>';
 				}else{
-					$updatecontent = $updatecontent.'<div class="whiteblock"><i style="font-size: 20;color: red;" class="fas fa-times-circle"></i>&nbsp;<p style="font-size:20px;display:inline;">Claimed</p></div><br>';
+					$updatecontent = $updatecontent.'<div class="whiteblock"><i style="font-size: 20;color: red;" class="fas fa-times-circle"></i>&nbsp;<p style="font-size:20px;display:inline;">Not Claimed</p></div><br>';
 				}
 				// Claimed Section End
 
