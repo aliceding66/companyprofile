@@ -1,8 +1,8 @@
 <?php
 /**
-ini_set('display_startup_errors', 1);
 ini_set('display_errors', 1);
-error_reporting(-1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
  * Template Name: Review Page
  * 
@@ -264,10 +264,16 @@ input[type=text] {
                 $cp_update     = "UPDATE ".$table_review." SET verified = 1, verified_at ='".$timestamp."' WHERE id=".$_GET['id'];
                 $cp_result_update  = $conn->query($cp_update);
                 if($conn->affected_rows > 0){
-                    echo "<p class='mfp-success'>Your review has been verified successfully!</p>";
-                } else {
-                    //echo $conn->error;
-                    echo "<p class='mfp-error'>Review verification failed! please try again</p>";
+                    // echo "<p class='mfp-success'>Your review has been verified successfully!</p>";  
+                    $cp_updated_company_review = "SELECT company_id FROM ".$table_review." WHERE id=".$_GET['id'];
+                    $cp_updated_company  = $conn->query($cp_updated_company_review);
+                    if ($cp_updated_company->num_rows > 0) {
+                        while($cp_reviews = $cp_updated_company->fetch_assoc()) {
+                            $cp_review_company_id = $cp_reviews["company_id"];       
+                        }
+                        include("cp-update-company.php");
+                        echo "<p class='mfp-success'>Your review has been verified successfully!</p>";  
+                    }
                 }
             } else {
                 echo "<p class='mfp-error'>Review verification failed! please try to submit a new review</p>";
